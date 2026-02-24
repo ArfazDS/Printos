@@ -8,14 +8,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Custom Styles for Unique Effects -->
+    <!-- Custom Styles for Unique Effects & Accessibility -->
     <style>
         /* Glassmorphism utility */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
         }
         
         .glass-dark {
@@ -67,576 +67,700 @@
             box-shadow: 0 20px 40px -5px rgba(37, 99, 235, 0.15);
             border-color: rgba(37, 99, 235, 0.3);
         }
+
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.9s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Infinite Marquee */
+        .marquee-container {
+            width: 100vw;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 30s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        /* Dropdown transition - updated for keyboard accessibility (focus-within) */
+        .mega-menu {
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+        .group:hover .mega-menu,
+        .group:focus-within .mega-menu {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Accessibility: Reduced Motion Preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen font-sans text-gray-800 bg-gray-50 overflow-x-hidden">
 
+    <!-- Accessibility: Skip to Main Content Link -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-[100] bg-blue-600 text-white px-6 py-3 rounded-lg shadow-xl font-bold focus:outline-none focus:ring-4 focus:ring-blue-400">
+        Skip to main content
+    </a>
+
     <!-- Navigation (Sticky & Glassmorphism) -->
-    <nav class="fixed w-full z-50 transition-all duration-300 glass-panel shadow-sm">
+    <nav class="fixed w-full z-50 transition-all duration-300 glass-panel shadow-sm pb-0" aria-label="Main Navigation">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-24 items-center">
+            <!-- Top Main Header Row -->
+            <div class="flex justify-between py-4 items-center">
                 
-                <!-- Logo -->
-                <a href="#" class="flex items-center space-x-2 group">
-                    <img src="Printos-01.svg" alt="Printos Logo" class="h-16 md:h-20 w-auto group-hover:scale-105 transition-transform" onerror="this.src='https://via.placeholder.com/150x60?text=Printos+Logo'">
+                <!-- Normal Sized Logo + Business Name -->
+                <a href="#" class="flex items-center space-x-3 group shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-4" aria-label="Printos Home">
+                    <!-- alt is empty because the text "Printos" is adjacent -->
+                    <img src="Printos-01.svg" alt="" class="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105" onerror="this.src='https://via.placeholder.com/48x48?text=P'">
+                    <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 group-hover:text-blue-600 transition-colors">Printos</span>
                 </a>
 
                 <!-- Desktop Nav & Search -->
-                <div class="hidden lg:flex flex-1 items-center justify-end md:justify-center px-6 space-x-8">
+                <div class="hidden lg:flex flex-1 items-center justify-end px-6 space-x-8">
                     
                     <!-- Search Bar -->
-                    <div class="relative group" id="desktop-search-container">
-                        <div class="flex items-center bg-white/60 backdrop-blur-sm border border-gray-200 rounded-full px-4 py-2 w-64 xl:w-80 transition-all duration-300 focus-within:ring-2 focus-within:ring-purple-500 focus-within:bg-white focus-within:shadow-lg">
-                            <i data-lucide="search" class="w-5 h-5 text-gray-500"></i>
-                            <input type="text" id="desktop-search-input" class="bg-transparent border-none focus:outline-none ml-2 text-sm w-full" placeholder="Search services...">
+                    <form class="relative group" id="desktop-search-container" role="search">
+                        <label for="desktop-search-input" class="sr-only">Search products</label>
+                        <div class="flex items-center bg-gray-100/80 backdrop-blur-sm border border-gray-200 rounded-full px-4 py-2 w-64 xl:w-80 transition-all duration-300 focus-within:ring-2 focus-within:ring-purple-500 focus-within:bg-white focus-within:shadow-lg">
+                            <i data-lucide="search" class="w-5 h-5 text-gray-500" aria-hidden="true"></i>
+                            <input type="search" id="desktop-search-input" class="bg-transparent border-none focus:outline-none ml-2 text-sm w-full" placeholder="Search products...">
                         </div>
-                        
-                        <!-- Search Categories Dropdown -->
-                        <div id="search-dropdown" class="absolute hidden top-full mt-4 left-0 w-96 bg-white/90 backdrop-blur-xl shadow-2xl rounded-2xl border border-gray-100 p-5 z-50 transform origin-top transition-all">
-                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Popular Categories</h4>
-                            <div class="grid grid-cols-2 gap-4">
-                                <a href="#services" class="flex items-center space-x-3 p-2 hover:bg-blue-50 rounded-xl transition-colors group">
-                                    <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform"><i data-lucide="shirt" class="w-5 h-5"></i></div>
-                                    <span class="text-sm font-semibold text-gray-700">Apparel</span>
-                                </a>
-                                <a href="#services" class="flex items-center space-x-3 p-2 hover:bg-purple-50 rounded-xl transition-colors group">
-                                    <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform"><i data-lucide="file-text" class="w-5 h-5"></i></div>
-                                    <span class="text-sm font-semibold text-gray-700">Paper & Print</span>
-                                </a>
-                                <a href="#services" class="flex items-center space-x-3 p-2 hover:bg-pink-50 rounded-xl transition-colors group">
-                                    <div class="w-10 h-10 rounded-lg bg-pink-100 flex items-center justify-center text-pink-600 group-hover:scale-110 transition-transform"><i data-lucide="gift" class="w-5 h-5"></i></div>
-                                    <span class="text-sm font-semibold text-gray-700">Promo Gifts</span>
-                                </a>
-                                <a href="#services" class="flex items-center space-x-3 p-2 hover:bg-orange-50 rounded-xl transition-colors group">
-                                    <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600 group-hover:scale-110 transition-transform"><i data-lucide="monitor" class="w-5 h-5"></i></div>
-                                    <span class="text-sm font-semibold text-gray-700">Large Format</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
 
-                    <a href="#home" class="text-gray-700 hover:text-blue-600 font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1">Home</a>
-                    
-                    <!-- Services Mega Menu -->
-                    <div class="relative group h-full flex items-center py-8">
-                        <a href="#services" class="text-gray-700 hover:text-blue-600 font-medium transition-colors flex items-center relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1">
-                            Services <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 transition-transform duration-300"></i>
-                        </a>
-                        
-                        <!-- Mega Menu Panel -->
-                        <div class="absolute top-full left-1/2 -translate-x-1/2 w-[700px] bg-white/95 backdrop-blur-xl shadow-2xl rounded-2xl border border-gray-100 p-8 hidden group-hover:block z-50 transform opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                            <div class="grid grid-cols-3 gap-8">
-                                <div>
-                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="shirt" class="w-4 h-4 mr-2 text-blue-600"></i>Apparel</h4>
-                                    <ul class="space-y-2 text-sm text-gray-600">
-                                        <li><a href="#services" class="hover:text-blue-600 hover:translate-x-2 transition-transform inline-block">Custom T-Shirts</a></li>
-                                        <li><a href="#services" class="hover:text-blue-600 hover:translate-x-2 transition-transform inline-block">Hoodies & Jackets</a></li>
-                                        <li><a href="#services" class="hover:text-blue-600 hover:translate-x-2 transition-transform inline-block">Polo Shirts</a></li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="file-text" class="w-4 h-4 mr-2 text-purple-600"></i>Paper & Print</h4>
-                                    <ul class="space-y-2 text-sm text-gray-600">
-                                        <li><a href="#services" class="hover:text-purple-600 hover:translate-x-2 transition-transform inline-block">Business Cards</a></li>
-                                        <li><a href="#services" class="hover:text-purple-600 hover:translate-x-2 transition-transform inline-block">Flyers & Brochures</a></li>
-                                        <li><a href="#services" class="hover:text-purple-600 hover:translate-x-2 transition-transform inline-block">Letterheads</a></li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="gift" class="w-4 h-4 mr-2 text-pink-600"></i>Promo Gifts</h4>
-                                    <ul class="space-y-2 text-sm text-gray-600">
-                                        <li><a href="#services" class="hover:text-pink-600 hover:translate-x-2 transition-transform inline-block">Ceramic Mugs</a></li>
-                                        <li><a href="#services" class="hover:text-pink-600 hover:translate-x-2 transition-transform inline-block">Water Bottles</a></li>
-                                        <li><a href="#services" class="hover:text-pink-600 hover:translate-x-2 transition-transform inline-block">Keychains</a></li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="monitor" class="w-4 h-4 mr-2 text-orange-600"></i>Large Format</h4>
-                                    <ul class="space-y-2 text-sm text-gray-600">
-                                        <li><a href="#services" class="hover:text-orange-600 hover:translate-x-2 transition-transform inline-block">Vinyl Banners</a></li>
-                                        <li><a href="#services" class="hover:text-orange-600 hover:translate-x-2 transition-transform inline-block">Posters</a></li>
-                                        <li><a href="#services" class="hover:text-orange-600 hover:translate-x-2 transition-transform inline-block">Standees</a></li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="package" class="w-4 h-4 mr-2 text-green-600"></i>Packaging</h4>
-                                    <ul class="space-y-2 text-sm text-gray-600">
-                                        <li><a href="#services" class="hover:text-green-600 hover:translate-x-2 transition-transform inline-block">Custom Boxes</a></li>
-                                        <li><a href="#services" class="hover:text-green-600 hover:translate-x-2 transition-transform inline-block">Mailers</a></li>
-                                        <li><a href="#services" class="hover:text-green-600 hover:translate-x-2 transition-transform inline-block">Stickers</a></li>
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="pen-tool" class="w-4 h-4 mr-2 text-indigo-600"></i>Design</h4>
-                                    <ul class="space-y-2 text-sm text-gray-600">
-                                        <li><a href="#services" class="hover:text-indigo-600 hover:translate-x-2 transition-transform inline-block">Logo Design</a></li>
-                                        <li><a href="#services" class="hover:text-indigo-600 hover:translate-x-2 transition-transform inline-block">Brand Identity</a></li>
-                                        <li><a href="#services" class="hover:text-indigo-600 hover:translate-x-2 transition-transform inline-block">Artwork Check</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1">About Us</a>
+                    <a href="#home" class="text-gray-800 font-bold hover:text-blue-600 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded">Home</a>
+                    <a href="#about" class="text-gray-800 font-bold hover:text-blue-600 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded">About Us</a>
                 </div>
 
                 <!-- CTA Button & Mobile Toggle -->
                 <div class="flex items-center space-x-4">
-                    <a href="#contact" class="hidden md:inline-flex px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-full hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 transform hover:-translate-y-0.5">
+                    <a href="#contact" class="hidden md:inline-flex px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-full hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2">
                         Get a Quote
                     </a>
                     
                     <!-- Mobile Menu Button -->
                     <div class="lg:hidden flex items-center">
-                        <button id="mobile-menu-btn" class="text-gray-600 focus:outline-none p-2 hover:bg-gray-100 rounded-full transition-colors">
-                            <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
-                            <i data-lucide="x" id="close-icon" class="w-6 h-6 hidden"></i>
+                        <button id="mobile-menu-btn" class="text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 p-2 hover:bg-gray-200 rounded-full transition-colors" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+                            <i data-lucide="menu" id="menu-icon" class="w-7 h-7" aria-hidden="true"></i>
+                            <i data-lucide="x" id="close-icon" class="w-7 h-7 hidden" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
             </div>
+
+            <!-- Sub-Navigation Categories Strip (Desktop) -->
+            <div class="hidden lg:flex border-t border-gray-200/60 pt-3 pb-3 justify-center space-x-6 xl:space-x-10 items-center w-full relative" aria-label="Product Categories">
+                
+                <!-- Category 1 -->
+                <div class="group relative">
+                    <button class="text-sm font-bold text-gray-700 hover:text-blue-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                        Apparel <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
+                    </button>
+                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li><a href="#" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Custom T-Shirts</a></li>
+                            <li><a href="#" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Hoodies & Jackets</a></li>
+                            <li><a href="#" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Polo Shirts</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Category 2 -->
+                <div class="group relative">
+                    <button class="text-sm font-bold text-gray-700 hover:text-purple-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                        Paper & Print <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
+                    </button>
+                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li><a href="#" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Business Cards</a></li>
+                            <li><a href="#" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Flyers & Brochures</a></li>
+                            <li><a href="#" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Letterheads</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Category 3 -->
+                <div class="group relative">
+                    <button class="text-sm font-bold text-gray-700 hover:text-pink-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                        Promo Gifts <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
+                    </button>
+                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li><a href="#" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Ceramic Mugs</a></li>
+                            <li><a href="#" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Water Bottles</a></li>
+                            <li><a href="#" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Keychains & Totes</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Category 4 -->
+                <div class="group relative">
+                    <button class="text-sm font-bold text-gray-700 hover:text-orange-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                        Large Format <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
+                    </button>
+                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li><a href="#" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Vinyl Banners</a></li>
+                            <li><a href="#" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Posters</a></li>
+                            <li><a href="#" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Standees / Rollups</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Category 5 -->
+                <div class="group relative">
+                    <button class="text-sm font-bold text-gray-700 hover:text-green-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                        Packaging <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
+                    </button>
+                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
+                        <ul class="space-y-1 text-sm text-gray-600">
+                            <li><a href="#" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Custom Boxes</a></li>
+                            <li><a href="#" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Mailers</a></li>
+                            <li><a href="#" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Stickers & Labels</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Category 6 -->
+                <div class="group relative">
+                    <button class="text-sm font-bold text-gray-700 hover:text-cyan-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                        Print & Decor <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
+                    </button>
+                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-[450px] bg-white shadow-2xl rounded-3xl border border-gray-100 p-5 z-50">
+                        <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Acrylic Photo cutouts</a>
+                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Photo Prints</a>
+                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Photo Plaque</a>
+                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Posters</a>
+                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Fridge Magnets</a>
+                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Frameless Photo Frames</a>
+                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">LED Photo Frames</a>
+                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Desktop Frames with Messages</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 7 -->
+                <div class="group relative">
+                    <button class="text-sm font-bold text-gray-700 hover:text-rose-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                        Photo Frames <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
+                    </button>
+                    <div class="mega-menu absolute top-full right-0 w-[550px] bg-white shadow-2xl rounded-3xl border border-gray-100 p-6 z-50">
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-2">
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Desktop Collage Foldable Frames</a>
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Classic Photo Frames</a>
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Eco Leatherette Collection</a>
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Wall Photo Frames</a>
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Heritage Collection</a>
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Collage Photo Frames</a>
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Vintage Collection</a>
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Matte Finish Photo Frames</a>
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Premium Photo Frames</a>
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Canvas Photo Frames</a>
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Custom Premium Photo Frames</a>
+                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Leatherette Acrylic Frames</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
         <!-- Mobile Nav -->
-        <div id="mobile-menu" class="hidden lg:hidden glass-panel border-t border-gray-100/50 px-4 pt-2 pb-6 space-y-2 shadow-2xl absolute w-full left-0 origin-top animate-fade-in">
-            <a href="#home" class="mobile-link block px-4 py-3 rounded-xl text-base font-semibold text-gray-700 hover:text-blue-600 hover:bg-white/50 transition-colors">Home</a>
-            <a href="#services" class="mobile-link block px-4 py-3 rounded-xl text-base font-semibold text-gray-700 hover:text-blue-600 hover:bg-white/50 transition-colors">Services</a>
-            <a href="#about" class="mobile-link block px-4 py-3 rounded-xl text-base font-semibold text-gray-700 hover:text-blue-600 hover:bg-white/50 transition-colors">About Us</a>
-            <a href="#contact" class="mobile-link block px-4 py-3 mt-4 text-center rounded-xl text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-lg transition-all">Get a Quote</a>
+        <div id="mobile-menu" class="hidden lg:hidden glass-panel border-t border-gray-200 px-4 pt-4 pb-6 space-y-2 shadow-2xl absolute w-full left-0 origin-top" aria-hidden="true">
+            <a href="#home" class="mobile-link block px-4 py-3 rounded-xl text-lg font-bold text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Home</a>
+            <a href="#services" class="mobile-link block px-4 py-3 rounded-xl text-lg font-bold text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Categories</a>
+            <a href="#about" class="mobile-link block px-4 py-3 rounded-xl text-lg font-bold text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">About Us</a>
+            <a href="#contact" class="mobile-link block px-4 py-4 mt-6 text-center rounded-xl text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2">Get a Quote</a>
         </div>
     </nav>
 
-    <!-- Hero Section (New Bright Split Layout) -->
-    <section id="home" class="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden bg-white">
-        <!-- Decorative subtle background elements -->
-        <div class="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[800px] h-[800px] bg-blue-50 rounded-full blur-3xl opacity-60 z-0"></div>
-        <div class="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[600px] h-[600px] bg-purple-50 rounded-full blur-3xl opacity-60 z-0"></div>
+    <!-- Main Content Wrapper -->
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section id="home" class="relative pt-44 pb-20 lg:pt-56 lg:pb-32 overflow-hidden bg-white" aria-label="Hero">
+            <!-- Decorative subtle background elements (hidden from screen readers) -->
+            <div class="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[800px] h-[800px] bg-blue-50 rounded-full blur-3xl opacity-60 z-0" aria-hidden="true"></div>
+            <div class="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[600px] h-[600px] bg-purple-50 rounded-full blur-3xl opacity-60 z-0" aria-hidden="true"></div>
 
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-                
-                <!-- Text Content (Left) -->
-                <div class="max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
-                    <div class="inline-flex items-center space-x-2 bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-sm font-bold mb-6 border border-blue-100 shadow-sm float-anim">
-                        <span class="relative flex h-3 w-3">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
-                        </span>
-                        <span>Innovating Print Solutions</span>
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center reveal">
+                    
+                    <!-- Text Content (Left) -->
+                    <div class="max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
+                        <div class="inline-flex items-center space-x-2 bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-sm font-bold mb-6 border border-blue-100 shadow-sm float-anim">
+                            <span class="relative flex h-3 w-3" aria-hidden="true">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                            </span>
+                            <span>Innovating Print Solutions</span>
+                        </div>
+                        
+                        <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-6">
+                            Bring your ideas to <br class="hidden sm:block"/>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">life with print.</span>
+                        </h1>
+                        
+                        <p class="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed font-light max-w-xl mx-auto lg:mx-0">
+                            Premium custom printing services for businesses and individuals. From custom apparel to personalized photo frames and decor, we deliver vibrant, high-quality results.
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center lg:justify-start">
+                            <a href="#services" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/30 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2">
+                                Explore Services <i data-lucide="arrow-right" class="ml-2 w-5 h-5" aria-hidden="true"></i>
+                            </a>
+                            <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2">
+                                Contact Us
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Image Slider (Right) -->
+                    <div class="relative h-[450px] sm:h-[550px] lg:h-[650px] w-full rounded-[3rem] overflow-hidden shadow-2xl border-[10px] border-white group transform hover:scale-[1.02] transition-transform duration-500" aria-label="Image gallery showing our printing work">
+                        <div id="hero-slider" class="absolute inset-0 z-0 bg-gray-100">
+                            <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-100" src="https://images.unsplash.com/photo-1562564055-71e051d33c19?auto=format&fit=crop&q=80&w=1200" alt="Industrial printing press in action" />
+                            <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-0" src="https://images.unsplash.com/photo-1513118172236-00b7cc57e1fa?auto=format&fit=crop&q=80&w=1200" alt="Custom apparel and t-shirt printing" />
+                            <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-0" src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200" alt="Stack of premium printed business cards" />
+                        </div>
+                        
+                        <!-- Decorative Graphic Elements (hidden from SR) -->
+                        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-pulse" aria-hidden="true"></div>
+                        <div class="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-r from-pink-400 to-orange-400 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-pulse" style="animation-delay: 1s;" aria-hidden="true"></div>
                     </div>
                     
-                    <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-6">
-                        Bring your ideas to <br class="hidden sm:block"/>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">life with print.</span>
-                    </h1>
-                    
-                    <p class="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed font-light max-w-xl mx-auto lg:mx-0">
-                        Premium custom printing services for businesses and individuals. From custom apparel to marketing materials, we deliver vibrant, high-quality results.
-                    </p>
-                    
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center lg:justify-start">
-                        <a href="#services" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/30 hover:-translate-y-1">
-                            Explore Services <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
-                        </a>
-                        <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1">
-                            Contact Us
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Image Slider (Right) -->
-                <div class="relative h-[450px] sm:h-[550px] lg:h-[650px] w-full rounded-[3rem] overflow-hidden shadow-2xl border-[10px] border-white group transform hover:scale-[1.02] transition-transform duration-500">
-                    <div id="hero-slider" class="absolute inset-0 z-0 bg-gray-100">
-                        <!-- Bright full-color images without dark overlay -->
-                        <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-100" src="https://images.unsplash.com/photo-1562564055-71e051d33c19?auto=format&fit=crop&q=80&w=1200" alt="Printing Press Background" />
-                        <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-0" src="https://images.unsplash.com/photo-1513118172236-00b7cc57e1fa?auto=format&fit=crop&q=80&w=1200" alt="Apparel Printing" />
-                        <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-0" src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200" alt="Business Cards" />
-                    </div>
-                    
-                    <!-- Decorative Graphic Elements floating around slider -->
-                    <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-pulse"></div>
-                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-r from-pink-400 to-orange-400 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-pulse" style="animation-delay: 1s;"></div>
-                </div>
-                
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Grid Section (Categories) -->
-    <section id="services" class="relative py-24 bg-gray-50 overflow-hidden border-t border-gray-100">
-        <!-- Decorative Background Blob -->
-        <div class="bg-blob bg-blue-400 w-96 h-96 rounded-full top-0 left-[-10%] mix-blend-multiply"></div>
-        <div class="bg-blob bg-purple-400 w-96 h-96 rounded-full bottom-0 right-[-10%] mix-blend-multiply animation-delay-2000"></div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-20">
-                <span class="text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 uppercase">Our Capabilities</span>
-                <h2 class="mt-3 text-4xl leading-tight font-extrabold text-gray-900 sm:text-5xl">
-                    Everything you need, <br/><span class="font-light italic text-gray-500">printed perfectly.</span>
-                </h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                <!-- Category 1: Apparel -->
-                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="p-10 relative z-10">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center mb-8 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner">
-                            <i data-lucide="shirt" class="w-8 h-8 text-blue-600"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Apparel</h3>
-                        <p class="text-gray-600 mb-8 leading-relaxed">
-                            High-quality screen printing and embroidery for T-shirts, hoodies, uniforms, and caps.
-                        </p>
-                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Custom T-Shirts</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Hoodies & Jackets</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Polo Shirts</li>
-                        </ul>
-                        <a href="#contact" class="inline-flex items-center text-blue-600 font-bold hover:text-blue-800 transition-colors group/link">
-                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Category 2: Paper & Print -->
-                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="p-10 relative z-10">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-50 flex items-center justify-center mb-8 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner">
-                            <i data-lucide="file-text" class="w-8 h-8 text-purple-600"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Paper & Print</h3>
-                        <p class="text-gray-600 mb-8 leading-relaxed">
-                            Premium stationery including business cards, flyers, brochures, and elegant letterheads.
-                        </p>
-                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Business Cards</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Flyers & Brochures</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Letterheads</li>
-                        </ul>
-                        <a href="#contact" class="inline-flex items-center text-purple-600 font-bold hover:text-purple-800 transition-colors group/link">
-                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Category 3: Promo Gifts -->
-                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
-                    <div class="absolute inset-0 bg-gradient-to-br from-pink-600/5 to-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="p-10 relative z-10">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-100 to-pink-50 flex items-center justify-center mb-8 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner">
-                            <i data-lucide="gift" class="w-8 h-8 text-pink-600"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Promo Gifts</h3>
-                        <p class="text-gray-600 mb-8 leading-relaxed">
-                            Personalized items for events or corporate merch like mugs, bottles, and tote bags.
-                        </p>
-                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Ceramic Mugs</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Water Bottles</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Keychains & Totes</li>
-                        </ul>
-                        <a href="#contact" class="inline-flex items-center text-pink-600 font-bold hover:text-pink-800 transition-colors group/link">
-                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Category 4: Large Format -->
-                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
-                    <div class="absolute inset-0 bg-gradient-to-br from-orange-600/5 to-yellow-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="p-10 relative z-10">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-100 to-orange-50 flex items-center justify-center mb-8 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner">
-                            <i data-lucide="monitor" class="w-8 h-8 text-orange-600"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Large Format</h3>
-                        <p class="text-gray-600 mb-8 leading-relaxed">
-                            High-visibility advertising including banners, posters, standees, and vinyls.
-                        </p>
-                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Vinyl Banners</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Posters & Canvas</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Standees / Rollups</li>
-                        </ul>
-                        <a href="#contact" class="inline-flex items-center text-orange-600 font-bold hover:text-orange-800 transition-colors group/link">
-                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Category 5: Packaging -->
-                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-600/5 to-teal-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="p-10 relative z-10">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center mb-8 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner">
-                            <i data-lucide="package" class="w-8 h-8 text-green-600"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Packaging</h3>
-                        <p class="text-gray-600 mb-8 leading-relaxed">
-                            Branded boxes, mailers, and custom packaging tape to elevate unboxing.
-                        </p>
-                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Custom Boxes</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Mailers</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Stickers & Labels</li>
-                        </ul>
-                        <a href="#contact" class="inline-flex items-center text-green-600 font-bold hover:text-green-800 transition-colors group/link">
-                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Category 6: Design -->
-                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="p-10 relative z-10">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center mb-8 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner">
-                            <i data-lucide="pen-tool" class="w-8 h-8 text-indigo-600"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Design Services</h3>
-                        <p class="text-gray-600 mb-8 leading-relaxed">
-                            In-house design team to bring your vision to life before it hits the press.
-                        </p>
-                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Logo Design</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Brand Identity</li>
-                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Vector Tracing</li>
-                        </ul>
-                        <a href="#contact" class="inline-flex items-center text-indigo-600 font-bold hover:text-indigo-800 transition-colors group/link">
-                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
-                        </a>
-                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Why Choose Us Section (Unique Shape Layout) -->
-    <section id="about" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-                <div class="relative lg:h-[650px] mb-16 lg:mb-0 hidden lg:block float-anim">
-                    <!-- Unique Asymmetrical Image Frame -->
-                    <div class="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[40px] transform rotate-3 scale-105 opacity-20"></div>
-                    <img src="https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&q=80&w=1000" alt="Colorful printed materials" class="absolute inset-0 w-full h-full object-cover rounded-[40px] shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-700" />
-                    
-                    <!-- Floating stat badge -->
-                    <div class="absolute -bottom-8 -right-8 glass-panel p-6 rounded-2xl shadow-xl flex items-center space-x-4">
-                        <div class="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">10+</div>
-                        <div>
-                            <p class="font-bold text-gray-900 text-lg">Years</p>
-                            <p class="text-sm text-gray-500">of Excellence</p>
-                        </div>
-                    </div>
-                </div>
+        <!-- Services Grid Section -->
+        <section id="services" class="relative py-24 bg-gray-50 overflow-hidden border-t border-gray-100" aria-labelledby="services-heading">
+            <!-- Decorative Background Blobs -->
+            <div class="bg-blob bg-blue-400 w-96 h-96 rounded-full top-0 left-[-10%] mix-blend-multiply" aria-hidden="true"></div>
+            <div class="bg-blob bg-purple-400 w-96 h-96 rounded-full bottom-0 right-[-10%] mix-blend-multiply animation-delay-2000" aria-hidden="true"></div>
 
-                <div>
-                    <span class="text-sm font-bold tracking-widest text-purple-600 uppercase mb-2 block">Why Printos?</span>
-                    <h2 class="text-4xl font-extrabold text-gray-900 sm:text-5xl mb-6 leading-tight">
-                        Precision in every pixel, <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">quality in every drop.</span>
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                    <span class="text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 uppercase block mb-3">Our Capabilities</span>
+                    <h2 id="services-heading" class="text-4xl leading-tight font-extrabold text-gray-900 sm:text-5xl">
+                        Everything you need, <br/><span class="font-light italic text-gray-500">printed perfectly.</span>
                     </h2>
-                    <p class="text-lg text-gray-600 mb-10 leading-relaxed font-light">
-                        Your printed materials are a direct reflection of your brand. We fuse state-of-the-art technology with artisanal attention to detail to ensure your project stands out.
-                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                            <div class="bg-blue-100 text-blue-600 p-2 rounded-lg"><i data-lucide="award" class="w-6 h-6"></i></div>
-                            <div>
-                                <h4 class="font-bold text-gray-900">Premium Quality</h4>
-                                <p class="text-sm text-gray-500 mt-1">Top-tier materials & inks.</p>
+                    <!-- Category 1: Apparel -->
+                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
+                        <div class="p-8 relative z-10">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
+                                <i data-lucide="shirt" class="w-7 h-7 text-blue-600"></i>
                             </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Apparel</h3>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
+                                Screen printing and embroidery for T-shirts, hoodies, and polo shirts.
+                            </p>
+                            <a href="#contact" class="inline-flex items-center text-blue-600 font-bold hover:text-blue-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded">
+                                Order Now <span class="sr-only">for Apparel</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
+                            </a>
                         </div>
-                        <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                            <div class="bg-purple-100 text-purple-600 p-2 rounded-lg"><i data-lucide="clock" class="w-6 h-6"></i></div>
-                            <div>
-                                <h4 class="font-bold text-gray-900">Fast Turnaround</h4>
-                                <p class="text-sm text-gray-500 mt-1">Deadlines met, guaranteed.</p>
+                    </article>
+
+                    <!-- Category 2: Paper & Print -->
+                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
+                        <div class="p-8 relative z-10">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
+                                <i data-lucide="file-text" class="w-7 h-7 text-purple-600"></i>
                             </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Paper & Print</h3>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
+                                Premium stationery including business cards, flyers, and brochures.
+                            </p>
+                            <a href="#contact" class="inline-flex items-center text-purple-600 font-bold hover:text-purple-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded">
+                                Order Now <span class="sr-only">for Paper & Print</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
+                            </a>
                         </div>
-                        <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                            <div class="bg-green-100 text-green-600 p-2 rounded-lg"><i data-lucide="leaf" class="w-6 h-6"></i></div>
-                            <div>
-                                <h4 class="font-bold text-gray-900">Eco-Friendly</h4>
-                                <p class="text-sm text-gray-500 mt-1">Sustainable print options.</p>
+                    </article>
+
+                    <!-- Category 3: Promo Gifts -->
+                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                        <div class="absolute inset-0 bg-gradient-to-br from-pink-600/5 to-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
+                        <div class="p-8 relative z-10">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-100 to-pink-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
+                                <i data-lucide="gift" class="w-7 h-7 text-pink-600"></i>
                             </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Promo Gifts</h3>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
+                                Personalized items like ceramic mugs, bottles, and customized keychains.
+                            </p>
+                            <a href="#contact" class="inline-flex items-center text-pink-600 font-bold hover:text-pink-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600 rounded">
+                                Order Now <span class="sr-only">for Promo Gifts</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
+                            </a>
                         </div>
-                        <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                            <div class="bg-pink-100 text-pink-600 p-2 rounded-lg"><i data-lucide="heart-handshake" class="w-6 h-6"></i></div>
+                    </article>
+
+                    <!-- Category 4: Large Format -->
+                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                        <div class="absolute inset-0 bg-gradient-to-br from-orange-600/5 to-yellow-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
+                        <div class="p-8 relative z-10">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-100 to-orange-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
+                                <i data-lucide="monitor" class="w-7 h-7 text-orange-600"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Large Format</h3>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
+                                High-visibility advertising including banners, posters, and standees.
+                            </p>
+                            <a href="#contact" class="inline-flex items-center text-orange-600 font-bold hover:text-orange-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600 rounded">
+                                Order Now <span class="sr-only">for Large Format</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- Category 5: Packaging -->
+                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                        <div class="absolute inset-0 bg-gradient-to-br from-green-600/5 to-teal-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
+                        <div class="p-8 relative z-10">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
+                                <i data-lucide="package" class="w-7 h-7 text-green-600"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Packaging</h3>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
+                                Branded boxes, mailers, stickers, and custom packaging tape.
+                            </p>
+                            <a href="#contact" class="inline-flex items-center text-green-600 font-bold hover:text-green-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 rounded">
+                                Order Now <span class="sr-only">for Packaging</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- Category 6: Design Services -->
+                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
+                        <div class="p-8 relative z-10">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
+                                <i data-lucide="pen-tool" class="w-7 h-7 text-indigo-600"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Design</h3>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
+                                In-house design team for logo creation, brand identity, and tracing.
+                            </p>
+                            <a href="#contact" class="inline-flex items-center text-indigo-600 font-bold hover:text-indigo-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 rounded">
+                                Order Now <span class="sr-only">for Design</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- Category 7: Print & Decor -->
+                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                        <div class="absolute inset-0 bg-gradient-to-br from-cyan-600/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
+                        <div class="p-8 relative z-10">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-100 to-cyan-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
+                                <i data-lucide="image" class="w-7 h-7 text-cyan-600"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Print & Decor</h3>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
+                                Acrylic photo cutouts, plaques, posters, fridge magnets, and LED frames.
+                            </p>
+                            <a href="#contact" class="inline-flex items-center text-cyan-600 font-bold hover:text-cyan-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600 rounded">
+                                Order Now <span class="sr-only">for Print & Decor</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- Category 8: Photo Frames -->
+                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                        <div class="absolute inset-0 bg-gradient-to-br from-rose-600/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
+                        <div class="p-8 relative z-10">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-100 to-rose-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
+                                <i data-lucide="layout" class="w-7 h-7 text-rose-600"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Photo Frames</h3>
+                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
+                                Heritage collections, canvas frames, collage frames, and custom designs.
+                            </p>
+                            <a href="#contact" class="inline-flex items-center text-rose-600 font-bold hover:text-rose-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 rounded">
+                                Order Now <span class="sr-only">for Photo Frames</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us Section -->
+        <section id="about" class="py-24 bg-white" aria-labelledby="about-heading">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                    <div class="relative lg:h-[650px] mb-16 lg:mb-0 hidden lg:block float-anim reveal">
+                        <!-- Unique Asymmetrical Image Frame -->
+                        <div class="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[40px] transform rotate-3 scale-105 opacity-20" aria-hidden="true"></div>
+                        <img src="https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&q=80&w=1000" alt="Vibrant printed color palettes arranged creatively" class="absolute inset-0 w-full h-full object-cover rounded-[40px] shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-700" />
+                        
+                        <!-- Floating stat badge -->
+                        <div class="absolute -bottom-8 -right-8 glass-panel p-6 rounded-2xl shadow-xl flex items-center space-x-4" aria-label="10 plus years of excellence">
+                            <div class="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl" aria-hidden="true">10+</div>
                             <div>
-                                <h4 class="font-bold text-gray-900">100% Satisfaction</h4>
-                                <p class="text-sm text-gray-500 mt-1">We aren't happy until you are.</p>
+                                <p class="font-bold text-gray-900 text-lg">Years</p>
+                                <p class="text-sm text-gray-500">of Excellence</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-12">
-                        <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-white bg-gray-900 hover:bg-blue-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
-                            Start Your Project
-                        </a>
+                    <div class="reveal">
+                        <span class="text-sm font-bold tracking-widest text-purple-600 uppercase block mb-3">Why Printos?</span>
+                        <h2 id="about-heading" class="text-4xl font-extrabold text-gray-900 sm:text-5xl mb-6 leading-tight">
+                            Precision in every pixel, <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">quality in every drop.</span>
+                        </h2>
+                        <p class="text-lg text-gray-600 mb-10 leading-relaxed font-light">
+                            Your printed materials are a direct reflection of your brand. We fuse state-of-the-art technology with artisanal attention to detail to ensure your project stands out.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                                <div class="bg-blue-100 text-blue-600 p-2 rounded-lg" aria-hidden="true"><i data-lucide="award" class="w-6 h-6"></i></div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900">Premium Quality</h3>
+                                    <p class="text-sm text-gray-500 mt-1">Top-tier materials & inks.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                                <div class="bg-purple-100 text-purple-600 p-2 rounded-lg" aria-hidden="true"><i data-lucide="clock" class="w-6 h-6"></i></div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900">Fast Turnaround</h3>
+                                    <p class="text-sm text-gray-500 mt-1">Deadlines met, guaranteed.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                                <div class="bg-green-100 text-green-600 p-2 rounded-lg" aria-hidden="true"><i data-lucide="leaf" class="w-6 h-6"></i></div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900">Eco-Friendly</h3>
+                                    <p class="text-sm text-gray-500 mt-1">Sustainable print options.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                                <div class="bg-pink-100 text-pink-600 p-2 rounded-lg" aria-hidden="true"><i data-lucide="heart-handshake" class="w-6 h-6"></i></div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900">100% Satisfaction</h3>
+                                    <p class="text-sm text-gray-500 mt-1">We aren't happy until you are.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-12">
+                            <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-white bg-gray-900 hover:bg-blue-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2">
+                                Start Your Project
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Call to Action, Contact & Map -->
-    <section id="contact" class="relative py-24 bg-gray-900 text-white overflow-hidden">
-        <!-- Abstract glowing shapes for dark background -->
-        <div class="absolute top-0 right-0 w-96 h-96 bg-purple-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30"></div>
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30"></div>
+        <!-- Call to Action, Contact & Map -->
+        <section id="contact" class="relative py-24 bg-gray-900 text-white overflow-hidden" aria-labelledby="contact-heading">
+            <!-- Abstract glowing shapes for dark background -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-purple-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30" aria-hidden="true"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30" aria-hidden="true"></div>
 
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl sm:text-5xl font-extrabold mb-4">Reach out to Us</h2>
-                <p class="text-xl text-gray-400 font-light">Get a custom quote or drop by our office.</p>
-            </div>
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 reveal">
+                    <h2 id="contact-heading" class="text-4xl sm:text-5xl font-extrabold mb-4">Reach out to Us</h2>
+                    <p class="text-xl text-gray-400 font-light">Get a custom quote or drop by our office.</p>
+                </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-                
-                <!-- Contact Info & Map (Takes up 5 columns) -->
-                <div class="lg:col-span-5 flex flex-col space-y-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 reveal">
                     
-                    <!-- Info Card -->
-                    <div class="glass-dark p-8 rounded-3xl border border-gray-700 hover:border-gray-600 transition-colors">
-                        <h3 class="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Contact Details</h3>
+                    <!-- Contact Info & Map (Takes up 5 columns) -->
+                    <div class="lg:col-span-5 flex flex-col space-y-8">
                         
-                        <div class="space-y-6">
-                            <div class="flex items-start">
-                                <div class="bg-blue-500/20 p-3 rounded-xl mr-4 text-blue-400"><i data-lucide="phone" class="w-6 h-6"></i></div>
-                                <div>
-                                    <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Phone</p>
-                                    <p class="text-lg font-medium text-white">081398 10721</p>
+                        <!-- Info Card -->
+                        <div class="glass-dark p-8 rounded-3xl border border-gray-700 hover:border-gray-600 transition-colors">
+                            <h3 class="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Contact Details</h3>
+                            
+                            <address class="space-y-6 not-italic">
+                                <div class="flex items-start">
+                                    <div class="bg-blue-500/20 p-3 rounded-xl mr-4 text-blue-400" aria-hidden="true"><i data-lucide="phone" class="w-6 h-6"></i></div>
+                                    <div>
+                                        <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Phone</p>
+                                        <p class="text-lg font-medium text-white"><a href="tel:08139810721" class="hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded">081398 10721</a></p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="bg-purple-500/20 p-3 rounded-xl mr-4 text-purple-400"><i data-lucide="mail" class="w-6 h-6"></i></div>
-                                <div>
-                                    <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Email</p>
-                                    <p class="text-lg font-medium text-white">hello@printos.com</p>
+                                <div class="flex items-start">
+                                    <div class="bg-purple-500/20 p-3 rounded-xl mr-4 text-purple-400" aria-hidden="true"><i data-lucide="mail" class="w-6 h-6"></i></div>
+                                    <div>
+                                        <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Email</p>
+                                        <p class="text-lg font-medium text-white"><a href="mailto:hello@printos.com" class="hover:text-purple-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded">hello@printos.com</a></p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="bg-pink-500/20 p-3 rounded-xl mr-4 text-pink-400"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
-                                <div>
-                                    <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Address</p>
-                                    <p class="text-base font-medium text-white leading-relaxed">
-                                        AKG Center, General Hospital Rd, near INDICOM SYSTEMS, Jai Vihar, Kunnukuzhy,<br/>
-                                        Thiruvananthapuram, Kerala 695035
-                                    </p>
+                                <div class="flex items-start">
+                                    <div class="bg-pink-500/20 p-3 rounded-xl mr-4 text-pink-400" aria-hidden="true"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
+                                    <div>
+                                        <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Address</p>
+                                        <p class="text-base font-medium text-white leading-relaxed">
+                                            AKG Center, General Hospital Rd, near INDICOM SYSTEMS, Jai Vihar, Kunnukuzhy,<br/>
+                                            Thiruvananthapuram, Kerala 695035
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
+                            </address>
+                        </div>
+
+                        <!-- Map Card -->
+                        <div class="glass-dark p-2 rounded-3xl border border-gray-700 overflow-hidden h-64 shadow-xl">
+                            <iframe 
+                                src="https://maps.google.com/maps?q=8.501022254586845,76.9467338232378+(Printos)&hl=en&z=15&output=embed" 
+                                width="100%" 
+                                height="100%" 
+                                style="border:0; border-radius: 1.25rem;" 
+                                allowfullscreen="" 
+                                title="Google Maps Location of Printos"
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
                         </div>
                     </div>
 
-                    <!-- Map Card -->
-                    <div class="glass-dark p-2 rounded-3xl border border-gray-700 overflow-hidden h-64 shadow-xl">
-                        <iframe 
-                            src="https://maps.google.com/maps?q=8.501022254586845,76.9467338232378+(Printos)&hl=en&z=15&output=embed" 
-                            width="100%" 
-                            height="100%" 
-                            style="border:0; border-radius: 1.25rem;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                    </div>
-                </div>
-
-                <!-- Contact Form (Takes up 7 columns) -->
-                <div class="lg:col-span-7">
-                    <div class="bg-white p-8 sm:p-12 rounded-3xl shadow-2xl text-gray-900 relative">
-                        <!-- Decorative top edge -->
-                        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-t-3xl"></div>
-                        
-                        <h3 class="text-2xl font-bold mb-8">Request a Free Quote</h3>
-                        <form action="#" method="POST" class="space-y-6">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div>
-                                    <label for="name" class="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
-                                    <input type="text" name="name" id="name" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3.5 transition-colors" placeholder="John Doe" />
+                    <!-- Contact Form (Takes up 7 columns) -->
+                    <div class="lg:col-span-7">
+                        <div class="bg-white p-8 sm:p-12 rounded-3xl shadow-2xl text-gray-900 relative">
+                            <!-- Decorative top edge -->
+                            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-t-3xl" aria-hidden="true"></div>
+                            
+                            <h3 class="text-2xl font-bold mb-8">Request a Free Quote</h3>
+                            <form action="#" method="POST" class="space-y-6" onsubmit="event.preventDefault(); alert('Form submitted! We will get back to you soon.');">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div>
+                                        <label for="name" class="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
+                                        <input type="text" name="name" id="name" required class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 block p-3.5 transition-colors" placeholder="John Doe" />
+                                    </div>
+                                    <div>
+                                        <label for="email" class="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+                                        <input type="email" name="email" id="email" required class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 block p-3.5 transition-colors" placeholder="john@example.com" />
+                                    </div>
                                 </div>
+                                
                                 <div>
-                                    <label for="email" class="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
-                                    <input type="email" name="email" id="email" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3.5 transition-colors" placeholder="john@example.com" />
+                                    <label for="category" class="block text-sm font-bold text-gray-700 mb-2">Select Category</label>
+                                    <select id="category" name="category" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 block p-3.5 transition-colors cursor-pointer">
+                                        <option>Apparel</option>
+                                        <option>Paper & Print</option>
+                                        <option>Promo Gifts</option>
+                                        <option>Large Format</option>
+                                        <option>Packaging</option>
+                                        <option>Print & Decor</option>
+                                        <option>Photo Frames</option>
+                                        <option>Design Services</option>
+                                    </select>
                                 </div>
-                            </div>
-                            
-                            <div>
-                                <label for="category" class="block text-sm font-bold text-gray-700 mb-2">Select Category</label>
-                                <select id="category" name="category" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3.5 transition-colors cursor-pointer">
-                                    <option>Apparel</option>
-                                    <option>Paper & Print</option>
-                                    <option>Promo Gifts</option>
-                                    <option>Large Format</option>
-                                    <option>Packaging</option>
-                                    <option>Design Services</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label for="message" class="block text-sm font-bold text-gray-700 mb-2">Project Details</label>
-                                <textarea id="message" name="message" rows="4" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3.5 transition-colors" placeholder="Tell us about quantities, colors, timeline..."></textarea>
-                            </div>
-                            
-                            <button type="button" onclick="alert('Form submitted! We will get back to you soon.')" class="w-full inline-flex justify-center items-center px-8 py-4 rounded-xl text-base font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-lg hover:shadow-purple-500/40 transition-all transform hover:-translate-y-0.5">
-                                Send Message <i data-lucide="send" class="ml-2 w-5 h-5"></i>
-                            </button>
-                        </form>
+                                
+                                <div>
+                                    <label for="message" class="block text-sm font-bold text-gray-700 mb-2">Project Details</label>
+                                    <textarea id="message" name="message" rows="4" required class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 block p-3.5 transition-colors" placeholder="Tell us about quantities, colors, timeline..."></textarea>
+                                </div>
+                                
+                                <button type="submit" class="w-full inline-flex justify-center items-center px-8 py-4 rounded-xl text-base font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-lg hover:shadow-purple-500/40 transition-all transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2">
+                                    Send Message <i data-lucide="send" class="ml-2 w-5 h-5" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="bg-black text-gray-400 py-16 border-t border-gray-800 relative overflow-hidden">
-        <!-- Abstract shape -->
-        <div class="absolute bottom-[-100px] left-[-100px] w-64 h-64 bg-gray-900 rounded-full blur-[80px]"></div>
+    <footer class="bg-black text-gray-400 pt-8 pb-16 border-t border-gray-800 relative overflow-hidden">
         
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10">
+        <!-- UNIQUE ANIMATION: Scrolling Marquee Banner -->
+        <div class="marquee-container bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white py-4 mb-16 transform -skew-y-2 shadow-2xl z-20 border-y-4 border-gray-900 overflow-hidden relative" aria-hidden="true">
+            <div class="marquee-content font-extrabold text-xl md:text-2xl tracking-[0.2em] uppercase whitespace-nowrap">
+                &nbsp; PREMIUM QUALITY • FAST TURNAROUND • CUSTOM DESIGNS • 100% SATISFACTION • PRINTING REIMAGINED • 
+                PREMIUM QUALITY • FAST TURNAROUND • CUSTOM DESIGNS • 100% SATISFACTION • PRINTING REIMAGINED • 
+                PREMIUM QUALITY • FAST TURNAROUND • CUSTOM DESIGNS • 100% SATISFACTION • PRINTING REIMAGINED • 
+            </div>
+        </div>
+
+        <!-- Abstract shape -->
+        <div class="absolute bottom-[-100px] left-[-100px] w-64 h-64 bg-gray-900 rounded-full blur-[80px]" aria-hidden="true"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10 reveal">
             <div class="md:col-span-5">
-                <div class="flex items-center space-x-2 mb-6">
-                    <img src="Printos-01.svg" alt="Printos Logo" class="h-10 w-auto grayscale brightness-200" onerror="this.src='https://via.placeholder.com/150x50?text=Printos+Logo'">
+                <div class="flex items-center space-x-3 mb-6">
+                    <!-- Normal Sized Footer Logo + Text -->
+                    <img src="Printos-01.svg" alt="" class="h-10 md:h-12 w-auto grayscale brightness-200 hover:grayscale-0 hover:brightness-100 transition-all duration-500" onerror="this.src='https://via.placeholder.com/48x48?text=P'">
+                    <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-white">Printos</span>
                 </div>
                 <p class="text-sm leading-relaxed max-w-sm font-light">
                     Printos is your trusted partner for premium custom printing solutions. Delivering precision, quality, and creativity to businesses and individuals alike.
                 </p>
-                <!-- Social links (Placeholders) -->
+                <!-- Social links -->
                 <div class="flex space-x-4 mt-6">
-                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-colors"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-400 hover:text-white transition-colors"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600" aria-label="Visit our Facebook page"><i data-lucide="facebook" class="w-4 h-4" aria-hidden="true"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-pink-600 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600" aria-label="Visit our Instagram page"><i data-lucide="instagram" class="w-4 h-4" aria-hidden="true"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-400 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400" aria-label="Visit our Twitter page"><i data-lucide="twitter" class="w-4 h-4" aria-hidden="true"></i></a>
                 </div>
             </div>
             
             <div class="md:col-span-3">
                 <h3 class="text-white font-bold mb-6 text-sm tracking-widest uppercase">Quick Links</h3>
                 <ul class="space-y-3 text-sm font-light">
-                    <li><a href="#home" class="hover:text-blue-400 transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2"></i>Home</a></li>
-                    <li><a href="#services" class="hover:text-blue-400 transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2"></i>Categories</a></li>
-                    <li><a href="#about" class="hover:text-blue-400 transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2"></i>About Us</a></li>
-                    <li><a href="#contact" class="hover:text-blue-400 transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2"></i>Contact</a></li>
+                    <li><a href="#home" class="hover:text-blue-400 hover:translate-x-2 transition-all duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded"><i data-lucide="chevron-right" class="w-3 h-3 mr-2" aria-hidden="true"></i>Home</a></li>
+                    <li><a href="#services" class="hover:text-blue-400 hover:translate-x-2 transition-all duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded"><i data-lucide="chevron-right" class="w-3 h-3 mr-2" aria-hidden="true"></i>Categories</a></li>
+                    <li><a href="#about" class="hover:text-blue-400 hover:translate-x-2 transition-all duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded"><i data-lucide="chevron-right" class="w-3 h-3 mr-2" aria-hidden="true"></i>About Us</a></li>
+                    <li><a href="#contact" class="hover:text-blue-400 hover:translate-x-2 transition-all duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded"><i data-lucide="chevron-right" class="w-3 h-3 mr-2" aria-hidden="true"></i>Contact</a></li>
                 </ul>
             </div>
             
             <div class="md:col-span-4">
                 <h3 class="text-white font-bold mb-6 text-sm tracking-widest uppercase">Newsletter</h3>
                 <p class="text-sm font-light mb-4">Subscribe to get special offers and industry print news.</p>
-                <form class="flex">
-                    <input type="email" placeholder="Email address" class="bg-gray-900 border border-gray-800 text-white text-sm rounded-l-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 outline-none">
-                    <button type="button" class="bg-blue-600 text-white px-4 rounded-r-xl hover:bg-blue-700 transition-colors"><i data-lucide="send" class="w-4 h-4"></i></button>
+                <form class="flex group" role="search" aria-label="Newsletter Subscribe">
+                    <label for="newsletter-email" class="sr-only">Email address</label>
+                    <input type="email" id="newsletter-email" placeholder="Email address" required class="bg-gray-900 border border-gray-800 text-white text-sm rounded-l-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 outline-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                    <button type="submit" class="bg-blue-600 text-white px-5 rounded-r-xl group-hover:bg-blue-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" aria-label="Subscribe to newsletter"><i data-lucide="send" class="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" aria-hidden="true"></i></button>
                 </form>
             </div>
         </div>
         
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 pt-8 border-t border-gray-800 text-xs text-center md:text-left flex flex-col md:flex-row justify-between items-center relative z-10 font-light tracking-wide">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 pt-8 border-t border-gray-800 text-xs text-center md:text-left flex flex-col md:flex-row justify-between items-center relative z-10 font-light tracking-wide reveal">
             <p>&copy; 2026 Printos. All rights reserved.</p>
             <div class="flex space-x-4 mt-4 md:mt-0">
-                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                <a href="#" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded">Terms of Service</a>
             </div>
         </div>
     </footer>
@@ -654,9 +778,14 @@
         const mobileLinks = document.querySelectorAll('.mobile-link');
 
         function toggleMenu() {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            
             mobileMenu.classList.toggle('hidden');
             menuIcon.classList.toggle('hidden');
             closeIcon.classList.toggle('hidden');
+            
+            // Accessibility state update
+            mobileBtn.setAttribute('aria-expanded', !isHidden);
         }
 
         if(mobileBtn) {
@@ -668,6 +797,7 @@
                 mobileMenu.classList.add('hidden');
                 menuIcon.classList.remove('hidden');
                 closeIcon.classList.add('hidden');
+                mobileBtn.setAttribute('aria-expanded', 'false');
             });
         });
 
@@ -689,11 +819,14 @@
             });
         }
 
-        // Hero Image Slider Logic (Fading + Zoom)
+        // Hero Image Slider Logic (Fading + Zoom) with preference check
         const slides = document.querySelectorAll('.hero-slide');
         let currentSlide = 0;
+        
+        // Respect reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        if (slides.length > 1) {
+        if (slides.length > 1 && !prefersReducedMotion) {
             setInterval(() => {
                 slides[currentSlide].classList.remove('opacity-100');
                 slides[currentSlide].classList.add('opacity-0');
@@ -709,11 +842,36 @@
         const nav = document.querySelector('nav');
         window.addEventListener('scroll', () => {
             if(window.scrollY > 20) {
-                nav.classList.add('bg-white/90', 'backdrop-blur-md');
+                nav.classList.add('bg-white/95', 'backdrop-blur-md');
+                nav.classList.remove('bg-white/50');
             } else {
-                nav.classList.remove('bg-white/90', 'backdrop-blur-md');
+                nav.classList.remove('bg-white/95', 'backdrop-blur-md');
             }
         });
+
+        // Scroll Reveal Animation Logic
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Run once per element
+                }
+            });
+        }, observerOptions);
+
+        // Target elements for reveal animation (disabled if reduced motion requested)
+        if (!prefersReducedMotion) {
+            document.querySelectorAll('.reveal').forEach((el) => {
+                observer.observe(el);
+            });
+        }
+
     </script>
 </body>
 </html>
