@@ -135,14 +135,14 @@
         Skip to main content
     </a>
 
-    <!-- Navigation (Sticky & Glassmorphism) -->
-    <nav class="fixed w-full z-50 transition-all duration-300 glass-panel shadow-sm pb-0" aria-label="Main Navigation">
+    <!-- Header (Sticky & Glassmorphism) -->
+    <header class="fixed w-full z-50 transition-all duration-300 glass-panel shadow-sm pb-0" id="main-header">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Top Main Header Row -->
             <div class="flex justify-between py-4 items-center">
                 
                 <!-- Normal Sized Logo + Business Name -->
-                <a href="#" class="flex items-center space-x-3 group shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-4" aria-label="Printos Home">
+                <a href="/" class="flex items-center space-x-3 group shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-4" aria-label="Printos Home">
                     <!-- alt is empty because the text "Printos" is adjacent -->
                     <img src="Printos-01.svg" alt="" class="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105" onerror="this.src='https://via.placeholder.com/48x48?text=P'">
                     <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 group-hover:text-blue-600 transition-colors">Printos</span>
@@ -152,16 +152,20 @@
                 <div class="hidden lg:flex flex-1 items-center justify-end px-6 space-x-8">
                     
                     <!-- Search Bar -->
-                    <form class="relative group" id="desktop-search-container" role="search">
+                    <form class="relative group" id="desktop-search-container" role="search" action="/search" method="GET" onsubmit="event.preventDefault();">
                         <label for="desktop-search-input" class="sr-only">Search products</label>
                         <div class="flex items-center bg-gray-100/80 backdrop-blur-sm border border-gray-200 rounded-full px-4 py-2 w-64 xl:w-80 transition-all duration-300 focus-within:ring-2 focus-within:ring-purple-500 focus-within:bg-white focus-within:shadow-lg">
                             <i data-lucide="search" class="w-5 h-5 text-gray-500" aria-hidden="true"></i>
                             <input type="search" id="desktop-search-input" class="bg-transparent border-none focus:outline-none ml-2 text-sm w-full" placeholder="Search products...">
                         </div>
+                        <button type="submit" class="sr-only">Submit Search</button>
                     </form>
 
-                    <a href="#home" class="text-gray-800 font-bold hover:text-blue-600 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded">Home</a>
-                    <a href="#about" class="text-gray-800 font-bold hover:text-blue-600 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded">About Us</a>
+                    <!-- Primary Navigation Links -->
+                    <nav aria-label="Primary Navigation" class="flex space-x-8">
+                        <a href="#home" class="text-gray-800 font-bold hover:text-blue-600 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded">Home</a>
+                        <a href="#about" class="text-gray-800 font-bold hover:text-blue-600 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded">About Us</a>
+                    </nav>
                 </div>
 
                 <!-- CTA Button & Mobile Toggle -->
@@ -172,7 +176,7 @@
                     
                     <!-- Mobile Menu Button -->
                     <div class="lg:hidden flex items-center">
-                        <button id="mobile-menu-btn" class="text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 p-2 hover:bg-gray-200 rounded-full transition-colors" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+                        <button type="button" id="mobile-menu-btn" class="text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 p-2 hover:bg-gray-200 rounded-full transition-colors" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
                             <i data-lucide="menu" id="menu-icon" class="w-7 h-7" aria-hidden="true"></i>
                             <i data-lucide="x" id="close-icon" class="w-7 h-7 hidden" aria-hidden="true"></i>
                         </button>
@@ -181,131 +185,131 @@
             </div>
 
             <!-- Sub-Navigation Categories Strip (Desktop) -->
-            <div class="hidden lg:flex border-t border-gray-200/60 pt-3 pb-3 justify-center space-x-6 xl:space-x-10 items-center w-full relative" aria-label="Product Categories">
+            <nav class="hidden lg:flex border-t border-gray-200/60 pt-3 pb-3 justify-center space-x-6 xl:space-x-10 items-center w-full relative" aria-label="Product Categories">
                 
                 <!-- Category 1 -->
                 <div class="group relative">
-                    <button class="text-sm font-bold text-gray-700 hover:text-blue-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-blue-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
                         Apparel <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
                     </button>
                     <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
                         <ul class="space-y-1 text-sm text-gray-600">
-                            <li><a href="#" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Custom T-Shirts</a></li>
-                            <li><a href="#" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Hoodies & Jackets</a></li>
-                            <li><a href="#" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Polo Shirts</a></li>
+                            <li><a href="/category/custom-tshirts" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Custom T-Shirts</a></li>
+                            <li><a href="/category/hoodies" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Hoodies & Jackets</a></li>
+                            <li><a href="/category/polos" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Polo Shirts</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Category 2 -->
                 <div class="group relative">
-                    <button class="text-sm font-bold text-gray-700 hover:text-purple-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-purple-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
                         Paper & Print <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
                     </button>
                     <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
                         <ul class="space-y-1 text-sm text-gray-600">
-                            <li><a href="#" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Business Cards</a></li>
-                            <li><a href="#" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Flyers & Brochures</a></li>
-                            <li><a href="#" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Letterheads</a></li>
+                            <li><a href="/category/business-cards" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Business Cards</a></li>
+                            <li><a href="/category/flyers" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Flyers & Brochures</a></li>
+                            <li><a href="/category/letterheads" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Letterheads</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Category 3 -->
                 <div class="group relative">
-                    <button class="text-sm font-bold text-gray-700 hover:text-pink-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-pink-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
                         Promo Gifts <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
                     </button>
                     <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
                         <ul class="space-y-1 text-sm text-gray-600">
-                            <li><a href="#" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Ceramic Mugs</a></li>
-                            <li><a href="#" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Water Bottles</a></li>
-                            <li><a href="#" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Keychains & Totes</a></li>
+                            <li><a href="/category/mugs" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Ceramic Mugs</a></li>
+                            <li><a href="/category/bottles" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Water Bottles</a></li>
+                            <li><a href="/category/keychains" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Keychains & Totes</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Category 4 -->
                 <div class="group relative">
-                    <button class="text-sm font-bold text-gray-700 hover:text-orange-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-orange-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
                         Large Format <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
                     </button>
                     <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
                         <ul class="space-y-1 text-sm text-gray-600">
-                            <li><a href="#" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Vinyl Banners</a></li>
-                            <li><a href="#" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Posters</a></li>
-                            <li><a href="#" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Standees / Rollups</a></li>
+                            <li><a href="/category/banners" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Vinyl Banners</a></li>
+                            <li><a href="/category/posters" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Posters</a></li>
+                            <li><a href="/category/standees" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Standees / Rollups</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Category 5 -->
                 <div class="group relative">
-                    <button class="text-sm font-bold text-gray-700 hover:text-green-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-green-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
                         Packaging <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
                     </button>
                     <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
                         <ul class="space-y-1 text-sm text-gray-600">
-                            <li><a href="#" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Custom Boxes</a></li>
-                            <li><a href="#" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Mailers</a></li>
-                            <li><a href="#" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Stickers & Labels</a></li>
+                            <li><a href="/category/boxes" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Custom Boxes</a></li>
+                            <li><a href="/category/mailers" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Mailers</a></li>
+                            <li><a href="/category/stickers" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Stickers & Labels</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Category 6 -->
                 <div class="group relative">
-                    <button class="text-sm font-bold text-gray-700 hover:text-cyan-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-cyan-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
                         Print & Decor <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
                     </button>
                     <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-[450px] bg-white shadow-2xl rounded-3xl border border-gray-100 p-5 z-50">
                         <div class="grid grid-cols-2 gap-x-4 gap-y-1">
-                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Acrylic Photo cutouts</a>
-                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Photo Prints</a>
-                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Photo Plaque</a>
-                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Posters</a>
-                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Fridge Magnets</a>
-                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Frameless Photo Frames</a>
-                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">LED Photo Frames</a>
-                            <a href="#" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Desktop Frames with Messages</a>
+                            <a href="/category/acrylic-cutouts" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Acrylic Photo cutouts</a>
+                            <a href="/category/photo-prints" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Photo Prints</a>
+                            <a href="/category/photo-plaque" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Photo Plaque</a>
+                            <a href="/category/posters" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Posters</a>
+                            <a href="/category/magnets" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Fridge Magnets</a>
+                            <a href="/category/frameless-frames" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Frameless Photo Frames</a>
+                            <a href="/category/led-frames" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">LED Photo Frames</a>
+                            <a href="/category/desktop-frames" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Desktop Frames with Messages</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Category 7 -->
                 <div class="group relative">
-                    <button class="text-sm font-bold text-gray-700 hover:text-rose-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-rose-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
                         Photo Frames <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
                     </button>
                     <div class="mega-menu absolute top-full right-0 w-[550px] bg-white shadow-2xl rounded-3xl border border-gray-100 p-6 z-50">
                         <div class="grid grid-cols-2 gap-x-6 gap-y-2">
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Desktop Collage Foldable Frames</a>
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Classic Photo Frames</a>
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Eco Leatherette Collection</a>
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Wall Photo Frames</a>
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Heritage Collection</a>
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Collage Photo Frames</a>
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Vintage Collection</a>
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Matte Finish Photo Frames</a>
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Premium Photo Frames</a>
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Canvas Photo Frames</a>
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Custom Premium Photo Frames</a>
-                            <a href="#" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Leatherette Acrylic Frames</a>
+                            <a href="/category/desktop-collage" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Desktop Collage Foldable Frames</a>
+                            <a href="/category/classic-frames" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Classic Photo Frames</a>
+                            <a href="/category/eco-leatherette" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Eco Leatherette Collection</a>
+                            <a href="/category/wall-frames" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Wall Photo Frames</a>
+                            <a href="/category/heritage" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Heritage Collection</a>
+                            <a href="/category/collage" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Collage Photo Frames</a>
+                            <a href="/category/vintage" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Vintage Collection</a>
+                            <a href="/category/matte-finish" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Matte Finish Photo Frames</a>
+                            <a href="/category/premium" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Premium Photo Frames</a>
+                            <a href="/category/canvas" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Canvas Photo Frames</a>
+                            <a href="/category/custom-premium" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Custom Premium Photo Frames</a>
+                            <a href="/category/leatherette-acrylic" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Leatherette Acrylic Frames</a>
                         </div>
                     </div>
                 </div>
 
-            </div>
+            </nav>
         </div>
 
         <!-- Mobile Nav -->
-        <div id="mobile-menu" class="hidden lg:hidden glass-panel border-t border-gray-200 px-4 pt-4 pb-6 space-y-2 shadow-2xl absolute w-full left-0 origin-top" aria-hidden="true">
+        <nav id="mobile-menu" class="hidden lg:hidden glass-panel border-t border-gray-200 px-4 pt-4 pb-6 space-y-2 shadow-2xl absolute w-full left-0 origin-top" aria-label="Mobile Navigation">
             <a href="#home" class="mobile-link block px-4 py-3 rounded-xl text-lg font-bold text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Home</a>
             <a href="#services" class="mobile-link block px-4 py-3 rounded-xl text-lg font-bold text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Categories</a>
             <a href="#about" class="mobile-link block px-4 py-3 rounded-xl text-lg font-bold text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">About Us</a>
             <a href="#contact" class="mobile-link block px-4 py-4 mt-6 text-center rounded-xl text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2">Get a Quote</a>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     <!-- Main Content Wrapper -->
     <main id="main-content">
@@ -381,7 +385,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     
                     <!-- Category 1: Apparel -->
-                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
                         <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
                         <div class="p-8 relative z-10">
                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
@@ -395,10 +399,10 @@
                                 Order Now <span class="sr-only">for Apparel</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
                             </a>
                         </div>
-                    </article>
+                    </div>
 
                     <!-- Category 2: Paper & Print -->
-                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
                         <div class="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
                         <div class="p-8 relative z-10">
                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
@@ -412,10 +416,10 @@
                                 Order Now <span class="sr-only">for Paper & Print</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
                             </a>
                         </div>
-                    </article>
+                    </div>
 
                     <!-- Category 3: Promo Gifts -->
-                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
                         <div class="absolute inset-0 bg-gradient-to-br from-pink-600/5 to-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
                         <div class="p-8 relative z-10">
                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-100 to-pink-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
@@ -429,10 +433,10 @@
                                 Order Now <span class="sr-only">for Promo Gifts</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
                             </a>
                         </div>
-                    </article>
+                    </div>
 
                     <!-- Category 4: Large Format -->
-                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
                         <div class="absolute inset-0 bg-gradient-to-br from-orange-600/5 to-yellow-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
                         <div class="p-8 relative z-10">
                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-100 to-orange-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
@@ -446,10 +450,10 @@
                                 Order Now <span class="sr-only">for Large Format</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
                             </a>
                         </div>
-                    </article>
+                    </div>
 
                     <!-- Category 5: Packaging -->
-                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
                         <div class="absolute inset-0 bg-gradient-to-br from-green-600/5 to-teal-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
                         <div class="p-8 relative z-10">
                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
@@ -463,10 +467,10 @@
                                 Order Now <span class="sr-only">for Packaging</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
                             </a>
                         </div>
-                    </article>
+                    </div>
 
                     <!-- Category 6: Design Services -->
-                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
                         <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
                         <div class="p-8 relative z-10">
                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
@@ -480,10 +484,10 @@
                                 Order Now <span class="sr-only">for Design</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
                             </a>
                         </div>
-                    </article>
+                    </div>
 
                     <!-- Category 7: Print & Decor -->
-                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
                         <div class="absolute inset-0 bg-gradient-to-br from-cyan-600/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
                         <div class="p-8 relative z-10">
                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-100 to-cyan-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
@@ -497,10 +501,10 @@
                                 Order Now <span class="sr-only">for Print & Decor</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
                             </a>
                         </div>
-                    </article>
+                    </div>
 
                     <!-- Category 8: Photo Frames -->
-                    <article class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
+                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
                         <div class="absolute inset-0 bg-gradient-to-br from-rose-600/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
                         <div class="p-8 relative z-10">
                             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-100 to-rose-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
@@ -514,7 +518,7 @@
                                 Order Now <span class="sr-only">for Photo Frames</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
                             </a>
                         </div>
-                    </article>
+                    </div>
 
                 </div>
             </div>
@@ -615,14 +619,14 @@
                                     <div class="bg-blue-500/20 p-3 rounded-xl mr-4 text-blue-400" aria-hidden="true"><i data-lucide="phone" class="w-6 h-6"></i></div>
                                     <div>
                                         <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Phone</p>
-                                        <p class="text-lg font-medium text-white"><a href="tel:08139810721" class="hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded">081398 10721</a></p>
+                                        <p class="text-lg font-medium text-white"><a href="tel:08139810721" class="hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded">081398 10721 <span class="sr-only">(opens phone application)</span></a></p>
                                     </div>
                                 </div>
                                 <div class="flex items-start">
                                     <div class="bg-purple-500/20 p-3 rounded-xl mr-4 text-purple-400" aria-hidden="true"><i data-lucide="mail" class="w-6 h-6"></i></div>
                                     <div>
                                         <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Email</p>
-                                        <p class="text-lg font-medium text-white"><a href="mailto:hello@printos.com" class="hover:text-purple-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded">hello@printos.com</a></p>
+                                        <p class="text-lg font-medium text-white"><a href="mailto:hello@printos.com" class="hover:text-purple-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded">hello@printos.com <span class="sr-only">(opens email application)</span></a></p>
                                     </div>
                                 </div>
                                 <div class="flex items-start">
@@ -703,7 +707,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black text-gray-400 pt-8 pb-16 border-t border-gray-800 relative overflow-hidden">
+    <footer class="bg-black text-gray-400 pt-8 pb-16 border-t border-gray-800 relative overflow-hidden" aria-label="Site Footer">
         
         <!-- UNIQUE ANIMATION: Scrolling Marquee Banner -->
         <div class="marquee-container bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white py-4 mb-16 transform -skew-y-2 shadow-2xl z-20 border-y-4 border-gray-900 overflow-hidden relative" aria-hidden="true">
@@ -729,9 +733,9 @@
                 </p>
                 <!-- Social links -->
                 <div class="flex space-x-4 mt-6">
-                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600" aria-label="Visit our Facebook page"><i data-lucide="facebook" class="w-4 h-4" aria-hidden="true"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-pink-600 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600" aria-label="Visit our Instagram page"><i data-lucide="instagram" class="w-4 h-4" aria-hidden="true"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-400 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400" aria-label="Visit our Twitter page"><i data-lucide="twitter" class="w-4 h-4" aria-hidden="true"></i></a>
+                    <a href="https://facebook.com/printos" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600" aria-label="Visit our Facebook page"><i data-lucide="facebook" class="w-4 h-4" aria-hidden="true"></i></a>
+                    <a href="https://instagram.com/printos" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-pink-600 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600" aria-label="Visit our Instagram page"><i data-lucide="instagram" class="w-4 h-4" aria-hidden="true"></i></a>
+                    <a href="https://twitter.com/printos" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-400 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400" aria-label="Visit our Twitter page"><i data-lucide="twitter" class="w-4 h-4" aria-hidden="true"></i></a>
                 </div>
             </div>
             
@@ -748,7 +752,7 @@
             <div class="md:col-span-4">
                 <h3 class="text-white font-bold mb-6 text-sm tracking-widest uppercase">Newsletter</h3>
                 <p class="text-sm font-light mb-4">Subscribe to get special offers and industry print news.</p>
-                <form class="flex group" role="search" aria-label="Newsletter Subscribe">
+                <form class="flex group" role="search" aria-label="Newsletter Subscribe" action="#" method="POST" onsubmit="event.preventDefault();">
                     <label for="newsletter-email" class="sr-only">Email address</label>
                     <input type="email" id="newsletter-email" placeholder="Email address" required class="bg-gray-900 border border-gray-800 text-white text-sm rounded-l-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 outline-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                     <button type="submit" class="bg-blue-600 text-white px-5 rounded-r-xl group-hover:bg-blue-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" aria-label="Subscribe to newsletter"><i data-lucide="send" class="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" aria-hidden="true"></i></button>
@@ -759,8 +763,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 pt-8 border-t border-gray-800 text-xs text-center md:text-left flex flex-col md:flex-row justify-between items-center relative z-10 font-light tracking-wide reveal">
             <p>&copy; 2026 Printos. All rights reserved.</p>
             <div class="flex space-x-4 mt-4 md:mt-0">
-                <a href="#" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded">Privacy Policy</a>
-                <a href="#" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded">Terms of Service</a>
+                <a href="/privacy" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded">Privacy Policy</a>
+                <a href="/terms" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded">Terms of Service</a>
             </div>
         </div>
     </footer>
@@ -839,13 +843,13 @@
         }
 
         // Sticky Nav styling change on scroll
-        const nav = document.querySelector('nav');
+        const header = document.getElementById('main-header');
         window.addEventListener('scroll', () => {
             if(window.scrollY > 20) {
-                nav.classList.add('bg-white/95', 'backdrop-blur-md');
-                nav.classList.remove('bg-white/50');
+                header.classList.add('bg-white/95', 'backdrop-blur-md');
+                header.classList.remove('bg-white/50');
             } else {
-                nav.classList.remove('bg-white/95', 'backdrop-blur-md');
+                header.classList.remove('bg-white/95', 'backdrop-blur-md');
             }
         });
 
