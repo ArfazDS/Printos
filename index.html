@@ -3,1613 +3,717 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Printos Accounting - Python Engine</title>
-    
+    <title>Printos | Custom Printing Services</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Brython -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.12.0/brython.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.12.0/brython_stdlib.js"></script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Styles for Unique Effects -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; } /* Lighter slate bg */
-        
-        /* Smooth Transitions */
-        .transition-all-300 { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        
-        /* Sidebar Styling */
-        #sidebar { background: white; border-right: 1px solid #f1f5f9; }
-        .nav-item { border-radius: 1rem; color: #64748b; font-weight: 500; transition: all 0.2s; }
-        .nav-item:hover { color: #0ea5e9; background-color: #f0f9ff; } /* Sky Blue Hover */
-        .nav-item.active { background-color: #0ea5e9; color: white; box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.3); } /* Sky Blue Active */
-        
-        /* Dashboard Cards */
-        .dash-card { background: white; border-radius: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02); }
-        .hero-card { background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%); color: white; } /* Sky Blue Gradient */
-        
-        /* Form Inputs */
-        .form-input { 
-            background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; 
-            padding: 0.75rem 1rem; width: 100%; transition: all 0.2s;
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
-        .form-input:focus { outline: none; border-color: #0ea5e9; background-color: white; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1); }
         
-        /* View Sections */
-        .view-section { display: none; opacity: 0; transform: translateY(10px); transition: opacity 0.3s ease-out, transform 0.3s ease-out; }
-        .view-section.active { display: block; opacity: 1; transform: translateY(0); }
+        .glass-dark {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-        /* Login Screen */
-        #login-screen { transition: opacity 0.5s ease, visibility 0.5s ease; }
-        #login-screen.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
+        /* Hero Image Animations */
+        @keyframes slowZoom {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.15); }
+        }
+        .animate-zoom {
+            animation: slowZoom 10s ease-in-out infinite alternate;
+        }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        
-        /* Loader */
-        #loader { position: fixed; inset: 0; background: #0f172a; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; transition: opacity 0.5s ease; }
-        .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #0ea5e9; border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* Floating effect for images and cards */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-anim {
+            animation: float 6s ease-in-out infinite;
+        }
 
-        /* Modal */
-        .modal { display: none; }
-        .modal.active { display: flex; animation: fadeIn 0.2s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* Sentiment Buttons */
-        .btn-sentiment { transition: all 0.2s; border: 2px solid transparent; opacity: 0.6; filter: grayscale(1); }
-        .btn-sentiment.selected { opacity: 1; filter: grayscale(0); transform: scale(1.05); border-color: currentColor; }
+        /* Animated background blob */
+        .bg-blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: spin-blob 20s linear infinite;
+        }
+        @keyframes spin-blob {
+            from { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            to { transform: rotate(360deg) scale(1); }
+        }
+
+        /* Card Hover Glow */
+        .service-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px -5px rgba(37, 99, 235, 0.15);
+            border-color: rgba(37, 99, 235, 0.3);
+        }
     </style>
 </head>
+<body class="min-h-screen font-sans text-gray-800 bg-gray-50 overflow-x-hidden">
 
-<body onload="brython()" class="text-slate-800 h-screen overflow-hidden flex flex-col">
-
-    <!-- Loading -->
-    <div id="loader">
-        <div class="spinner mb-4"></div>
-        <h2 class="text-lg font-semibold">Loading Engine...</h2>
-    </div>
-
-    <!-- Login -->
-    <div id="login-screen" class="fixed inset-0 z-[60] bg-slate-50 flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-3xl shadow-xl w-full max-w-sm text-center">
-            <!-- UPDATED LOGIN LOGO -->
-            <div class="w-20 h-20 bg-white rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-sky-500/10 mb-6 p-2 border border-slate-100">
-                <img src="images/logo.jpeg" alt="Logo" class="w-full h-full object-contain">
-            </div>
-            <h2 class="text-2xl font-bold text-slate-800">Welcome Back</h2>
-            <p class="text-slate-400 text-sm mb-8">Enter your credentials to access the workspace.</p>
-            
-            <div class="space-y-4 text-left">
-                <input type="text" id="login-user" class="form-input" placeholder="Username">
-                <input type="password" id="login-pass" class="form-input" placeholder="Password">
-                <button id="btn-login" class="w-full bg-sky-500 text-white font-bold py-3.5 rounded-xl hover:bg-sky-600 transition shadow-lg shadow-sky-200">Login</button>
-                <p id="login-msg" class="text-xs text-red-500 text-center h-4 font-semibold"></p>
-            </div>
-            <div class="mt-8 text-xs text-slate-400">Default: admin / admin</div>
-        </div>
-    </div>
-
-    <!-- Sidebar & Content Wrapper -->
-    <div class="flex-1 flex overflow-hidden">
-        
-        <!-- Sidebar -->
-        <aside id="sidebar" class="w-64 hidden md:flex flex-col relative z-20 transition-all-300 p-4">
-            <div class="px-2 py-4 flex items-center gap-3 mb-6">
-                <!-- UPDATED SIDEBAR LOGO -->
-                <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-md shadow-sky-100 overflow-hidden border border-slate-100" id="sidebar-logo-container">
-                    <img src="images/logo.jpeg" id="sidebar-icon" class="w-full h-full object-contain">
-                </div>
-                <h1 class="font-bold text-xl tracking-tight text-slate-800 logo-text" id="app-name-sidebar">Printos</h1>
-            </div>
-            
-            <nav class="flex-1 space-y-1">
-                <button id="nav-dashboard" class="nav-item active w-full flex items-center gap-3 px-4 py-3.5">
-                    <i class="fa-solid fa-chart-pie w-5 text-center"></i> <span class="nav-text">Dashboard</span>
-                </button>
-                <button id="nav-create" class="nav-item w-full flex items-center gap-3 px-4 py-3.5">
-                    <i class="fa-solid fa-file-circle-plus w-5 text-center"></i> <span class="nav-text">New Customer/Business</span>
-                </button>
-                <button id="nav-ledger" class="nav-item w-full flex items-center gap-3 px-4 py-3.5">
-                    <i class="fa-solid fa-book w-5 text-center"></i> <span class="nav-text">Ledger</span>
-                </button>
-                <button id="nav-leads" class="nav-item w-full flex items-center gap-3 px-4 py-3.5">
-                    <i class="fa-solid fa-users w-5 text-center"></i> <span class="nav-text">Leads</span>
-                </button>
-                <button id="nav-pending" class="nav-item w-full flex items-center gap-3 px-4 py-3.5">
-                    <i class="fa-solid fa-wallet w-5 text-center"></i> <span class="nav-text">Receivables</span>
-                </button>
-                <button id="nav-company" class="nav-item w-full flex items-center gap-3 px-4 py-3.5">
-                    <i class="fa-solid fa-building w-5 text-center"></i> <span class="nav-text">Companies</span>
-                </button>
-            </nav>
-            
-            <!-- User Profile (Bottom) -->
-            <div class="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between px-2 user-info">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden">
-                        <i class="fa-solid fa-user text-slate-400"></i>
-                    </div>
-                    <div class="text-sm">
-                        <p class="font-bold text-slate-700">Admin User</p>
-                    </div>
-                </div>
-                <button id="btn-logout" class="text-slate-400 hover:text-red-500 transition"><i class="fa-solid fa-right-from-bracket"></i></button>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 flex flex-col overflow-hidden relative">
-            
-            <!-- Header -->
-            <header class="h-20 flex items-center justify-between px-8 bg-transparent">
-                <h2 class="font-bold text-2xl text-slate-800" id="page-title">Dashboard</h2>
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-400 hover:text-sky-500 transition cursor-pointer">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>
-                    <div id="btn-notifications" class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-400 hover:text-sky-500 transition cursor-pointer relative">
-                        <i class="fa-regular fa-bell"></i>
-                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                    </div>
-                </div>
-            </header>
-
-            <div class="flex-1 overflow-auto px-8 pb-8 relative">
+    <!-- Navigation (Sticky & Glassmorphism) -->
+    <nav class="fixed w-full z-50 transition-all duration-300 glass-panel shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 items-center">
                 
-                <!-- VIEW: DASHBOARD -->
-                <div id="view-dashboard" class="view-section active">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        
-                        <!-- Left Column: Stats & Financials -->
-                        <div class="lg:col-span-2 space-y-6">
-                            <!-- Hero Stats Row -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Main Revenue Card -->
-                                <div class="dash-card hero-card p-6 relative overflow-hidden group">
-                                    <div class="absolute top-0 right-0 p-6 opacity-20 transform group-hover:scale-110 transition-transform duration-500">
-                                        <i class="fa-solid fa-wallet text-8xl text-white"></i>
-                                    </div>
-                                    <div class="relative z-10 flex flex-col justify-between h-full">
-                                        <div class="flex justify-between items-start">
-                                            <div class="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                                                <i class="fa-solid fa-receipt text-xl"></i>
-                                            </div>
-                                            <span class="bg-white/20 text-xs font-bold px-2 py-1 rounded-full"></span>
-                                        </div>
-                                        <div class="mt-8">
-                                            <p class="text-sky-100 text-sm font-medium mb-1">Total Sales</p>
-                                            <h3 class="text-3xl font-bold break-all leading-tight">₹<span id="stat-gross">0.00</span></h3>
-                                            <p class="text-sky-100 text-xs mt-1">Products vs last month</p>
-                                        </div>
-                                    </div>
-                                </div>
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-2 group">
+                    <img src="Printos-01.svg" alt="Printos Logo" class="h-16 md:h-20 w-auto group-hover:scale-105 transition-transform" onerror="this.src='https://via.placeholder.com/150x60?text=Printos+Logo'">
+                </a>
 
-                                <!-- Secondary Stats Grid -->
-                                <div class="grid grid-cols-2 gap-4">
-                                    <!-- Tax -->
-                                    <div class="dash-card p-5 flex flex-col justify-between">
-                                        <div class="flex justify-between">
-                                            <i class="fa-solid fa-coins text-slate-400"></i>
-                                            <span class="text-xs text-green-500 font-bold">+12.4%</span>
-                                        </div>
-                                        <div>
-                                            <p class="text-slate-400 text-xs font-bold uppercase">Tax</p>
-                                            <h4 class="text-xl font-bold text-slate-800 break-all leading-tight">₹<span id="stat-tax">0.00</span></h4>
-                                        </div>
-                                    </div>
-                                    <!-- Pending (UPDATED) -->
-                                    <div id="card-pending" class="dash-card p-5 flex flex-col justify-between cursor-pointer hover:bg-slate-50 transition relative group border-l-4 border-transparent hover:border-orange-500">
-                                        <div class="flex justify-between">
-                                            <i class="fa-solid fa-clock text-slate-400 group-hover:text-orange-500 transition"></i>
-                                            <span class="text-xs text-orange-500 font-bold flex items-center gap-1">View Details <i class="fa-solid fa-arrow-right"></i></span>
-                                        </div>
-                                        <div>
-                                            <p class="text-slate-400 text-xs font-bold uppercase">Pending</p>
-                                            <h4 class="text-2xl font-bold text-slate-800 break-all leading-tight">₹<span id="stat-due">0.00</span></h4>
-                                        </div>
-                                    </div>
-                                    <!-- Cash -->
-                                    <div class="dash-card p-5 flex flex-col justify-between col-span-2">
-                                        <div class="flex justify-between items-center mb-2">
-                                            <p class="text-slate-400 text-xs font-bold uppercase">Cash in Hand</p>
-                                            <i class="fa-solid fa-sack-dollar text-emerald-500"></i>
-                                        </div>
-                                        <h3 class="text-2xl font-bold text-slate-800 break-all leading-tight">₹<span id="stat-cash">0.00</span></h3>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Assets Bar Chart -->
-                            <div class="dash-card p-6">
-                                <div class="flex justify-between items-center mb-6">
-                                    <h3 class="font-bold text-lg text-slate-800">Financial Habits</h3>
-                                    <select class="bg-slate-50 border-none text-xs font-bold text-slate-500 rounded-lg p-2 cursor-pointer focus:ring-0">
-                                        <option>This Year</option>
-                                    </select>
-                                </div>
-                                <div class="h-64">
-                                    <canvas id="chartAssets"></canvas>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Column: Stats & Donut -->
-                        <div class="space-y-6">
-                            <!-- Donut Chart -->
-                            <div class="dash-card p-6">
-                                <h3 class="font-bold text-lg text-slate-800 mb-6">Receivables</h3>
-                                <div class="h-48 relative flex justify-center items-center">
-                                    <canvas id="chartPayable"></canvas>
-                                </div>
-                                <div class="mt-6 space-y-3">
-                                    <div class="flex justify-between items-center text-sm">
-                                        <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> <span class="text-slate-500">Received</span></div>
-                                        <span class="font-bold text-slate-800" id="legend-received">0%</span>
-                                    </div>
-                                    <div class="flex justify-between items-center text-sm">
-                                        <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500"></span> <span class="text-slate-500">Pending</span></div>
-                                        <span class="font-bold text-slate-800" id="legend-pending">0%</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Trend Line (Mini) -->
-                            <div class="dash-card p-6">
-                                <h3 class="font-bold text-lg text-slate-800 mb-2">Growth</h3>
-                                <p class="text-xs text-slate-400 mb-4">Cash received (Last 6 Months)</p>
-                                <div class="h-32">
-                                    <canvas id="financeChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- VIEW: NEW DOCUMENT (ADAPTIVE) -->
-                <div id="view-create" class="view-section">
-                    <div class="max-w-3xl mx-auto">
-                        <div class="dash-card p-8">
-                            <div class="flex justify-between items-start mb-8">
-                                <div>
-                                    <h2 class="text-2xl font-bold text-slate-800">New Customer/Business</h2>
-                                    <p class="text-slate-400 text-sm mt-1">Select type and fill details</p>
-                                </div>
-                                <span class="bg-sky-50 text-sky-600 px-3 py-1 rounded-full text-xs font-bold tracking-wide border border-sky-100" id="next-inv">#DOC-001</span>
-                            </div>
-
-                            <div class="space-y-6">
-                                <!-- Document Selector -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Document Type</label>
-                                    <select id="input-doc-type" class="form-input font-bold text-slate-700 cursor-pointer">
-                                        <option value="Invoice">Tax Invoice</option>
-                                        <option value="Quotation">Quotation</option>
-                                        <option value="Purchase Order">Purchase Order (PO)</option>
-                                        <option value="Delivery Note">Delivery Note</option>
-                                    </select>
-                                </div>
-
-                                <!-- Dynamic Grid -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <!-- Party Name -->
-                                    <div>
-                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2" id="lbl-customer">Customer Name</label>
-                                        <input type="text" id="input-customer" list="customer-list" class="form-input" placeholder="Enter Name">
-                                        <datalist id="customer-list"></datalist>
-                                    </div>
-                                    
-                                    <!-- Date -->
-                                    <div>
-                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Date Issued</label>
-                                        <input type="date" id="input-date" class="form-input">
-                                    </div>
-
-                                    <!-- Project -->
-                                    <div class="md:col-span-2">
-                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Project Reference</label>
-                                        <input type="text" id="input-project" class="form-input" placeholder="e.g. Q1 Marketing Campaign">
-                                    </div>
-
-                                    <!-- Item Desc -->
-                                    <div class="md:col-span-2">
-                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Item Description</label>
-                                        <input type="text" id="input-desc" class="form-input" placeholder="Product or Service details">
-                                    </div>
-
-                                    <!-- Quantity (Always Visible) -->
-                                    <div>
-                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Quantity</label>
-                                        <input type="number" id="input-qty" value="1" class="form-input">
-                                    </div>
-
-                                    <!-- Price (Conditional) -->
-                                    <div id="field-price">
-                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Unit Price (₹)</label>
-                                        <input type="number" id="input-price" placeholder="0.00" class="form-input">
-                                    </div>
-
-                                    <!-- GST (Conditional) -->
-                                    <div id="field-gst">
-                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">GST Rate</label>
-                                        <select id="input-gst" class="form-input">
-                                            <option value="5">5%</option>
-                                            <option value="12">12%</option>
-                                            <option value="18" selected>18%</option>
-                                            <option value="28">28%</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Status (Conditional) -->
-                                    <div id="field-status">
-                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Payment Status</label>
-                                        <select id="input-status" class="form-input">
-                                            <option value="Paid">Paid</option>
-                                            <option value="Unpaid">Unpaid</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="pt-6 border-t border-slate-100 mt-6">
-                                    <button id="btn-add" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-4 rounded-2xl transition shadow-lg shadow-sky-200 transform active:scale-95 flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-check"></i> <span>Save Document</span>
-                                    </button>
-                                    <p id="status-msg" class="text-xs text-center mt-3 h-4 font-semibold transition-colors duration-300"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- VIEW: LEDGER -->
-                <div id="view-ledger" class="view-section">
-                    <div class="dash-card flex flex-col h-[700px]">
-                        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-                            <div>
-                                <h3 class="font-bold text-lg text-slate-800">Ledger</h3>
-                                <p class="text-slate-400 text-xs">Transaction history</p>
-                            </div>
-                            <div class="flex gap-2 w-full sm:w-auto">
-                                <input type="text" id="search-bar" placeholder="Search..." class="form-input py-2 text-sm w-64">
-                                <button id="btn-clear" class="px-4 py-2 bg-slate-100 text-slate-500 rounded-lg hover:bg-slate-200 text-xs font-bold">Reset</button>
-                            </div>
-                        </div>
-                        <div class="overflow-auto flex-1 p-0">
-                            <table class="w-full text-left text-sm">
-                                <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100 sticky top-0 z-10">
-                                    <tr>
-                                        <th class="px-6 py-4 cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="date" data-tab="ledger">Date <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                        <th class="px-6 py-4 cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="customer" data-tab="ledger">Details <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                        <th class="px-6 py-4 text-right cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="total" data-tab="ledger">Total <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                        <th class="px-6 py-4 text-right cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="paid" data-tab="ledger">Paid <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                        <th class="px-6 py-4 text-right cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="balance" data-tab="ledger">Balance <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                        <th class="px-6 py-4 text-center cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="status" data-tab="ledger">Status <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                        <th class="px-6 py-4 w-48">Payment History</th>
-                                        <th class="px-6 py-4 text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ledger-body" class="divide-y divide-slate-50"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- VIEW: LEADS -->
-                <div id="view-leads" class="view-section">
-                    <div class="dash-card overflow-hidden">
-                        <div class="p-6 border-b border-slate-100 flex justify-between items-center">
-                            <div>
-                                <h3 class="font-bold text-lg text-slate-800">Leads</h3>
-                                <p class="text-xs text-slate-400">Manage outsourced opportunities</p>
-                            </div>
-                            <button id="btn-add-lead" class="bg-sky-500 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md hover:bg-sky-600">
-                                <i class="fa-solid fa-plus mr-2"></i> Add Lead
-                            </button>
-                        </div>
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100">
-                                <tr>
-                                    <th class="px-6 py-4 cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="date" data-tab="leads">Date <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                    <th class="px-6 py-4 cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="name" data-tab="leads">Client <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                    <th class="px-6 py-4 cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="source" data-tab="leads">Source <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                    <th class="px-6 py-4 cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="date" data-tab="leads">Age <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                    <th class="px-6 py-4 text-center cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="date" data-tab="leads">Priority <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                    <th class="px-6 py-4 text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="leads-body" class="divide-y divide-slate-50"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- VIEW: RECEIVABLES -->
-                <div id="view-pending" class="view-section">
-                    <div class="dash-card overflow-hidden">
-                        <div class="p-6 border-b border-slate-100">
-                            <h3 class="font-bold text-lg text-slate-800">Receivables</h3>
-                            <p class="text-xs text-slate-400">Track outstanding payments</p>
-                        </div>
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-100">
-                                <tr>
-                                    <th class="px-6 py-4 cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="inv_no" data-tab="pending">Invoice # <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                    <th class="px-6 py-4 cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="customer" data-tab="pending">Customer <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                    <th class="px-6 py-4 cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="project" data-tab="pending">Project <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                    <th class="px-6 py-4 text-right cursor-pointer hover:bg-slate-100 transition select-none sort-header" data-key="balance" data-tab="pending">Balance Due <i class="fa-solid fa-sort text-slate-300 ml-1"></i></th>
-                                    <th class="px-6 py-4 text-center">Remind</th>
-                                </tr>
-                            </thead>
-                            <tbody id="pending-body" class="divide-y divide-slate-50"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- VIEW: COMPANIES (Was Import) -->
-                <div id="view-company" class="view-section">
+                <!-- Desktop Nav & Search -->
+                <div class="hidden lg:flex flex-1 items-center justify-end md:justify-center px-6 space-x-8">
                     
-                    <!-- Business Settings (NEW) -->
-                    <div class="dash-card p-8 mb-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <div>
-                                <h2 class="text-xl font-bold text-slate-800">My Business Profile</h2>
-                                <p class="text-slate-500 text-sm">Customize your invoice branding</p>
-                            </div>
-                            
+                    <!-- Search Bar -->
+                    <div class="relative group" id="desktop-search-container">
+                        <div class="flex items-center bg-white/60 backdrop-blur-sm border border-gray-200 rounded-full px-4 py-2 w-64 xl:w-80 transition-all duration-300 focus-within:ring-2 focus-within:ring-purple-500 focus-within:bg-white focus-within:shadow-lg">
+                            <i data-lucide="search" class="w-5 h-5 text-gray-500"></i>
+                            <input type="text" id="desktop-search-input" class="bg-transparent border-none focus:outline-none ml-2 text-sm w-full" placeholder="Search services...">
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Business Name</label>
-                                <input type="text" id="my-business-name" class="form-input" value="Printos">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 uppercase mb-2">My GSTIN</label>
-                                <input type="text" id="my-business-gst" class="form-input" value="29ABCDE1234F1Z5">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Current Logo</label>
-                                <!-- PASTE YOUR LOGO URL HERE (in the src attribute below) -->
-                                <img id="static-logo-img" src="images/logo.jpeg" class="h-16 object-contain border border-slate-200 rounded p-1">
-                                <p class="text-[10px] text-slate-400 mt-1">Edit 'src' in HTML code to change</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Manual Entry -->
-                        <div class="dash-card p-8">
-                            <div class="mb-6">
-                                <h2 class="text-xl font-bold text-slate-800">Add New Company</h2>
-                                <p class="text-slate-500 text-sm">Manually add details to database</p>
-                            </div>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Company Name</label>
-                                    <input type="text" id="new-comp-name" class="form-input" placeholder="e.g. Acme Corp">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Address</label>
-                                    <input type="text" id="new-comp-address" class="form-input" placeholder="City, State">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">GSTIN</label>
-                                    <input type="text" id="new-comp-gst" class="form-input" placeholder="29ABCDE1234F1Z5">
-                                </div>
-                                <button id="btn-save-company" class="w-full bg-sky-500 text-white font-bold py-3 rounded-xl hover:bg-sky-600 transition mt-4">
-                                    Add to Database
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Import Files (UPDATED) -->
-                        <div class="dash-card p-8">
-                            <div class="mb-6">
-                                <h2 class="text-xl font-bold text-slate-800">Import from Backup</h2>
-                                <p class="text-slate-500 text-sm">Upload files from external apps</p>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Source Application</label>
-                                    <select id="import-source" class="form-input cursor-pointer">
-                                        <option value="Vyapar">Vyapar App</option>
-                                        <option value="Zoho">Zoho Books</option>
-                                        <option value="Bookkeeper">Bookkeeper App</option>
-                                        <option value="Tally">Tally Prime</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-50 transition cursor-pointer relative group">
-                                    <input type="file" id="import-file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                                    <div class="relative z-0 pointer-events-none">
-                                        <div class="w-12 h-12 bg-sky-100 text-sky-500 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                                            <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
-                                        </div>
-                                        <p class="text-sm font-medium text-slate-600">Click to upload or drag file</p>
-                                        <p class="text-xs text-slate-400 mt-1">Supported: .xls, .csv, .xml, .ybkp</p>
-                                    </div>
-                                </div>
-
-                                <button id="btn-process-import" class="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-900 transition flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-file-import"></i> Process Import
-                                </button>
+                        
+                        <!-- Search Categories Dropdown -->
+                        <div id="search-dropdown" class="absolute hidden top-full mt-4 left-0 w-96 bg-white/90 backdrop-blur-xl shadow-2xl rounded-2xl border border-gray-100 p-5 z-50 transform origin-top transition-all">
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Popular Categories</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <a href="#services" class="flex items-center space-x-3 p-2 hover:bg-blue-50 rounded-xl transition-colors group">
+                                    <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform"><i data-lucide="shirt" class="w-5 h-5"></i></div>
+                                    <span class="text-sm font-semibold text-gray-700">Apparel</span>
+                                </a>
+                                <a href="#services" class="flex items-center space-x-3 p-2 hover:bg-purple-50 rounded-xl transition-colors group">
+                                    <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+                                    <span class="text-sm font-semibold text-gray-700">Paper & Print</span>
+                                </a>
+                                <a href="#services" class="flex items-center space-x-3 p-2 hover:bg-pink-50 rounded-xl transition-colors group">
+                                    <div class="w-10 h-10 rounded-lg bg-pink-100 flex items-center justify-center text-pink-600 group-hover:scale-110 transition-transform"><i data-lucide="gift" class="w-5 h-5"></i></div>
+                                    <span class="text-sm font-semibold text-gray-700">Promo Gifts</span>
+                                </a>
+                                <a href="#services" class="flex items-center space-x-3 p-2 hover:bg-orange-50 rounded-xl transition-colors group">
+                                    <div class="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center text-orange-600 group-hover:scale-110 transition-transform"><i data-lucide="monitor" class="w-5 h-5"></i></div>
+                                    <span class="text-sm font-semibold text-gray-700">Large Format</span>
+                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
 
-            </div>
-        </main>
-    </div>
-
-    <!-- Modals (Hidden) -->
-    
-    <!-- Credit Limit Warning Modal -->
-    <div id="warning-modal" class="modal fixed inset-0 z-[80] items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 text-center transform scale-100 transition-transform">
-            <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <h3 class="font-bold text-xl text-slate-800 mb-2">Credit Limit Exceeded</h3>
-            <p class="text-slate-500 text-sm mb-6" id="warning-msg">This customer has a high outstanding balance.</p>
-            <button id="btn-close-warning" class="w-full py-3 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-900 transition">Acknowledge</button>
-        </div>
-    </div>
-
-    <!-- Payment Modal (NEW) -->
-    <div id="payment-modal" class="modal fixed inset-0 z-[70] items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-8">
-            <h3 class="font-bold text-xl text-slate-800 mb-2">Record Payment</h3>
-            <p class="text-sm text-slate-500 mb-6" id="pay-modal-details">Invoice #INV-001</p>
-            
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Total Amount</label>
-                    <input type="text" id="pay-total" class="form-input bg-slate-100 text-slate-500" readonly>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Balance Due</label>
-                    <input type="text" id="pay-balance" class="form-input bg-slate-100 text-red-500 font-bold" readonly>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Payment Amount (₹)</label>
-                    <input type="number" id="pay-amount" class="form-input text-lg font-bold text-slate-800" placeholder="0.00">
-                </div>
-            </div>
-            
-            <div class="mt-6 flex gap-3">
-                <button id="btn-cancel-pay" class="flex-1 py-3 text-slate-500 hover:bg-slate-100 rounded-xl font-bold">Cancel</button>
-                <button id="btn-confirm-pay" class="flex-1 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 shadow-lg shadow-emerald-200">Confirm</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Invoice Modal -->
-    <div id="invoice-modal" class="modal fixed inset-0 z-50 items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl flex flex-col max-h-[90vh]">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h3 class="font-bold text-lg text-slate-800">Preview</h3>
-                <button id="close-modal" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-times text-xl"></i></button>
-            </div>
-            <div class="flex-1 overflow-auto p-8" id="printable-area">
-                <div class="flex justify-between items-start border-b pb-8 mb-8">
-                    <div id="inv-header-left">
-                        <h1 class="text-2xl font-bold text-sky-600 mb-1" id="display-bus-name">Printos</h1>
-                        <p class="text-sm text-slate-500">GSTIN: <span id="display-bus-gst">29ABCDE1234F1Z5</span></p>
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1">Home</a>
+                    
+                    <!-- Services Mega Menu -->
+                    <div class="relative group h-full flex items-center py-8">
+                        <a href="#services" class="text-gray-700 hover:text-blue-600 font-medium transition-colors flex items-center relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1">
+                            Services <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 transition-transform duration-300"></i>
+                        </a>
+                        
+                        <!-- Mega Menu Panel -->
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 w-[700px] bg-white/95 backdrop-blur-xl shadow-2xl rounded-2xl border border-gray-100 p-8 hidden group-hover:block z-50 transform opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                            <div class="grid grid-cols-3 gap-8">
+                                <div>
+                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="shirt" class="w-4 h-4 mr-2 text-blue-600"></i>Apparel</h4>
+                                    <ul class="space-y-2 text-sm text-gray-600">
+                                        <li><a href="#services" class="hover:text-blue-600 hover:translate-x-2 transition-transform inline-block">Custom T-Shirts</a></li>
+                                        <li><a href="#services" class="hover:text-blue-600 hover:translate-x-2 transition-transform inline-block">Hoodies & Jackets</a></li>
+                                        <li><a href="#services" class="hover:text-blue-600 hover:translate-x-2 transition-transform inline-block">Polo Shirts</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="file-text" class="w-4 h-4 mr-2 text-purple-600"></i>Paper & Print</h4>
+                                    <ul class="space-y-2 text-sm text-gray-600">
+                                        <li><a href="#services" class="hover:text-purple-600 hover:translate-x-2 transition-transform inline-block">Business Cards</a></li>
+                                        <li><a href="#services" class="hover:text-purple-600 hover:translate-x-2 transition-transform inline-block">Flyers & Brochures</a></li>
+                                        <li><a href="#services" class="hover:text-purple-600 hover:translate-x-2 transition-transform inline-block">Letterheads</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="gift" class="w-4 h-4 mr-2 text-pink-600"></i>Promo Gifts</h4>
+                                    <ul class="space-y-2 text-sm text-gray-600">
+                                        <li><a href="#services" class="hover:text-pink-600 hover:translate-x-2 transition-transform inline-block">Ceramic Mugs</a></li>
+                                        <li><a href="#services" class="hover:text-pink-600 hover:translate-x-2 transition-transform inline-block">Water Bottles</a></li>
+                                        <li><a href="#services" class="hover:text-pink-600 hover:translate-x-2 transition-transform inline-block">Keychains</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="monitor" class="w-4 h-4 mr-2 text-orange-600"></i>Large Format</h4>
+                                    <ul class="space-y-2 text-sm text-gray-600">
+                                        <li><a href="#services" class="hover:text-orange-600 hover:translate-x-2 transition-transform inline-block">Vinyl Banners</a></li>
+                                        <li><a href="#services" class="hover:text-orange-600 hover:translate-x-2 transition-transform inline-block">Posters</a></li>
+                                        <li><a href="#services" class="hover:text-orange-600 hover:translate-x-2 transition-transform inline-block">Standees</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="package" class="w-4 h-4 mr-2 text-green-600"></i>Packaging</h4>
+                                    <ul class="space-y-2 text-sm text-gray-600">
+                                        <li><a href="#services" class="hover:text-green-600 hover:translate-x-2 transition-transform inline-block">Custom Boxes</a></li>
+                                        <li><a href="#services" class="hover:text-green-600 hover:translate-x-2 transition-transform inline-block">Mailers</a></li>
+                                        <li><a href="#services" class="hover:text-green-600 hover:translate-x-2 transition-transform inline-block">Stickers</a></li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900 border-b pb-2 mb-3 flex items-center"><i data-lucide="pen-tool" class="w-4 h-4 mr-2 text-indigo-600"></i>Design</h4>
+                                    <ul class="space-y-2 text-sm text-gray-600">
+                                        <li><a href="#services" class="hover:text-indigo-600 hover:translate-x-2 transition-transform inline-block">Logo Design</a></li>
+                                        <li><a href="#services" class="hover:text-indigo-600 hover:translate-x-2 transition-transform inline-block">Brand Identity</a></li>
+                                        <li><a href="#services" class="hover:text-indigo-600 hover:translate-x-2 transition-transform inline-block">Artwork Check</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <h2 class="text-2xl font-bold text-slate-800 uppercase tracking-wide" id="doc-title">INVOICE</h2>
-                        <p class="text-sm font-semibold text-slate-500 mt-1">#<span id="inv-num">INV-001</span></p>
-                        <p class="text-sm text-slate-400"><span id="inv-date">--</span></p>
-                    </div>
+
+                    <a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1">About Us</a>
                 </div>
-                <div class="mb-8">
-                    <p class="text-xs font-bold text-slate-400 uppercase mb-1">Bill To</p>
-                    <h3 class="text-xl font-bold text-slate-800" id="inv-customer">Customer</h3>
-                    <p class="text-sm text-slate-500 mt-1">Ref: <span id="inv-project">--</span></p>
-                </div>
-                <table class="w-full text-sm mb-8">
-                    <thead class="bg-slate-50 border-b border-slate-100 text-slate-500">
-                        <tr>
-                            <th class="text-left py-3 px-4">Item</th>
-                            <th class="text-right py-3 px-4">Qty</th>
-                            <th class="text-right py-3 px-4">Price</th>
-                            <th class="text-right py-3 px-4">Tax</th>
-                            <th class="text-right py-3 px-4">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inv-items"></tbody>
-                </table>
-                <div class="flex justify-end">
-                    <div class="w-64 space-y-3 text-right">
-                        <div class="flex justify-between text-slate-500 text-sm"><span>Subtotal</span> <span id="inv-sub">0.00</span></div>
-                        <div class="flex justify-between text-slate-500 text-sm"><span>Tax</span> <span id="inv-tax">0.00</span></div>
-                        <div class="flex justify-between font-bold text-lg text-slate-800 border-t pt-3"><span>Total</span> <span id="inv-total" class="text-sky-600">0.00</span></div>
+
+                <!-- CTA Button & Mobile Toggle -->
+                <div class="flex items-center space-x-4">
+                    <a href="#contact" class="hidden md:inline-flex px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-full hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 transform hover:-translate-y-0.5">
+                        Get a Quote
+                    </a>
+                    
+                    <!-- Mobile Menu Button -->
+                    <div class="lg:hidden flex items-center">
+                        <button id="mobile-menu-btn" class="text-gray-600 focus:outline-none p-2 hover:bg-gray-100 rounded-full transition-colors">
+                            <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+                            <i data-lucide="x" id="close-icon" class="w-6 h-6 hidden"></i>
+                        </button>
                     </div>
                 </div>
             </div>
-            <div class="p-6 border-t bg-slate-50 rounded-b-3xl flex justify-end gap-3">
-                <button id="btn-print-sys" class="px-6 py-2.5 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 transition shadow-lg shadow-slate-300">Print</button>
-            </div>
         </div>
-    </div>
 
-    <!-- Lead Resolution Modal -->
-    <div id="lead-resolve-modal" class="modal fixed inset-0 z-[70] items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-8">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-xl text-slate-800">Resolve Lead</h3>
-                <span class="text-xs font-mono bg-slate-100 px-2 py-1 rounded" id="modal-lead-id">--</span>
-            </div>
-            <div class="space-y-4">
-                <input type="text" id="lead-modal-name" class="form-input bg-slate-100" readonly>
-                <div class="flex gap-4">
-                    <button id="btn-sentiment-pos" class="btn-sentiment flex-1 py-3 rounded-xl bg-green-50 text-green-700 font-bold border border-green-100 flex items-center justify-center gap-2"><i class="fa-solid fa-thumbs-up"></i> Positive</button>
-                    <button id="btn-sentiment-neg" class="btn-sentiment flex-1 py-3 rounded-xl bg-red-50 text-red-700 font-bold border border-red-100 flex items-center justify-center gap-2"><i class="fa-solid fa-thumbs-down"></i> Negative</button>
-                </div>
-                <input type="hidden" id="lead-sentiment-val">
-                <div>
-                    <textarea id="lead-modal-response" rows="3" class="form-input resize-none" placeholder="Resolution notes (Min 25 words)"></textarea>
-                    <div class="text-right mt-1"><span id="word-count-msg" class="text-xs font-bold text-red-500">0/25 words</span></div>
-                </div>
-            </div>
-            <div class="mt-6 flex gap-3">
-                <button id="btn-cancel-resolve" class="flex-1 py-3 text-slate-500 hover:bg-slate-100 rounded-xl font-bold">Cancel</button>
-                <button id="btn-submit-resolve" class="flex-1 py-3 bg-slate-200 text-white rounded-xl font-bold cursor-not-allowed" disabled>Submit</button>
-            </div>
+        <!-- Mobile Nav -->
+        <div id="mobile-menu" class="hidden lg:hidden glass-panel border-t border-gray-100/50 px-4 pt-2 pb-6 space-y-2 shadow-2xl absolute w-full left-0 origin-top animate-fade-in">
+            <a href="#home" class="mobile-link block px-4 py-3 rounded-xl text-base font-semibold text-gray-700 hover:text-blue-600 hover:bg-white/50 transition-colors">Home</a>
+            <a href="#services" class="mobile-link block px-4 py-3 rounded-xl text-base font-semibold text-gray-700 hover:text-blue-600 hover:bg-white/50 transition-colors">Services</a>
+            <a href="#about" class="mobile-link block px-4 py-3 rounded-xl text-base font-semibold text-gray-700 hover:text-blue-600 hover:bg-white/50 transition-colors">About Us</a>
+            <a href="#contact" class="mobile-link block px-4 py-3 mt-4 text-center rounded-xl text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-lg transition-all">Get a Quote</a>
         </div>
-    </div>
+    </nav>
 
-    <!-- Add Lead Modal -->
-    <div id="add-lead-modal" class="modal fixed inset-0 z-[70] items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-8">
-            <h3 class="font-bold text-xl text-slate-800 mb-6">Add New Lead</h3>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Client Name <span class="text-red-500">*</span></label>
-                    <input type="text" id="new-lead-name" class="form-input" placeholder="e.g. Acme Corp">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Source</label>
-                    <select id="new-lead-source" class="form-input">
-                        <option value="LinkedIn">LinkedIn</option>
-                        <option value="Upwork">Upwork</option>
-                        <option value="Referral">Referral</option>
-                        <option value="Website">Website</option>
-                    </select>
-                </div>
-                <!-- Enhanced Fields -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Mobile (Mandatory if no Email)</label>
-                    <input type="text" id="new-lead-mobile" class="form-input" placeholder="+91 98765 43210">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Email (Mandatory if no Mobile)</label>
-                    <input type="email" id="new-lead-email" class="form-input" placeholder="client@example.com">
-                </div>
-            </div>
-            <div class="mt-6 flex gap-3">
-                <button id="btn-cancel-add-lead" class="flex-1 py-3 text-slate-500 hover:bg-slate-100 rounded-xl font-bold">Cancel</button>
-                <button id="btn-save-lead" class="flex-1 py-3 bg-sky-500 text-white rounded-xl font-bold hover:bg-sky-600">Save</button>
-            </div>
-        </div>
-    </div>
+    <!-- Hero Section (New Bright Split Layout) -->
+    <section id="home" class="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden bg-white">
+        <!-- Decorative subtle background elements -->
+        <div class="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[800px] h-[800px] bg-blue-50 rounded-full blur-3xl opacity-60 z-0"></div>
+        <div class="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[600px] h-[600px] bg-purple-50 rounded-full blur-3xl opacity-60 z-0"></div>
 
-    <!-- PYTHON CODE -->
-    <script type="text/python">
-        from browser import document, window, html, aio
-        import datetime
-
-        # --- Utility: Indian Currency Formatter ---
-        def format_inr(number):
-            try:
-                n = float(number)
-            except:
-                return "0.00"
-            
-            # Split integer and decimal
-            s = "{:.2f}".format(n)
-            parts = s.split('.')
-            main = parts[0]
-            decimal = parts[1]
-            
-            if len(main) <= 3:
-                return main + "." + decimal
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
                 
-            # The last 3 digits are one group
-            last3 = main[-3:]
-            rest = main[:-3]
-            
-            # The rest are grouped in 2s
-            formatted_rest = ""
-            while len(rest) > 2:
-                formatted_rest = "," + rest[-2:] + formatted_rest
-                rest = rest[:-2]
-            
-            formatted_rest = rest + formatted_rest
-            
-            return formatted_rest + "," + last3 + "." + decimal
+                <!-- Text Content (Left) -->
+                <div class="max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
+                    <div class="inline-flex items-center space-x-2 bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-sm font-bold mb-6 border border-blue-100 shadow-sm float-anim">
+                        <span class="relative flex h-3 w-3">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                        </span>
+                        <span>Innovating Print Solutions</span>
+                    </div>
+                    
+                    <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-6">
+                        Bring your ideas to <br class="hidden sm:block"/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">life with print.</span>
+                    </h1>
+                    
+                    <p class="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed font-light max-w-xl mx-auto lg:mx-0">
+                        Premium custom printing services for businesses and individuals. From custom apparel to marketing materials, we deliver vibrant, high-quality results.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center lg:justify-start">
+                        <a href="#services" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/30 hover:-translate-y-1">
+                            Explore Services <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i>
+                        </a>
+                        <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1">
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
 
-        # --- State ---
-        ledger = []
-        company_db = set()
-        leads = [
-            {"id": 1, "name": "Alpha Corp", "source": "Upwork", "date": "2023-10-01"},
-            {"id": 2, "name": "Beta Inc", "source": "LinkedIn", "date": "2023-10-10"},
-            {"id": 3, "name": "Gamma Ltd", "source": "Referral", "date": "2023-10-20"},
-            {"id": 4, "name": "Delta Systems", "source": "Fiverr", "date": "2023-09-15"},
-        ]
-        current_resolve_id = None
-        current_pay_id = None
+                <!-- Image Slider (Right) -->
+                <div class="relative h-[450px] sm:h-[550px] lg:h-[650px] w-full rounded-[3rem] overflow-hidden shadow-2xl border-[10px] border-white group transform hover:scale-[1.02] transition-transform duration-500">
+                    <div id="hero-slider" class="absolute inset-0 z-0 bg-gray-100">
+                        <!-- Bright full-color images without dark overlay -->
+                        <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-100" src="https://images.unsplash.com/photo-1562564055-71e051d33c19?auto=format&fit=crop&q=80&w=1200" alt="Printing Press Background" />
+                        <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-0" src="https://images.unsplash.com/photo-1513118172236-00b7cc57e1fa?auto=format&fit=crop&q=80&w=1200" alt="Apparel Printing" />
+                        <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-0" src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200" alt="Business Cards" />
+                    </div>
+                    
+                    <!-- Decorative Graphic Elements floating around slider -->
+                    <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-pulse"></div>
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-r from-pink-400 to-orange-400 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-pulse" style="animation-delay: 1s;"></div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Grid Section (Categories) -->
+    <section id="services" class="relative py-24 bg-gray-50 overflow-hidden border-t border-gray-100">
+        <!-- Decorative Background Blob -->
+        <div class="bg-blob bg-blue-400 w-96 h-96 rounded-full top-0 left-[-10%] mix-blend-multiply"></div>
+        <div class="bg-blob bg-purple-400 w-96 h-96 rounded-full bottom-0 right-[-10%] mix-blend-multiply animation-delay-2000"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <span class="text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 uppercase">Our Capabilities</span>
+                <h2 class="mt-3 text-4xl leading-tight font-extrabold text-gray-900 sm:text-5xl">
+                    Everything you need, <br/><span class="font-light italic text-gray-500">printed perfectly.</span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Category 1: Apparel -->
+                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="p-10 relative z-10">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center mb-8 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner">
+                            <i data-lucide="shirt" class="w-8 h-8 text-blue-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Apparel</h3>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            High-quality screen printing and embroidery for T-shirts, hoodies, uniforms, and caps.
+                        </p>
+                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Custom T-Shirts</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Hoodies & Jackets</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Polo Shirts</li>
+                        </ul>
+                        <a href="#contact" class="inline-flex items-center text-blue-600 font-bold hover:text-blue-800 transition-colors group/link">
+                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Category 2: Paper & Print -->
+                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="p-10 relative z-10">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-50 flex items-center justify-center mb-8 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner">
+                            <i data-lucide="file-text" class="w-8 h-8 text-purple-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Paper & Print</h3>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            Premium stationery including business cards, flyers, brochures, and elegant letterheads.
+                        </p>
+                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Business Cards</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Flyers & Brochures</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Letterheads</li>
+                        </ul>
+                        <a href="#contact" class="inline-flex items-center text-purple-600 font-bold hover:text-purple-800 transition-colors group/link">
+                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Category 3: Promo Gifts -->
+                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-pink-600/5 to-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="p-10 relative z-10">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-100 to-pink-50 flex items-center justify-center mb-8 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner">
+                            <i data-lucide="gift" class="w-8 h-8 text-pink-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Promo Gifts</h3>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            Personalized items for events or corporate merch like mugs, bottles, and tote bags.
+                        </p>
+                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Ceramic Mugs</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Water Bottles</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Keychains & Totes</li>
+                        </ul>
+                        <a href="#contact" class="inline-flex items-center text-pink-600 font-bold hover:text-pink-800 transition-colors group/link">
+                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Category 4: Large Format -->
+                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-orange-600/5 to-yellow-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="p-10 relative z-10">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-100 to-orange-50 flex items-center justify-center mb-8 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner">
+                            <i data-lucide="monitor" class="w-8 h-8 text-orange-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Large Format</h3>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            High-visibility advertising including banners, posters, standees, and vinyls.
+                        </p>
+                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Vinyl Banners</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Posters & Canvas</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Standees / Rollups</li>
+                        </ul>
+                        <a href="#contact" class="inline-flex items-center text-orange-600 font-bold hover:text-orange-800 transition-colors group/link">
+                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Category 5: Packaging -->
+                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-600/5 to-teal-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="p-10 relative z-10">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center mb-8 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner">
+                            <i data-lucide="package" class="w-8 h-8 text-green-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Packaging</h3>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            Branded boxes, mailers, and custom packaging tape to elevate unboxing.
+                        </p>
+                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Custom Boxes</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Mailers</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Stickers & Labels</li>
+                        </ul>
+                        <a href="#contact" class="inline-flex items-center text-green-600 font-bold hover:text-green-800 transition-colors group/link">
+                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Category 6: Design -->
+                <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="p-10 relative z-10">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center mb-8 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner">
+                            <i data-lucide="pen-tool" class="w-8 h-8 text-indigo-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Design Services</h3>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            In-house design team to bring your vision to life before it hits the press.
+                        </p>
+                        <ul class="space-y-2 mb-8 text-sm text-gray-500">
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Logo Design</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Brand Identity</li>
+                            <li class="flex items-center"><i data-lucide="check" class="w-4 h-4 text-green-500 mr-2"></i> Vector Tracing</li>
+                        </ul>
+                        <a href="#contact" class="inline-flex items-center text-indigo-600 font-bold hover:text-indigo-800 transition-colors group/link">
+                            Explore Category <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover/link:translate-x-2 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section (Unique Shape Layout) -->
+    <section id="about" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                <div class="relative lg:h-[650px] mb-16 lg:mb-0 hidden lg:block float-anim">
+                    <!-- Unique Asymmetrical Image Frame -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[40px] transform rotate-3 scale-105 opacity-20"></div>
+                    <img src="https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&q=80&w=1000" alt="Colorful printed materials" class="absolute inset-0 w-full h-full object-cover rounded-[40px] shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-700" />
+                    
+                    <!-- Floating stat badge -->
+                    <div class="absolute -bottom-8 -right-8 glass-panel p-6 rounded-2xl shadow-xl flex items-center space-x-4">
+                        <div class="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">10+</div>
+                        <div>
+                            <p class="font-bold text-gray-900 text-lg">Years</p>
+                            <p class="text-sm text-gray-500">of Excellence</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="text-sm font-bold tracking-widest text-purple-600 uppercase mb-2 block">Why Printos?</span>
+                    <h2 class="text-4xl font-extrabold text-gray-900 sm:text-5xl mb-6 leading-tight">
+                        Precision in every pixel, <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">quality in every drop.</span>
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-10 leading-relaxed font-light">
+                        Your printed materials are a direct reflection of your brand. We fuse state-of-the-art technology with artisanal attention to detail to ensure your project stands out.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                            <div class="bg-blue-100 text-blue-600 p-2 rounded-lg"><i data-lucide="award" class="w-6 h-6"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Premium Quality</h4>
+                                <p class="text-sm text-gray-500 mt-1">Top-tier materials & inks.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                            <div class="bg-purple-100 text-purple-600 p-2 rounded-lg"><i data-lucide="clock" class="w-6 h-6"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Fast Turnaround</h4>
+                                <p class="text-sm text-gray-500 mt-1">Deadlines met, guaranteed.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                            <div class="bg-green-100 text-green-600 p-2 rounded-lg"><i data-lucide="leaf" class="w-6 h-6"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Eco-Friendly</h4>
+                                <p class="text-sm text-gray-500 mt-1">Sustainable print options.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
+                            <div class="bg-pink-100 text-pink-600 p-2 rounded-lg"><i data-lucide="heart-handshake" class="w-6 h-6"></i></div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">100% Satisfaction</h4>
+                                <p class="text-sm text-gray-500 mt-1">We aren't happy until you are.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-12">
+                        <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-white bg-gray-900 hover:bg-blue-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            Start Your Project
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action, Contact & Map -->
+    <section id="contact" class="relative py-24 bg-gray-900 text-white overflow-hidden">
+        <!-- Abstract glowing shapes for dark background -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-purple-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl sm:text-5xl font-extrabold mb-4">Reach out to Us</h2>
+                <p class="text-xl text-gray-400 font-light">Get a custom quote or drop by our office.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+                
+                <!-- Contact Info & Map (Takes up 5 columns) -->
+                <div class="lg:col-span-5 flex flex-col space-y-8">
+                    
+                    <!-- Info Card -->
+                    <div class="glass-dark p-8 rounded-3xl border border-gray-700 hover:border-gray-600 transition-colors">
+                        <h3 class="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Contact Details</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="bg-blue-500/20 p-3 rounded-xl mr-4 text-blue-400"><i data-lucide="phone" class="w-6 h-6"></i></div>
+                                <div>
+                                    <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Phone</p>
+                                    <p class="text-lg font-medium text-white">081398 10721</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-purple-500/20 p-3 rounded-xl mr-4 text-purple-400"><i data-lucide="mail" class="w-6 h-6"></i></div>
+                                <div>
+                                    <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Email</p>
+                                    <p class="text-lg font-medium text-white">hello@printos.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-pink-500/20 p-3 rounded-xl mr-4 text-pink-400"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
+                                <div>
+                                    <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Address</p>
+                                    <p class="text-base font-medium text-white leading-relaxed">
+                                        AKG Center, General Hospital Rd, near INDICOM SYSTEMS, Jai Vihar, Kunnukuzhy,<br/>
+                                        Thiruvananthapuram, Kerala 695035
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map Card -->
+                    <div class="glass-dark p-2 rounded-3xl border border-gray-700 overflow-hidden h-64 shadow-xl">
+                        <iframe 
+                            src="https://maps.google.com/maps?q=8.501022254586845,76.9467338232378+(Printos)&hl=en&z=15&output=embed" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0; border-radius: 1.25rem;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+
+                <!-- Contact Form (Takes up 7 columns) -->
+                <div class="lg:col-span-7">
+                    <div class="bg-white p-8 sm:p-12 rounded-3xl shadow-2xl text-gray-900 relative">
+                        <!-- Decorative top edge -->
+                        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-t-3xl"></div>
+                        
+                        <h3 class="text-2xl font-bold mb-8">Request a Free Quote</h3>
+                        <form action="#" method="POST" class="space-y-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
+                                    <input type="text" name="name" id="name" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3.5 transition-colors" placeholder="John Doe" />
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+                                    <input type="email" name="email" id="email" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3.5 transition-colors" placeholder="john@example.com" />
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="category" class="block text-sm font-bold text-gray-700 mb-2">Select Category</label>
+                                <select id="category" name="category" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3.5 transition-colors cursor-pointer">
+                                    <option>Apparel</option>
+                                    <option>Paper & Print</option>
+                                    <option>Promo Gifts</option>
+                                    <option>Large Format</option>
+                                    <option>Packaging</option>
+                                    <option>Design Services</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label for="message" class="block text-sm font-bold text-gray-700 mb-2">Project Details</label>
+                                <textarea id="message" name="message" rows="4" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block p-3.5 transition-colors" placeholder="Tell us about quantities, colors, timeline..."></textarea>
+                            </div>
+                            
+                            <button type="button" onclick="alert('Form submitted! We will get back to you soon.')" class="w-full inline-flex justify-center items-center px-8 py-4 rounded-xl text-base font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-lg hover:shadow-purple-500/40 transition-all transform hover:-translate-y-0.5">
+                                Send Message <i data-lucide="send" class="ml-2 w-5 h-5"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-gray-400 py-16 border-t border-gray-800 relative overflow-hidden">
+        <!-- Abstract shape -->
+        <div class="absolute bottom-[-100px] left-[-100px] w-64 h-64 bg-gray-900 rounded-full blur-[80px]"></div>
         
-        # New State for Business Profile
-        business_profile = {
-            "name": "Printos",
-            "gst": "29ABCDE1234F1Z5",
-            "logo": "images/logo.jpeg" # Default path
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10">
+            <div class="md:col-span-5">
+                <div class="flex items-center space-x-2 mb-6">
+                    <img src="Printos-01.svg" alt="Printos Logo" class="h-10 w-auto grayscale brightness-200" onerror="this.src='https://via.placeholder.com/150x50?text=Printos+Logo'">
+                </div>
+                <p class="text-sm leading-relaxed max-w-sm font-light">
+                    Printos is your trusted partner for premium custom printing solutions. Delivering precision, quality, and creativity to businesses and individuals alike.
+                </p>
+                <!-- Social links (Placeholders) -->
+                <div class="flex space-x-4 mt-6">
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-pink-600 hover:text-white transition-colors"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-400 hover:text-white transition-colors"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                </div>
+            </div>
+            
+            <div class="md:col-span-3">
+                <h3 class="text-white font-bold mb-6 text-sm tracking-widest uppercase">Quick Links</h3>
+                <ul class="space-y-3 text-sm font-light">
+                    <li><a href="#home" class="hover:text-blue-400 transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2"></i>Home</a></li>
+                    <li><a href="#services" class="hover:text-blue-400 transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2"></i>Categories</a></li>
+                    <li><a href="#about" class="hover:text-blue-400 transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2"></i>About Us</a></li>
+                    <li><a href="#contact" class="hover:text-blue-400 transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2"></i>Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="md:col-span-4">
+                <h3 class="text-white font-bold mb-6 text-sm tracking-widest uppercase">Newsletter</h3>
+                <p class="text-sm font-light mb-4">Subscribe to get special offers and industry print news.</p>
+                <form class="flex">
+                    <input type="email" placeholder="Email address" class="bg-gray-900 border border-gray-800 text-white text-sm rounded-l-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 outline-none">
+                    <button type="button" class="bg-blue-600 text-white px-4 rounded-r-xl hover:bg-blue-700 transition-colors"><i data-lucide="send" class="w-4 h-4"></i></button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 pt-8 border-t border-gray-800 text-xs text-center md:text-left flex flex-col md:flex-row justify-between items-center relative z-10 font-light tracking-wide">
+            <p>&copy; 2026 Printos. All rights reserved.</p>
+            <div class="flex space-x-4 mt-4 md:mt-0">
+                <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle Logic
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const closeIcon = document.getElementById('close-icon');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('hidden');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
         }
 
-        # Sorting State
-        # order: 0 = Default (usually time-based reversed), 1 = Ascending, 2 = Descending
-        current_sort = {"tab": None, "key": None, "order": 0}
+        if(mobileBtn) {
+            mobileBtn.addEventListener('click', toggleMenu);
+        }
 
-        class Transaction:
-            def __init__(self, id_num, doc_type, date_str, customer, project, desc, price, qty, gst_rate, status):
-                self.id = id_num
-                prefix = "INV"
-                if doc_type == "Quotation": prefix = "QUO"
-                elif doc_type == "Purchase Order": prefix = "PO"
-                elif doc_type == "Delivery Note": prefix = "DN"
-                
-                self.doc_type = doc_type
-                self.inv_no = f"{prefix}-{str(id_num).zfill(3)}"
-                self.date = date_str
-                self.customer = customer if customer else "Cash Sale"
-                self.project = project if project else "General"
-                self.desc = desc
-                self.payments = [] # List of {date, amount}
-                
-                if doc_type == "Delivery Note":
-                    self.price_unit = 0.0
-                    self.gst_rate = 0
-                    self.tax_amount = 0.0
-                    self.base_total = 0.0
-                    self.final_total = 0.0
-                    self.status = "Delivered" 
-                    self.amount_paid = 0.0
-                else:
-                    self.price_unit = float(price) if price else 0.0
-                    self.qty = int(qty) if qty else 1
-                    self.gst_rate = int(gst_rate) if gst_rate else 0
-                    self.base_total = self.price_unit * self.qty
-                    self.tax_amount = (self.base_total * self.gst_rate) / 100
-                    self.final_total = self.base_total + self.tax_amount
-                    self.status = status
-                    
-                    # Set initial payment
-                    self.amount_paid = 0.0
-                    if status == "Paid":
-                        self.amount_paid = self.final_total
-                        # Log initial full payment
-                        now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-                        self.payments.append({"date": now_str, "amount": self.final_total})
-                    elif status == "Unpaid":
-                        self.amount_paid = 0.0
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            });
+        });
 
-        # --- Sorting Logic ---
-        def handle_sort(evt):
-            th = evt.target
-            # Handle click on icon inside TH
-            if th.tagName != "TH": th = th.closest("th")
-            
-            tab = th.attrs.get("data-tab")
-            key = th.attrs.get("data-key")
-            
-            if not tab or not key: return
+        // Search Bar Dropdown Logic
+        const searchInput = document.getElementById('desktop-search-input');
+        const searchDropdown = document.getElementById('search-dropdown');
+        const searchContainer = document.getElementById('desktop-search-container');
 
-            # Toggle Sort Order
-            if current_sort["tab"] == tab and current_sort["key"] == key:
-                current_sort["order"] = (current_sort["order"] + 1) % 3
-            else:
-                current_sort["tab"] = tab
-                current_sort["key"] = key
-                current_sort["order"] = 1
-            
-            update_sort_icons(tab, key, current_sort["order"])
-            
-            if tab == "ledger": render_ledger()
-            elif tab == "leads": render_leads()
-            elif tab == "pending": render_pending()
+        if (searchInput && searchDropdown) {
+            searchInput.addEventListener('focus', () => {
+                searchDropdown.classList.remove('hidden');
+                searchDropdown.classList.add('scale-100', 'opacity-100');
+            });
 
-        def update_sort_icons(tab, active_key, order):
-            # Reset all icons in this tab
-            for th in document.select(f"th[data-tab='{tab}']"):
-                icon = th.select_one("i")
-                if icon:
-                    icon.class_name = "fa-solid fa-sort text-slate-300 ml-1"
-            
-            if order == 0: return
-
-            # Set active icon
-            active_th = document.select_one(f"th[data-tab='{tab}'][data-key='{active_key}']")
-            if active_th:
-                icon = active_th.select_one("i")
-                if icon:
-                    if order == 1:
-                        icon.class_name = "fa-solid fa-sort-up text-sky-500 ml-1"
-                    else:
-                        icon.class_name = "fa-solid fa-sort-down text-sky-500 ml-1"
-
-        # --- Adaptive Form Logic ---
-        def update_form_fields(evt):
-            doc_type = document["input-doc-type"].value
-            f_price = document["field-price"]
-            f_gst = document["field-gst"]
-            f_status = document["field-status"]
-            lbl_cust = document["lbl-customer"]
-            
-            f_price.style.display = "block"
-            f_gst.style.display = "block"
-            f_status.style.display = "block"
-            lbl_cust.text = "Customer Name"
-            
-            if doc_type == "Delivery Note":
-                f_price.style.display = "none"
-                f_gst.style.display = "none"
-                f_status.style.display = "none"
-                lbl_cust.text = "Receiver Name"
-            elif doc_type == "Quotation":
-                f_status.style.display = "none"
-            elif doc_type == "Purchase Order":
-                f_status.style.display = "none"
-                lbl_cust.text = "Vendor Name"
-
-        # --- Outstanding Balance Check ---
-        def check_credit_limit(evt):
-            cust_name = document["input-customer"].value.strip()
-            if not cust_name: return
-            
-            outstanding = 0
-            for t in ledger:
-                if t.customer.lower() == cust_name.lower() and t.status != "Paid" and t.doc_type == "Invoice":
-                    outstanding += (t.final_total - t.amount_paid)
-            
-            if outstanding > 5000:
-                document["warning-msg"].text = f"{cust_name} has an outstanding balance of ₹{format_inr(outstanding)}.\n(Threshold: ₹5,000)"
-                document["warning-modal"].classList.add("active")
-
-        # --- UI Navigation ---
-        def switch_view(view_id, title):
-            for btn in document.select(".nav-item"):
-                btn.classList.remove("active")
-            if view_id == "view-dashboard": document["nav-dashboard"].classList.add("active")
-            elif view_id == "view-create": document["nav-create"].classList.add("active")
-            elif view_id == "view-ledger": document["nav-ledger"].classList.add("active")
-            elif view_id == "view-leads": document["nav-leads"].classList.add("active")
-            elif view_id == "view-pending": document["nav-pending"].classList.add("active")
-            elif view_id == "view-company": document["nav-company"].classList.add("active")
-
-            for el in document.select(".view-section"):
-                el.classList.remove("active")
-            document[view_id].classList.add("active")
-            document["page-title"].text = title
-
-        # --- Core Logic Functions ---
-        def add_transaction(evt):
-            doc_type = document["input-doc-type"].value
-            customer = document["input-customer"].value
-            project = document["input-project"].value
-            date_val = document["input-date"].value
-            desc = document["input-desc"].value
-            qty = document["input-qty"].value
-            
-            price = document["input-price"].value if document["field-price"].style.display != "none" else 0
-            gst = document["input-gst"].value if document["field-gst"].style.display != "none" else 0
-            status = document["input-status"].value if document["field-status"].style.display != "none" else "Open"
-
-            if not date_val:
-                now = datetime.datetime.now()
-                date_val = f"{now.year}-{now.month:02d}-{now.day:02d}"
-
-            try:
-                new_tx = Transaction(len(ledger)+1, doc_type, date_val, customer, project, desc, price, qty, gst, status)
-                ledger.append(new_tx)
-                if customer:
-                    company_db.add(customer)
-                    update_customer_suggestions()
-                
-                render_ledger()
-                update_stats()
-                render_pending()
-                
-                document["status-msg"].text = "Document Saved Successfully"
-                document["status-msg"].classList.add("text-emerald-500")
-                document["input-desc"].value = ""
-                
-                check_credit_limit(None)
-                
-            except Exception as e:
-                document["status-msg"].text = str(e)
-
-        def render_ledger():
-            tbody = document["ledger-body"]
-            tbody.clear()
-            
-            # Prepare data
-            data = ledger[:] # Copy
-            
-            # Sort if needed
-            if current_sort["tab"] == "ledger" and current_sort["order"] != 0:
-                key = current_sort["key"]
-                reverse = (current_sort["order"] == 2)
-                
-                def sort_key(t):
-                    if key == "date": return t.date
-                    if key == "customer": return t.customer.lower()
-                    if key == "total": return t.final_total
-                    if key == "paid": return t.amount_paid
-                    if key == "balance": return t.final_total - t.amount_paid
-                    if key == "status": return t.status
-                    return 0
-                
-                data.sort(key=sort_key, reverse=reverse)
-            else:
-                data = list(reversed(data)) # Default view
-
-            for t in data:
-                row = html.TR(Class="hover:bg-slate-50 transition border-b border-slate-50")
-                row <= html.TD(t.date, Class="px-6 py-4")
-                td_det = html.TD(Class="px-6 py-4")
-                td_det <= html.DIV(f"{t.customer} ({t.doc_type})", Class="font-bold text-slate-800")
-                td_det <= html.DIV(t.desc, Class="text-xs text-slate-400")
-                row <= td_det
-                
-                # Updated Columns
-                row <= html.TD(f"₹{format_inr(t.final_total)}", Class="px-6 py-4 text-right font-medium")
-                row <= html.TD(f"₹{format_inr(t.amount_paid)}", Class="px-6 py-4 text-right text-emerald-600 font-bold")
-                
-                balance = t.final_total - t.amount_paid
-                row <= html.TD(f"₹{format_inr(balance)}", Class="px-6 py-4 text-right text-red-500 font-bold")
-
-                td_st = html.TD(Class="px-6 py-4 text-center")
-                if t.status == "Paid": color = "bg-emerald-100 text-emerald-700"
-                elif t.status == "Unpaid": color = "bg-red-100 text-red-700"
-                elif t.status == "Partial": color = "bg-indigo-100 text-indigo-700"
-                else: color = "bg-slate-100 text-slate-600"
-                
-                td_st <= html.SPAN(t.status, Class=f"px-2 py-1 rounded-full text-xs font-bold {color}")
-                row <= td_st
-
-                # Payment History Column
-                td_hist = html.TD(Class="px-6 py-4 text-xs")
-                if t.payments:
-                    # Show last 2 payments
-                    for p in t.payments[-2:]:
-                        div = html.DIV(Class="flex justify-between border-b border-slate-100 pb-1 mb-1 last:border-0")
-                        div <= html.SPAN(p['date'], Class="text-slate-400 mr-2")
-                        div <= html.SPAN(f"₹{format_inr(p['amount'])}", Class="font-bold text-slate-700")
-                        td_hist <= div
-                else:
-                    td_hist <= html.SPAN("-", Class="text-slate-300")
-                row <= td_hist
-
-                td_act = html.TD(Class="px-6 py-4 text-center")
-                
-                # Pay Button if not fully paid
-                if t.status != "Paid" and t.doc_type == "Invoice":
-                    btn_pay = html.BUTTON(Class="text-emerald-500 hover:bg-emerald-50 w-8 h-8 rounded-full transition mr-2")
-                    btn_pay.id = f"paybtn-{t.id}"
-                    btn_pay.title = "Record Payment"
-                    btn_pay.bind("click", open_payment_modal)
-                    btn_pay <= html.I(Class="fa-solid fa-hand-holding-dollar")
-                    td_act <= btn_pay
-
-                btn = html.BUTTON(Class="text-slate-400 hover:text-sky-600 w-8 h-8 rounded-full transition")
-                btn.id = f"print-{t.id}"
-                btn.title = "View Invoice"
-                btn.bind("click", show_preview)
-                btn <= html.I(Class="fa-solid fa-eye")
-                td_act <= btn
-                row <= td_act
-                tbody <= row
-
-        def render_leads():
-            tbody = document["leads-body"]
-            tbody.clear()
-            today = datetime.date.today()
-            
-            # Prepare data
-            data = leads[:] 
-            
-            # Sort if needed
-            if current_sort["tab"] == "leads" and current_sort["order"] != 0:
-                key = current_sort["key"]
-                reverse = (current_sort["order"] == 2)
-                
-                def sort_key(l):
-                    if key == "date": return l['date']
-                    if key == "name": return l['name'].lower()
-                    if key == "source": return l['source']
-                    return 0
-                
-                data.sort(key=sort_key, reverse=reverse)
-
-            for l in data:
-                row = html.TR(Class="hover:bg-slate-50 transition border-b border-slate-50")
-                row <= html.TD(l["date"], Class="px-6 py-4 font-mono text-xs")
-                row <= html.TD(l["name"], Class="px-6 py-4 font-bold text-slate-700")
-                row <= html.TD(l["source"], Class="px-6 py-4 text-slate-500")
-                
-                # Age Calc
-                try:
-                    ld = datetime.datetime.strptime(l["date"], "%Y-%m-%d").date()
-                    days = (today - ld).days
-                except:
-                    days = 0
-                
-                row <= html.TD(f"{days} days", Class="px-6 py-4")
-                
-                # Priority
-                if days > 15:
-                    prio = html.SPAN("High", Class="text-red-600 bg-red-100 px-2 py-1 rounded-full text-xs font-bold")
-                elif days > 7:
-                    prio = html.SPAN("Medium", Class="text-amber-600 bg-amber-100 px-2 py-1 rounded-full text-xs font-bold")
-                else:
-                    prio = html.SPAN("Normal", Class="text-sky-600 bg-sky-100 px-2 py-1 rounded-full text-xs font-bold")
-                row <= html.TD(prio, Class="px-6 py-4 text-center")
-
-                # Action
-                btn = html.BUTTON("Resolve", Class="text-xs bg-slate-800 text-white px-3 py-1.5 rounded-lg hover:bg-slate-900 font-bold")
-                btn.id = f"resolve-{l['id']}"
-                btn.bind("click", open_resolve_modal)
-                row <= html.TD(btn, Class="px-6 py-4 text-center")
-                
-                tbody <= row
-
-        def render_pending():
-            tbody = document["pending-body"]
-            tbody.clear()
-            
-            # Filter first
-            data = [t for t in ledger if t.status != "Paid" and t.doc_type == "Invoice"]
-            
-            # Sort if needed
-            if current_sort["tab"] == "pending" and current_sort["order"] != 0:
-                key = current_sort["key"]
-                reverse = (current_sort["order"] == 2)
-                
-                def sort_key(t):
-                    if key == "inv_no": return t.inv_no
-                    if key == "customer": return t.customer.lower()
-                    if key == "project": return t.project.lower()
-                    if key == "balance": return t.final_total - t.amount_paid
-                    return 0
-                
-                data.sort(key=sort_key, reverse=reverse)
-
-            count = 0
-            for t in data:
-                count += 1
-                balance = t.final_total - t.amount_paid
-                row = html.TR(Class="hover:bg-slate-50 transition border-b border-slate-50")
-                row <= html.TD(t.inv_no, Class="px-6 py-4 font-mono text-xs")
-                row <= html.TD(t.customer, Class="px-6 py-4 font-bold")
-                row <= html.TD(t.project, Class="px-6 py-4 text-slate-500")
-                row <= html.TD(f"₹{format_inr(balance)}", Class="px-6 py-4 text-right font-bold text-red-600")
-                
-                btn = html.BUTTON(Class="text-sky-500 hover:bg-sky-50 w-8 h-8 rounded-full transition")
-                btn.bind("click", lambda e: window.alert("Reminder sent to customer!"))
-                btn <= html.I(Class="fa-regular fa-paper-plane")
-                row <= html.TD(btn, Class="px-6 py-4 text-center")
-                tbody <= row
-            
-            if count == 0:
-                row = html.TR()
-                row <= html.TD("No pending payments found.", colspan=5, Class="px-6 py-8 text-center text-slate-400 italic")
-                tbody <= row
-
-        # --- Business Profile Logic ---
-        def handle_logo_upload(evt):
-            pass
-        
-        def update_logo_preview(base64_str):
-            pass
-
-        def update_business_info(evt):
-            business_profile["name"] = document["my-business-name"].value
-            business_profile["gst"] = document["my-business-gst"].value
-            document["app-name-sidebar"].text = business_profile["name"]
-
-        # --- Lead Resolution Logic ---
-        def open_resolve_modal(evt):
-            global current_resolve_id
-            btn_id = evt.target.id
-            if not btn_id: btn_id = evt.target.parentElement.id 
-            
-            lead_id = int(btn_id.split("-")[1])
-            current_resolve_id = lead_id
-            
-            lead = next((x for x in leads if x["id"] == lead_id), None)
-            if lead:
-                document["lead-modal-name"].value = lead["name"]
-                document["modal-lead-id"].text = f"LEAD-{str(lead_id).zfill(3)}"
-                document["lead-modal-response"].value = ""
-                document["lead-sentiment-val"].value = ""
-                document["btn-sentiment-pos"].classList.remove("selected")
-                document["btn-sentiment-neg"].classList.remove("selected")
-                document["word-count-msg"].text = "0/25 words"
-                document["word-count-msg"].classList.remove("text-green-500")
-                document["word-count-msg"].classList.add("text-red-500")
-                document["btn-submit-resolve"].disabled = True
-                document["btn-submit-resolve"].classList.remove("bg-sky-500", "hover:bg-sky-600")
-                document["btn-submit-resolve"].classList.add("bg-slate-200", "cursor-not-allowed")
-                document["lead-resolve-modal"].classList.add("active")
-
-        def select_sentiment(evt):
-            target = evt.target if evt.target.tagName == "BUTTON" else evt.target.closest("button")
-            val = "Positive" if "pos" in target.id else "Negative"
-            
-            document["lead-sentiment-val"].value = val
-            document["btn-sentiment-pos"].classList.remove("selected")
-            document["btn-sentiment-neg"].classList.remove("selected")
-            target.classList.add("selected")
-            validate_resolution(None)
-
-        def validate_resolution(evt):
-            text = document["lead-modal-response"].value
-            words = len(text.strip().split()) if text.strip() else 0
-            document["word-count-msg"].text = f"{words}/25 words"
-            
-            is_valid = words >= 25 and document["lead-sentiment-val"].value != ""
-            
-            if words >= 25:
-                document["word-count-msg"].classList.remove("text-red-500")
-                document["word-count-msg"].classList.add("text-green-500")
-            else:
-                document["word-count-msg"].classList.add("text-red-500")
-                document["word-count-msg"].classList.remove("text-green-500")
-
-            btn = document["btn-submit-resolve"]
-            if is_valid:
-                btn.disabled = False
-                btn.classList.remove("bg-slate-200", "cursor-not-allowed")
-                btn.classList.add("bg-sky-500", "hover:bg-sky-600")
-            else:
-                btn.disabled = True
-                btn.classList.add("bg-slate-200", "cursor-not-allowed")
-                btn.classList.remove("bg-sky-500", "hover:bg-sky-600")
-
-        def submit_resolution(evt):
-            global leads
-            leads = [l for l in leads if l["id"] != current_resolve_id]
-            render_leads()
-            document["lead-resolve-modal"].classList.remove("active")
-            window.alert("Lead resolved and archived.")
-        
-        # --- Payment Modal Logic ---
-        def open_payment_modal(evt):
-            global current_pay_id
-            btn = evt.target
-            if btn.tagName != "BUTTON": btn = btn.closest("button")
-            
-            tx_id = int(btn.id.split("-")[1])
-            current_pay_id = tx_id
-            
-            t = next((x for x in ledger if x.id == tx_id), None)
-            if t:
-                document["pay-modal-details"].text = f"{t.inv_no} - {t.customer}"
-                balance = t.final_total - t.amount_paid
-                
-                # Use Indian Format
-                document["pay-total"].value = f"₹{format_inr(t.final_total)}"
-                document["pay-balance"].value = f"₹{format_inr(balance)}"
-                document["pay-amount"].value = ""
-                document["payment-modal"].classList.add("active")
-                
-        def confirm_payment(evt):
-            if current_pay_id is None: return
-            
-            try:
-                amt = float(document["pay-amount"].value)
-            except:
-                window.alert("Please enter a valid amount")
-                return
-                
-            t = next((x for x in ledger if x.id == current_pay_id), None)
-            if t:
-                balance = t.final_total - t.amount_paid
-                if amt > balance:
-                    window.alert(f"Payment cannot exceed balance of ₹{format_inr(balance)}")
-                    return
-                if amt <= 0:
-                    window.alert("Payment must be greater than 0")
-                    return
-                    
-                t.amount_paid += amt
-                
-                # Log Payment (NEW)
-                now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-                t.payments.append({"date": now_str, "amount": amt})
-
-                # Update status based on paid amount
-                if t.amount_paid >= t.final_total - 0.01: # Small epsilon for float comparison
-                    t.status = "Paid"
-                    t.amount_paid = t.final_total # clean up
-                elif t.amount_paid > 0:
-                    t.status = "Partial"
-                
-                render_ledger()
-                update_stats()
-                render_pending()
-                document["payment-modal"].classList.remove("active")
-                window.alert("Payment recorded successfully!")
-
-        # --- Chart & Stats Updates ---
-        def update_stats():
-            # FIXED: Only consider Invoices for Sales and Pending
-            total_rev = sum(t.final_total for t in ledger if t.doc_type == "Invoice")
-            total_tax = sum(t.tax_amount for t in ledger if t.doc_type == "Invoice")
-            
-            # Due calculated only for Invoices
-            total_due = sum((t.final_total - t.amount_paid) for t in ledger if t.status != "Paid" and t.doc_type == "Invoice")
-            
-            # Cash calculated based on amount_paid from all invoices
-            total_cash = sum(t.amount_paid for t in ledger if t.doc_type == "Invoice")
-            
-            document["stat-gross"].text = format_inr(total_rev)
-            document["stat-tax"].text = format_inr(total_tax)
-            document["stat-due"].text = format_inr(total_due)
-            document["stat-cash"].text = format_inr(total_cash)
-            document["next-inv"].text = f"#DOC-{str(len(ledger)+1).zfill(3)}"
-            
-            if chart_assets:
-                chart_assets.data.datasets[0].data = [total_rev]
-                chart_assets.data.datasets[1].data = [total_tax]
-                chart_assets.update()
-            if chart_payable:
-                chart_payable.data.datasets[0].data = [total_cash, total_due]
-                chart_payable.update()
-                total = total_cash + total_due
-                if total > 0:
-                    document["legend-received"].text = f"{int((total_cash/total)*100)}%"
-                    document["legend-pending"].text = f"{int((total_due/total)*100)}%"
-
-            # Dynamic Growth Chart Logic
-            if chart_line:
-                today = datetime.date.today()
-                
-                # Generate last 6 month labels
-                labels = []
-                data_points = [0] * 6
-                
-                for i in range(5, -1, -1):
-                    d = today - datetime.timedelta(days=i*30) 
-                    labels.append(d.strftime("%b"))
-                
-                # Calculate Revenue per month (Approximation using 30-day buckets)
-                # We iterate through all payments in all transactions
-                for t in ledger:
-                    for p in t.payments:
-                        try:
-                            # date format: 2023-10-25 14:30
-                            p_date_str = p['date'].split(" ")[0]
-                            p_date = datetime.datetime.strptime(p_date_str, "%Y-%m-%d").date()
-                            
-                            # Find which bucket (month) this falls into relative to today
-                            diff_days = (today - p_date).days
-                            if 0 <= diff_days < 180:
-                                bucket_index = 5 - int(diff_days / 30)
-                                if 0 <= bucket_index <= 5:
-                                    data_points[bucket_index] += p['amount']
-                        except:
-                            pass
-
-                chart_line.data.labels = labels
-                chart_line.data.datasets[0].data = data_points
-                chart_line.update()
-
-        def show_preview(evt):
-            btn = evt.target.closest("button")
-            idx = int(btn.id.split("-")[1])
-            t = next((x for x in ledger if x.id == idx), None)
-            if t:
-                # Header Update
-                header_left = document["inv-header-left"]
-                header_left.clear()
-                
-                # Use Global Business Profile (Static)
-                logo_src = document["static-logo-img"].src # Get from HTML
-                
-                if logo_src and "placeholder" not in logo_src:
-                     img = html.IMG(src=logo_src, Class="h-16 object-contain mb-2")
-                     header_left <= img
-                else:
-                     header_left <= html.H1(business_profile["name"], Class="text-2xl font-bold text-sky-600 mb-1")
-                    
-                header_left <= html.P(f"GSTIN: {business_profile['gst']}", Class="text-sm text-slate-500")
-
-                document["doc-title"].text = t.doc_type.upper()
-                document["inv-num"].text = t.inv_no
-                document["inv-date"].text = t.date
-                document["inv-customer"].text = t.customer
-                document["inv-project"].text = t.project
-                document["inv-total"].text = f"₹{format_inr(t.final_total)}"
-                document["inv-sub"].text = f"₹{format_inr(t.base_total)}"
-                document["inv-tax"].text = f"₹{format_inr(t.tax_amount)}"
-                tbody = document["inv-items"]
-                tbody.clear()
-                row = html.TR(Class="border-b border-slate-50")
-                row <= html.TD(t.desc, Class="py-3 px-4")
-                row <= html.TD(str(t.qty), Class="text-right py-3 px-4")
-                row <= html.TD(f"{format_inr(t.price_unit)}", Class="text-right py-3 px-4")
-                row <= html.TD(f"{format_inr(t.tax_amount)}", Class="text-right py-3 px-4")
-                row <= html.TD(f"{format_inr(t.final_total)}", Class="text-right py-3 px-4 font-bold")
-                tbody <= row
-                
-                # Show Amount Paid in Invoice Preview if partial/paid
-                if t.amount_paid > 0:
-                    row2 = html.TR(Class="text-emerald-600 bg-emerald-50")
-                    row2 <= html.TD("Amount Paid", colspan=4, Class="py-2 px-4 text-right font-bold")
-                    row2 <= html.TD(f"-₹{format_inr(t.amount_paid)}", Class="py-2 px-4 text-right font-bold")
-                    tbody <= row2
-                    
-                    row3 = html.TR(Class="text-slate-800")
-                    row3 <= html.TD("Balance Due", colspan=4, Class="py-2 px-4 text-right font-bold")
-                    row3 <= html.TD(f"₹{format_inr(t.final_total - t.amount_paid)}", Class="py-2 px-4 text-right font-bold")
-                    tbody <= row3
-                
-                document["invoice-modal"].classList.add("active")
-
-        # --- Init & Charts ---
-        chart_assets = None
-        chart_payable = None
-        chart_line = None
-
-        def init_charts():
-            global chart_assets, chart_payable, chart_line
-            ctx1 = document["chartAssets"].getContext("2d")
-            chart_assets = window.Chart.new(ctx1, {
-                "type": "bar",
-                "data": {
-                    "labels": ["Current"],
-                    "datasets": [
-                        {"label": "Revenue", "data": [0], "backgroundColor": "#0ea5e9", "borderRadius": 8, "barThickness": 40},
-                        {"label": "Tax Liability", "data": [0], "backgroundColor": "#ef4444", "borderRadius": 8, "barThickness": 40}
-                    ]
-                },
-                "options": {
-                    "responsive": True, "maintainAspectRatio": False,
-                    "plugins": {"legend": {"display": True, "position": "bottom"}},
-                    "scales": {"x": {"grid": {"display": False}}, "y": {"grid": {"color": "#f1f5f9"}}}
+            document.addEventListener('click', (e) => {
+                if (!searchContainer.contains(e.target)) {
+                    searchDropdown.classList.add('hidden');
                 }
-            })
-            ctx2 = document["chartPayable"].getContext("2d")
-            chart_payable = window.Chart.new(ctx2, {
-                "type": "doughnut",
-                "data": {
-                    "labels": ["Received", "Pending"],
-                    "datasets": [{
-                        "data": [0, 0],
-                        "backgroundColor": ["#10b981", "#f59e0b"],
-                        "borderWidth": 0,
-                        "hoverOffset": 4
-                    }]
-                },
-                "options": {
-                    "responsive": True, "maintainAspectRatio": False,
-                    "cutout": "75%",
-                    "plugins": {"legend": {"display": False}}
-                }
-            })
-            ctx3 = document["financeChart"].getContext("2d")
-            grad = ctx3.createLinearGradient(0, 0, 0, 200)
-            grad.addColorStop(0, "rgba(14, 165, 233, 0.2)") # Sky Blue with opacity
-            grad.addColorStop(1, "rgba(14, 165, 233, 0)")
-            chart_line = window.Chart.new(ctx3, {
-                "type": "line",
-                "data": {
-                    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-                    "datasets": [{
-                        "label": "Growth",
-                        "data": [0, 0, 0, 0, 0, 0], # Initial empty data
-                        "borderColor": "#0ea5e9", # Sky Blue
-                        "backgroundColor": grad,
-                        "tension": 0.4,
-                        "pointRadius": 0,
-                        "fill": True
-                    }]
-                },
-                "options": {
-                    "responsive": True, "maintainAspectRatio": False,
-                    "plugins": {"legend": {"display": False}},
-                    "scales": {"x": {"grid": {"display": False}}, "y": {"display": False}}
-                }
-            })
+            });
+        }
 
-        # --- Leads & Login ---
-        def login_handler(evt):
-            if document["login-user"].value == "admin" and document["login-pass"].value == "admin":
-                document["login-screen"].classList.add("fade-out")
-                window.setTimeout(lambda: document["login-screen"].style.setProperty("display", "none"), 500)
-            else:
-                document["login-msg"].text = "Invalid credentials"
+        // Hero Image Slider Logic (Fading + Zoom)
+        const slides = document.querySelectorAll('.hero-slide');
+        let currentSlide = 0;
 
-        def logout_handler(evt):
-            today = datetime.date.today()
-            hot = 0
-            for l in leads:
-                try:
-                    ld = datetime.datetime.strptime(l["date"], "%Y-%m-%d").date()
-                    if (today - ld).days >= 15: hot += 1
-                except: pass
-            
-            if hot > 0:
-                window.alert(f"Cannot Logout! You have {hot} HOT leads pending resolution.")
-                switch_view("view-leads", "Leads")
-            else:
-                document["login-screen"].style.removeProperty("display")
-                document["login-screen"].classList.remove("fade-out")
-                document["login-user"].value = ""
-                document["login-pass"].value = ""
+        if (slides.length > 1) {
+            setInterval(() => {
+                slides[currentSlide].classList.remove('opacity-100');
+                slides[currentSlide].classList.add('opacity-0');
+                
+                currentSlide = (currentSlide + 1) % slides.length;
+                
+                slides[currentSlide].classList.remove('opacity-0');
+                slides[currentSlide].classList.add('opacity-100');
+            }, 6000); // Changes image every 6 seconds
+        }
 
-        # --- Companies / Import Logic (New) ---
-        def update_customer_suggestions():
-            dl = document["customer-list"]
-            dl.clear()
-            for c in sorted(list(company_db)): dl <= html.OPTION(value=c)
-
-        def add_manual_company(evt):
-            name = document["new-comp-name"].value
-            if not name:
-                window.alert("Company Name is required")
-                return
-            
-            company_db.add(name)
-            update_customer_suggestions()
-            window.alert(f"Company '{name}' added to database.")
-            
-            # Reset form
-            document["new-comp-name"].value = ""
-            document["new-comp-address"].value = ""
-            document["new-comp-gst"].value = ""
-
-        def handle_app_import(evt):
-            # NEW: Use inputs instead of button attributes
-            source = document["import-source"].value
-            file_path = document["import-file"].value
-            
-            if not file_path:
-                window.alert("Please select a file to upload first.")
-                return
-
-            new_data = []
-            if source == "Vyapar":
-                new_data = [("Vyapar Inc", "Web Design", 5000, "Paid"), ("Local Shop A", "Consulting", 2500, "Unpaid")]
-            elif source == "Zoho":
-                new_data = [("Zoho Corp", "SaaS Sub", 12000, "Paid"), ("Global Traders", "Maintenance", 4500, "Paid")]
-            elif source == "Bookkeeper":
-                new_data = [("BK Enterprise", "Audit Fee", 8000, "Unpaid"), ("Retail Plus", "Software", 3000, "Paid")]
-            elif source == "Tally":
-                new_data = [("Tally User Pvt", "AMC Charges", 6000, "Unpaid")]
-            
-            today = datetime.date.today().strftime("%Y-%m-%d")
-            count = 0
-            for name, desc, price, status in new_data:
-                new_tx = Transaction(len(ledger)+1, "Invoice", today, name, "Imported", desc, price, 1, 18, status)
-                ledger.append(new_tx)
-                company_db.add(name)
-                count += 1
-            
-            render_ledger()
-            update_stats()
-            render_pending()
-            update_customer_suggestions()
-            
-            window.alert(f"Successfully processed {source} backup file. Imported {count} records.")
-            # Clear file input
-            document["import-file"].value = ""
-
-        # --- Notification & Add Lead Logic (New) ---
-        def show_notifications(evt):
-            window.alert("No new notifications at the moment.")
-
-        def open_add_lead_modal(evt):
-            document["add-lead-modal"].classList.add("active")
-            
-        def save_new_lead(evt):
-            name = document["new-lead-name"].value
-            source = document["new-lead-source"].value
-            mobile = document["new-lead-mobile"].value
-            email = document["new-lead-email"].value
-            
-            if not name:
-                window.alert("Please enter a client name.")
-                return
-            
-            if not mobile and not email:
-                window.alert("You must provide either a Mobile Number or an Email Address.")
-                return
-            
-            new_id = len(leads) + 1
-            today = datetime.date.today().strftime("%Y-%m-%d")
-            leads.append({"id": new_id, "name": name, "source": source, "date": today})
-            
-            render_leads()
-            document["add-lead-modal"].classList.remove("active")
-            document["new-lead-name"].value = ""
-            document["new-lead-mobile"].value = ""
-            document["new-lead-email"].value = ""
-
-        # --- Event Binding ---
-        def init():
-            document["nav-dashboard"].bind("click", lambda e: switch_view("view-dashboard", "Dashboard"))
-            document["nav-create"].bind("click", lambda e: switch_view("view-create", "New Customer/Business"))
-            document["nav-ledger"].bind("click", lambda e: switch_view("view-ledger", "Ledger"))
-            document["nav-leads"].bind("click", lambda e: [switch_view("view-leads", "Leads"), render_leads()])
-            document["nav-pending"].bind("click", lambda e: [switch_view("view-pending", "Receivables"), render_pending()])
-            document["nav-company"].bind("click", lambda e: switch_view("view-company", "Companies"))
-            
-            document["btn-login"].bind("click", login_handler)
-            document["btn-logout"].bind("click", logout_handler)
-            document["input-doc-type"].bind("change", update_form_fields)
-            document["btn-add"].bind("click", add_transaction)
-            
-            # Popup binding
-            document["input-customer"].bind("blur", check_credit_limit)
-            document["btn-close-warning"].bind("click", lambda e: document["warning-modal"].classList.remove("active"))
-            
-            document["close-modal"].bind("click", lambda e: document["invoice-modal"].classList.remove("active"))
-            
-            # New Companies bindings
-            document["btn-save-company"].bind("click", add_manual_company)
-            document["btn-process-import"].bind("click", handle_app_import)
-            
-            # Notifications & Add Lead
-            document["btn-notifications"].bind("click", show_notifications)
-            document["btn-add-lead"].bind("click", open_add_lead_modal)
-            document["btn-save-lead"].bind("click", save_new_lead)
-            document["btn-cancel-add-lead"].bind("click", lambda e: document["add-lead-modal"].classList.remove("active"))
-            
-            # Lead Resolution Bindings
-            document["btn-sentiment-pos"].bind("click", select_sentiment)
-            document["btn-sentiment-neg"].bind("click", select_sentiment)
-            document["lead-modal-response"].bind("input", validate_resolution)
-            document["btn-submit-resolve"].bind("click", submit_resolution)
-            document["btn-cancel-resolve"].bind("click", lambda e: document["lead-resolve-modal"].classList.remove("active"))
-            
-            # Payment Modal Bindings (NEW)
-            document["btn-confirm-pay"].bind("click", confirm_payment)
-            document["btn-cancel-pay"].bind("click", lambda e: document["payment-modal"].classList.remove("active"))
-
-            # Business Profile Bindings
-            # document["my-business-logo"].bind("change", handle_logo_upload) # Removed
-            document["my-business-name"].bind("blur", update_business_info)
-            document["my-business-gst"].bind("blur", update_business_info)
-
-            # Pending Card Click
-            document["card-pending"].bind("click", lambda e: [switch_view("view-pending", "Receivables"), render_pending()])
-
-            # Bind Sort Headers (Using class selector for all sortable headers)
-            for th in document.select(".sort-header"):
-                th.bind("click", handle_sort)
-
-            now = datetime.datetime.now()
-            document["input-date"].value = f"{now.year}-{now.month:02d}-{now.day:02d}"
-            
-            init_charts()
-            document["loader"].classList.add("fade-out")
-            window.setTimeout(lambda: document["loader"].style.setProperty("display", "none"), 500)
-            render_ledger()
-
-        init()
+        // Sticky Nav styling change on scroll
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if(window.scrollY > 20) {
+                nav.classList.add('bg-white/90', 'backdrop-blur-md');
+            } else {
+                nav.classList.remove('bg-white/90', 'backdrop-blur-md');
+            }
+        });
     </script>
 </body>
 </html>
