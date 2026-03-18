@@ -1,881 +1,1443 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Printos | Custom Printing Services</title>
-    <!-- Tailwind CSS -->
+    <title>Printos</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 122.26 150.6'%3E%3Cpath fill='%232D9ED8' d='M122.26,61.13c0,33.76-27.37,61.13-61.13,61.13-7.42,0-14.54-1.32-21.12-3.75v-57.38c0-11.65,9.47-21.13,21.12-21.13s21.13,9.48,21.13,21.13-9.48,21.13-21.13,21.13c-4.53,0-8.73-1.43-12.17-3.88v22.04c3.85,1.2,7.93,1.84,12.17,1.84,22.68,0,41.13-18.45,41.13-41.13s-18.45-41.13-41.13-41.13S20.01,38.45,20.01,61.13v45.23C7.72,95.18,0,79.06,0,61.13,0,27.37,27.37,0,61.13,0s61.13,27.37,61.13,61.13Z'/%3E%3Cpolygon fill='%232D9ED8' points='20.01 106.36 40.01 118.51 40.01 150.6 20.01 150.6 20.01 106.36'/%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Custom Styles for Unique Effects & Accessibility -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: { DEFAULT: '#2D9ED8', dark: '#1e7eb0', light: '#f0f8fc', muted: '#8cbcd6' },
+                        dark: '#0f172a'
+                    },
+                    boxShadow: {
+                        'elegant': '0 20px 40px -15px rgba(0,0,0,0.05)',
+                        'elegant-hover': '0 30px 60px -15px rgba(45,158,216,0.15)',
+                        'mega-menu': '0 10px 30px -10px rgba(0,0,0,0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
     <style>
-        /* Glassmorphism utility */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-        }
-        
-        .glass-dark {
-            background: rgba(17, 24, 39, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fafafa;
+            color: #0f172a;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Hero Image Animations */
-        @keyframes slowZoom {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.15); }
-        }
-        .animate-zoom {
-            animation: slowZoom 10s ease-in-out infinite alternate;
-        }
-
-        /* Floating effect for images and cards */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
-        }
-        .float-anim {
-            animation: float 6s ease-in-out infinite;
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            font-size: 24px;
+            line-height: 1;
         }
 
-        /* Animated background blob */
-        .bg-blob {
+        .star-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2D9ED8;
+        }
+
+        .hover-lift {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 30px 60px -15px rgba(45, 158, 216, 0.2);
+        }
+
+        .image-parallax-container {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-parallax-inner {
             position: absolute;
-            filter: blur(80px);
-            z-index: -1;
-            opacity: 0.5;
-            animation: spin-blob 20s linear infinite;
-        }
-        @keyframes spin-blob {
-            from { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.2); }
-            to { transform: rotate(360deg) scale(1); }
+            top: -10%;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            object-fit: cover;
+            will-change: transform;
         }
 
-        /* Card Hover Glow */
-        .service-card {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .service-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px -5px rgba(37, 99, 235, 0.15);
-            border-color: rgba(37, 99, 235, 0.3);
+        .parallax-aspect-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 133%;
         }
 
-        /* Scroll Reveal Animations */
-        .reveal {
+        .reveal-text {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .reveal-text>* {
+            transform: translateY(100%);
+            opacity: 0;
+            display: inline-block;
+            will-change: transform;
+        }
+
+        .fade-up {
             opacity: 0;
             transform: translateY(40px);
-            transition: all 0.9s cubic-bezier(0.5, 0, 0, 1);
+            will-change: transform, opacity;
         }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+
+        @keyframes blink {
+
+            0%,
+            90%,
+            100% {
+                transform: scaleY(1);
+            }
+
+            95% {
+                transform: scaleY(0.1);
+            }
+        }
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .animate-blink {
+            animation: blink 5s infinite;
+        }
+
+        .animate-breathe {
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        .pupil {
+            transition: transform 0.1s ease-out;
+        }
+
+        .blush {
+            transition: all 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mega-menu-panel {
+            animation: slideDown 0.2s ease-out;
+        }
+
+        /* CMYK Animated Background Blobs */
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(40px, -60px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-30px, 30px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 12s infinite alternate ease-in-out;
+        }
+
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+
+        .animation-delay-4000 {
+            animation-delay: 4s;
         }
 
         /* Infinite Marquee */
-        .marquee-container {
-            width: 100vw;
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
-        }
-        .marquee-content {
-            display: inline-block;
-            animation: marquee 30s linear infinite;
-        }
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        
-        /* Dropdown transition - updated for keyboard accessibility (focus-within) */
-        .mega-menu {
-            visibility: hidden;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.3s ease;
-        }
-        .group:hover .mega-menu,
-        .group:focus-within .mega-menu {
-            visibility: visible;
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
         }
 
-        /* Accessibility: Reduced Motion Preference */
-        @media (prefers-reduced-motion: reduce) {
-            *, ::before, ::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: scroll-left 40s linear infinite;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        /* Floating 3D/Cartoon Art Animations */
+        @keyframes float-1 {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(-4deg);
             }
-            .reveal {
-                opacity: 1;
-                transform: none;
+
+            50% {
+                transform: translateY(-25px) rotate(4deg);
             }
+        }
+
+        @keyframes float-2 {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(5deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(-5deg);
+            }
+        }
+
+        @keyframes float-3 {
+
+            0%,
+            100% {
+                transform: translateY(0px) scale(1);
+            }
+
+            50% {
+                transform: translateY(-15px) scale(1.05);
+            }
+        }
+
+        .anim-float-1 {
+            animation: float-1 6s ease-in-out infinite;
+        }
+
+        .anim-float-2 {
+            animation: float-2 7s ease-in-out infinite;
+        }
+
+        .anim-float-3 {
+            animation: float-3 5s ease-in-out infinite;
+        }
+
+        /* Clay buttons */
+        .clay-btn {
+            background: #ffffff;
+            box-shadow:
+                4px 4px 10px rgba(166, 180, 200, 0.2),
+                -4px -4px 10px rgba(255, 255, 255, 1),
+                inset 1px 1px 2px rgba(255, 255, 255, 1),
+                inset -1px -2px 4px rgba(166, 180, 200, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #3f3f46;
+            font-weight: 700;
+            white-space: nowrap;
+            border-radius: 9999px;
+            padding: 10px 24px;
+            font-size: 14px;
+        }
+
+        .clay-btn:hover {
+            background: #ffffff;
+            box-shadow:
+                0 0 20px rgba(45, 158, 216, 0.3),
+                -4px -4px 10px rgba(255, 255, 255, 1),
+                inset 1px 1px 2px rgba(255, 255, 255, 1),
+                inset -1px -2px 4px rgba(45, 158, 216, 0.15);
+            color: #2D9ED8;
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        /* Clay Panels for Cards */
+        .clay-panel {
+            background: #ffffff;
+            box-shadow:
+                6px 6px 16px rgba(166, 180, 200, 0.25),
+                -6px -6px 16px rgba(255, 255, 255, 1),
+                inset 2px 2px 4px rgba(255, 255, 255, 1),
+                inset -2px -4px 6px rgba(166, 180, 200, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .clay-panel:hover {
+            background: #f8fbff;
+            box-shadow:
+                0 15px 30px rgba(45, 158, 216, 0.2),
+                -6px -6px 16px rgba(255, 255, 255, 1),
+                inset 2px 2px 4px rgba(255, 255, 255, 1),
+                inset -2px -4px 6px rgba(45, 158, 216, 0.15);
+            transform: translateY(-5px);
+            border-color: rgba(45, 158, 216, 0.3);
+        }
+
+        .clay-panel-brand {
+            background: #2D9ED8;
+            box-shadow:
+                8px 8px 20px rgba(45, 158, 216, 0.4),
+                -6px -6px 16px rgba(255, 255, 255, 0.9),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.5),
+                inset -3px -5px 8px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .clay-panel-brand:hover {
+            background: #35a8e4;
+            box-shadow:
+                0 20px 40px rgba(45, 158, 216, 0.5),
+                -6px -6px 16px rgba(255, 255, 255, 0.9),
+                inset 2px 2px 5px rgba(255, 255, 255, 0.5),
+                inset -3px -5px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .testimonial-swiper .swiper-pagination-bullet {
+            background: #cbd5e1;
+            opacity: 0.5;
+        }
+
+        .testimonial-swiper .swiper-pagination-bullet-active {
+            background: #2D9ED8;
+            opacity: 1;
+        }
+
+        /* Utility for true 3D nesting */
+        .transform-style-3d {
+            transform-style: preserve-3d;
         }
     </style>
 </head>
-<body class="min-h-screen font-sans text-gray-800 bg-gray-50 overflow-x-hidden">
 
-    <!-- Accessibility: Skip to Main Content Link -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-[100] bg-blue-600 text-white px-6 py-3 rounded-lg shadow-xl font-bold focus:outline-none focus:ring-4 focus:ring-blue-400">
-        Skip to main content
-    </a>
+<body>
+    <div id="root"></div>
 
-    <!-- Header (Sticky & Glassmorphism) -->
-    <header class="fixed w-full z-50 transition-all duration-300 glass-panel shadow-sm pb-0" id="main-header">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Top Main Header Row -->
-            <div class="flex justify-between py-4 items-center">
-                
-                <!-- Normal Sized Logo + Business Name -->
-                <a href="/" class="flex items-center space-x-3 group shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-4" aria-label="Printos Home">
-                    <!-- alt is empty because the text "Printos" is adjacent -->
-                    <img src="Printos-01.svg" alt="" class="h-10 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105" onerror="this.src='https://via.placeholder.com/48x48?text=P'">
-                    <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 group-hover:text-blue-600 transition-colors">Printos</span>
-                </a>
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useLayoutEffect } = React;
 
-                <!-- Desktop Nav & Search -->
-                <div class="hidden lg:flex flex-1 items-center justify-end px-6 space-x-8">
-                    
-                    <!-- Search Bar -->
-                    <form class="relative group" id="desktop-search-container" role="search" action="/search" method="GET" onsubmit="event.preventDefault();">
-                        <label for="desktop-search-input" class="sr-only">Search products</label>
-                        <div class="flex items-center bg-gray-100/80 backdrop-blur-sm border border-gray-200 rounded-full px-4 py-2 w-64 xl:w-80 transition-all duration-300 focus-within:ring-2 focus-within:ring-purple-500 focus-within:bg-white focus-within:shadow-lg">
-                            <i data-lucide="search" class="w-5 h-5 text-gray-500" aria-hidden="true"></i>
-                            <input type="search" id="desktop-search-input" class="bg-transparent border-none focus:outline-none ml-2 text-sm w-full" placeholder="Search products...">
-                        </div>
-                        <button type="submit" class="sr-only">Submit Search</button>
-                    </form>
+        gsap.registerPlugin(ScrollTrigger);
 
-                    <!-- Primary Navigation Links -->
-                    <nav aria-label="Primary Navigation" class="flex space-x-8">
-                        <a href="#home" class="text-gray-800 font-bold hover:text-blue-600 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded">Home</a>
-                        <a href="#about" class="text-gray-800 font-bold hover:text-blue-600 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300 pb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded">About Us</a>
-                    </nav>
-                </div>
+        // ─── MEGA MENU DATA ───────────────────────────────────────────────────────
+        const CATEGORY_NAMES = [
+            "All Products", "Apparel", "Photo Gifts", "Stationery",
+            "Packaging", "Signage", "Corporate Gifts", "Drinkware"
+        ];
 
-                <!-- CTA Button & Mobile Toggle -->
-                <div class="flex items-center space-x-4">
-                    <a href="#contact" class="hidden md:inline-flex px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-full hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2">
-                        Get a Quote
-                    </a>
-                    
-                    <!-- Mobile Menu Button -->
-                    <div class="lg:hidden flex items-center">
-                        <button type="button" id="mobile-menu-btn" class="text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 p-2 hover:bg-gray-200 rounded-full transition-colors" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
-                            <i data-lucide="menu" id="menu-icon" class="w-7 h-7" aria-hidden="true"></i>
-                            <i data-lucide="x" id="close-icon" class="w-7 h-7 hidden" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sub-Navigation Categories Strip (Desktop) -->
-            <nav class="hidden lg:flex border-t border-gray-200/60 pt-3 pb-3 justify-center space-x-6 xl:space-x-10 items-center w-full relative" aria-label="Product Categories">
-                
-                <!-- Category 1 -->
-                <div class="group relative">
-                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-blue-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
-                        Apparel <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
-                    </button>
-                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
-                        <ul class="space-y-1 text-sm text-gray-600">
-                            <li><a href="/category/custom-tshirts" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Custom T-Shirts</a></li>
-                            <li><a href="/category/hoodies" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Hoodies & Jackets</a></li>
-                            <li><a href="/category/polos" class="hover:text-blue-600 block px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Polo Shirts</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Category 2 -->
-                <div class="group relative">
-                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-purple-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
-                        Paper & Print <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
-                    </button>
-                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
-                        <ul class="space-y-1 text-sm text-gray-600">
-                            <li><a href="/category/business-cards" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Business Cards</a></li>
-                            <li><a href="/category/flyers" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Flyers & Brochures</a></li>
-                            <li><a href="/category/letterheads" class="hover:text-purple-600 block px-3 py-2 rounded-lg hover:bg-purple-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600">Letterheads</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Category 3 -->
-                <div class="group relative">
-                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-pink-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
-                        Promo Gifts <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
-                    </button>
-                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
-                        <ul class="space-y-1 text-sm text-gray-600">
-                            <li><a href="/category/mugs" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Ceramic Mugs</a></li>
-                            <li><a href="/category/bottles" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Water Bottles</a></li>
-                            <li><a href="/category/keychains" class="hover:text-pink-600 block px-3 py-2 rounded-lg hover:bg-pink-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600">Keychains & Totes</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Category 4 -->
-                <div class="group relative">
-                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-orange-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
-                        Large Format <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
-                    </button>
-                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
-                        <ul class="space-y-1 text-sm text-gray-600">
-                            <li><a href="/category/banners" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Vinyl Banners</a></li>
-                            <li><a href="/category/posters" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Posters</a></li>
-                            <li><a href="/category/standees" class="hover:text-orange-600 block px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600">Standees / Rollups</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Category 5 -->
-                <div class="group relative">
-                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-green-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
-                        Packaging <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
-                    </button>
-                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-48 bg-white shadow-2xl rounded-2xl border border-gray-100 p-3 z-50">
-                        <ul class="space-y-1 text-sm text-gray-600">
-                            <li><a href="/category/boxes" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Custom Boxes</a></li>
-                            <li><a href="/category/mailers" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Mailers</a></li>
-                            <li><a href="/category/stickers" class="hover:text-green-600 block px-3 py-2 rounded-lg hover:bg-green-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600">Stickers & Labels</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Category 6 -->
-                <div class="group relative">
-                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-cyan-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
-                        Print & Decor <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
-                    </button>
-                    <div class="mega-menu absolute top-full left-1/2 -translate-x-1/2 w-[450px] bg-white shadow-2xl rounded-3xl border border-gray-100 p-5 z-50">
-                        <div class="grid grid-cols-2 gap-x-4 gap-y-1">
-                            <a href="/category/acrylic-cutouts" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Acrylic Photo cutouts</a>
-                            <a href="/category/photo-prints" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Photo Prints</a>
-                            <a href="/category/photo-plaque" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Photo Plaque</a>
-                            <a href="/category/posters" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Posters</a>
-                            <a href="/category/magnets" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Fridge Magnets</a>
-                            <a href="/category/frameless-frames" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Frameless Photo Frames</a>
-                            <a href="/category/led-frames" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">LED Photo Frames</a>
-                            <a href="/category/desktop-frames" class="text-sm hover:text-cyan-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-cyan-50 transition-colors font-medium col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600">Desktop Frames with Messages</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Category 7 -->
-                <div class="group relative">
-                    <button type="button" class="text-sm font-bold text-gray-700 hover:text-rose-600 transition-colors flex items-center py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 rounded px-2" aria-haspopup="true" aria-expanded="false">
-                        Photo Frames <i data-lucide="chevron-down" class="w-4 h-4 ml-1 group-hover:rotate-180 group-focus-within:rotate-180 transition-transform" aria-hidden="true"></i>
-                    </button>
-                    <div class="mega-menu absolute top-full right-0 w-[550px] bg-white shadow-2xl rounded-3xl border border-gray-100 p-6 z-50">
-                        <div class="grid grid-cols-2 gap-x-6 gap-y-2">
-                            <a href="/category/desktop-collage" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Desktop Collage Foldable Frames</a>
-                            <a href="/category/classic-frames" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Classic Photo Frames</a>
-                            <a href="/category/eco-leatherette" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Eco Leatherette Collection</a>
-                            <a href="/category/wall-frames" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Wall Photo Frames</a>
-                            <a href="/category/heritage" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Heritage Collection</a>
-                            <a href="/category/collage" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Collage Photo Frames</a>
-                            <a href="/category/vintage" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Vintage Collection</a>
-                            <a href="/category/matte-finish" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Matte Finish Photo Frames</a>
-                            <a href="/category/premium" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Premium Photo Frames</a>
-                            <a href="/category/canvas" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Canvas Photo Frames</a>
-                            <a href="/category/custom-premium" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Custom Premium Photo Frames</a>
-                            <a href="/category/leatherette-acrylic" class="text-sm hover:text-rose-600 text-gray-600 block px-3 py-2 rounded-lg hover:bg-rose-50 transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600">Leatherette Acrylic Frames</a>
-                        </div>
-                    </div>
-                </div>
-
-            </nav>
-        </div>
-
-        <!-- Mobile Nav -->
-        <nav id="mobile-menu" class="hidden lg:hidden glass-panel border-t border-gray-200 px-4 pt-4 pb-6 space-y-2 shadow-2xl absolute w-full left-0 origin-top" aria-label="Mobile Navigation">
-            <a href="#home" class="mobile-link block px-4 py-3 rounded-xl text-lg font-bold text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Home</a>
-            <a href="#services" class="mobile-link block px-4 py-3 rounded-xl text-lg font-bold text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">Categories</a>
-            <a href="#about" class="mobile-link block px-4 py-3 rounded-xl text-lg font-bold text-gray-800 hover:text-blue-600 hover:bg-blue-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600">About Us</a>
-            <a href="#contact" class="mobile-link block px-4 py-4 mt-6 text-center rounded-xl text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2">Get a Quote</a>
-        </nav>
-    </header>
-
-    <!-- Main Content Wrapper -->
-    <main id="main-content">
-        <!-- Hero Section -->
-        <section id="home" class="relative pt-44 pb-20 lg:pt-56 lg:pb-32 overflow-hidden bg-white" aria-label="Hero">
-            <!-- Decorative subtle background elements (hidden from screen readers) -->
-            <div class="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[800px] h-[800px] bg-blue-50 rounded-full blur-3xl opacity-60 z-0" aria-hidden="true"></div>
-            <div class="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[600px] h-[600px] bg-purple-50 rounded-full blur-3xl opacity-60 z-0" aria-hidden="true"></div>
-
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center reveal">
-                    
-                    <!-- Text Content (Left) -->
-                    <div class="max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
-                        <div class="inline-flex items-center space-x-2 bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-sm font-bold mb-6 border border-blue-100 shadow-sm float-anim">
-                            <span class="relative flex h-3 w-3" aria-hidden="true">
-                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                              <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
-                            </span>
-                            <span>Innovating Print Solutions</span>
-                        </div>
-                        
-                        <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold text-gray-900 leading-[1.1] tracking-tight mb-6">
-                            Bring your ideas to <br class="hidden sm:block"/>
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">life with print.</span>
-                        </h1>
-                        
-                        <p class="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed font-light max-w-xl mx-auto lg:mx-0">
-                            Premium custom printing services for businesses and individuals. From custom apparel to personalized photo frames and decor, we deliver vibrant, high-quality results.
-                        </p>
-                        
-                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 justify-center lg:justify-start">
-                            <a href="#services" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-blue-500/30 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2">
-                                Explore Services <i data-lucide="arrow-right" class="ml-2 w-5 h-5" aria-hidden="true"></i>
-                            </a>
-                            <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2">
-                                Contact Us
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Image Slider (Right) -->
-                    <div class="relative h-[450px] sm:h-[550px] lg:h-[650px] w-full rounded-[3rem] overflow-hidden shadow-2xl border-[10px] border-white group transform hover:scale-[1.02] transition-transform duration-500" aria-label="Image gallery showing our printing work">
-                        <div id="hero-slider" class="absolute inset-0 z-0 bg-gray-100">
-                            <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-100" src="https://images.unsplash.com/photo-1562564055-71e051d33c19?auto=format&fit=crop&q=80&w=1200" alt="Industrial printing press in action" />
-                            <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-0" src="https://images.unsplash.com/photo-1513118172236-00b7cc57e1fa?auto=format&fit=crop&q=80&w=1200" alt="Custom apparel and t-shirt printing" />
-                            <img class="hero-slide absolute inset-0 w-full h-full object-cover animate-zoom transition-opacity duration-1000 opacity-0" src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=1200" alt="Stack of premium printed business cards" />
-                        </div>
-                        
-                        <!-- Decorative Graphic Elements (hidden from SR) -->
-                        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-pulse" aria-hidden="true"></div>
-                        <div class="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-r from-pink-400 to-orange-400 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-pulse" style="animation-delay: 1s;" aria-hidden="true"></div>
-                    </div>
-                    
-                </div>
-            </div>
-        </section>
-
-        <!-- Services Grid Section -->
-        <section id="services" class="relative py-24 bg-gray-50 overflow-hidden border-t border-gray-100" aria-labelledby="services-heading">
-            <!-- Decorative Background Blobs -->
-            <div class="bg-blob bg-blue-400 w-96 h-96 rounded-full top-0 left-[-10%] mix-blend-multiply" aria-hidden="true"></div>
-            <div class="bg-blob bg-purple-400 w-96 h-96 rounded-full bottom-0 right-[-10%] mix-blend-multiply animation-delay-2000" aria-hidden="true"></div>
-
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center max-w-3xl mx-auto mb-20 reveal">
-                    <span class="text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 uppercase block mb-3">Our Capabilities</span>
-                    <h2 id="services-heading" class="text-4xl leading-tight font-extrabold text-gray-900 sm:text-5xl">
-                        Everything you need, <br/><span class="font-light italic text-gray-500">printed perfectly.</span>
-                    </h2>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    
-                    <!-- Category 1: Apparel -->
-                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
-                        <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
-                        <div class="p-8 relative z-10">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
-                                <i data-lucide="shirt" class="w-7 h-7 text-blue-600"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-3">Apparel</h3>
-                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
-                                Screen printing and embroidery for T-shirts, hoodies, and polo shirts.
-                            </p>
-                            <a href="#contact" class="inline-flex items-center text-blue-600 font-bold hover:text-blue-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded">
-                                Order Now <span class="sr-only">for Apparel</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Category 2: Paper & Print -->
-                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
-                        <div class="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
-                        <div class="p-8 relative z-10">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
-                                <i data-lucide="file-text" class="w-7 h-7 text-purple-600"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-3">Paper & Print</h3>
-                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
-                                Premium stationery including business cards, flyers, and brochures.
-                            </p>
-                            <a href="#contact" class="inline-flex items-center text-purple-600 font-bold hover:text-purple-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 rounded">
-                                Order Now <span class="sr-only">for Paper & Print</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Category 3: Promo Gifts -->
-                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
-                        <div class="absolute inset-0 bg-gradient-to-br from-pink-600/5 to-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
-                        <div class="p-8 relative z-10">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-100 to-pink-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
-                                <i data-lucide="gift" class="w-7 h-7 text-pink-600"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-3">Promo Gifts</h3>
-                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
-                                Personalized items like ceramic mugs, bottles, and customized keychains.
-                            </p>
-                            <a href="#contact" class="inline-flex items-center text-pink-600 font-bold hover:text-pink-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600 rounded">
-                                Order Now <span class="sr-only">for Promo Gifts</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Category 4: Large Format -->
-                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
-                        <div class="absolute inset-0 bg-gradient-to-br from-orange-600/5 to-yellow-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
-                        <div class="p-8 relative z-10">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-100 to-orange-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
-                                <i data-lucide="monitor" class="w-7 h-7 text-orange-600"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-3">Large Format</h3>
-                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
-                                High-visibility advertising including banners, posters, and standees.
-                            </p>
-                            <a href="#contact" class="inline-flex items-center text-orange-600 font-bold hover:text-orange-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600 rounded">
-                                Order Now <span class="sr-only">for Large Format</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Category 5: Packaging -->
-                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
-                        <div class="absolute inset-0 bg-gradient-to-br from-green-600/5 to-teal-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
-                        <div class="p-8 relative z-10">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
-                                <i data-lucide="package" class="w-7 h-7 text-green-600"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-3">Packaging</h3>
-                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
-                                Branded boxes, mailers, stickers, and custom packaging tape.
-                            </p>
-                            <a href="#contact" class="inline-flex items-center text-green-600 font-bold hover:text-green-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 rounded">
-                                Order Now <span class="sr-only">for Packaging</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Category 6: Design Services -->
-                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
-                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
-                        <div class="p-8 relative z-10">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
-                                <i data-lucide="pen-tool" class="w-7 h-7 text-indigo-600"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-3">Design</h3>
-                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
-                                In-house design team for logo creation, brand identity, and tracing.
-                            </p>
-                            <a href="#contact" class="inline-flex items-center text-indigo-600 font-bold hover:text-indigo-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 rounded">
-                                Order Now <span class="sr-only">for Design</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Category 7: Print & Decor -->
-                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
-                        <div class="absolute inset-0 bg-gradient-to-br from-cyan-600/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
-                        <div class="p-8 relative z-10">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-100 to-cyan-50 flex items-center justify-center mb-6 transform group-hover:-rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
-                                <i data-lucide="image" class="w-7 h-7 text-cyan-600"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-3">Print & Decor</h3>
-                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
-                                Acrylic photo cutouts, plaques, posters, fridge magnets, and LED frames.
-                            </p>
-                            <a href="#contact" class="inline-flex items-center text-cyan-600 font-bold hover:text-cyan-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-600 rounded">
-                                Order Now <span class="sr-only">for Print & Decor</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Category 8: Photo Frames -->
-                    <div class="service-card bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 group relative reveal">
-                        <div class="absolute inset-0 bg-gradient-to-br from-rose-600/5 to-pink-600/5 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true"></div>
-                        <div class="p-8 relative z-10">
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-100 to-rose-50 flex items-center justify-center mb-6 transform group-hover:rotate-12 transition-transform duration-500 shadow-inner" aria-hidden="true">
-                                <i data-lucide="layout" class="w-7 h-7 text-rose-600"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-900 mb-3">Photo Frames</h3>
-                            <p class="text-gray-500 text-sm mb-6 leading-relaxed">
-                                Heritage collections, canvas frames, collage frames, and custom designs.
-                            </p>
-                            <a href="#contact" class="inline-flex items-center text-rose-600 font-bold hover:text-rose-800 transition-colors group/link text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 rounded">
-                                Order Now <span class="sr-only">for Photo Frames</span> <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover/link:translate-x-2 transition-transform" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- Why Choose Us Section -->
-        <section id="about" class="py-24 bg-white" aria-labelledby="about-heading">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-                    <div class="relative lg:h-[650px] mb-16 lg:mb-0 hidden lg:block float-anim reveal">
-                        <!-- Unique Asymmetrical Image Frame -->
-                        <div class="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[40px] transform rotate-3 scale-105 opacity-20" aria-hidden="true"></div>
-                        <img src="https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&q=80&w=1000" alt="Vibrant printed color palettes arranged creatively" class="absolute inset-0 w-full h-full object-cover rounded-[40px] shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-700" />
-                        
-                        <!-- Floating stat badge -->
-                        <div class="absolute -bottom-8 -right-8 glass-panel p-6 rounded-2xl shadow-xl flex items-center space-x-4" aria-label="10 plus years of excellence">
-                            <div class="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl" aria-hidden="true">10+</div>
-                            <div>
-                                <p class="font-bold text-gray-900 text-lg">Years</p>
-                                <p class="text-sm text-gray-500">of Excellence</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="reveal">
-                        <span class="text-sm font-bold tracking-widest text-purple-600 uppercase block mb-3">Why Printos?</span>
-                        <h2 id="about-heading" class="text-4xl font-extrabold text-gray-900 sm:text-5xl mb-6 leading-tight">
-                            Precision in every pixel, <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">quality in every drop.</span>
-                        </h2>
-                        <p class="text-lg text-gray-600 mb-10 leading-relaxed font-light">
-                            Your printed materials are a direct reflection of your brand. We fuse state-of-the-art technology with artisanal attention to detail to ensure your project stands out.
-                        </p>
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                                <div class="bg-blue-100 text-blue-600 p-2 rounded-lg" aria-hidden="true"><i data-lucide="award" class="w-6 h-6"></i></div>
-                                <div>
-                                    <h3 class="font-bold text-gray-900">Premium Quality</h3>
-                                    <p class="text-sm text-gray-500 mt-1">Top-tier materials & inks.</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                                <div class="bg-purple-100 text-purple-600 p-2 rounded-lg" aria-hidden="true"><i data-lucide="clock" class="w-6 h-6"></i></div>
-                                <div>
-                                    <h3 class="font-bold text-gray-900">Fast Turnaround</h3>
-                                    <p class="text-sm text-gray-500 mt-1">Deadlines met, guaranteed.</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                                <div class="bg-green-100 text-green-600 p-2 rounded-lg" aria-hidden="true"><i data-lucide="leaf" class="w-6 h-6"></i></div>
-                                <div>
-                                    <h3 class="font-bold text-gray-900">Eco-Friendly</h3>
-                                    <p class="text-sm text-gray-500 mt-1">Sustainable print options.</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start space-x-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-100">
-                                <div class="bg-pink-100 text-pink-600 p-2 rounded-lg" aria-hidden="true"><i data-lucide="heart-handshake" class="w-6 h-6"></i></div>
-                                <div>
-                                    <h3 class="font-bold text-gray-900">100% Satisfaction</h3>
-                                    <p class="text-sm text-gray-500 mt-1">We aren't happy until you are.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-12">
-                            <a href="#contact" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold rounded-full text-white bg-gray-900 hover:bg-blue-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2">
-                                Start Your Project
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Call to Action, Contact & Map -->
-        <section id="contact" class="relative py-24 bg-gray-900 text-white overflow-hidden" aria-labelledby="contact-heading">
-            <!-- Abstract glowing shapes for dark background -->
-            <div class="absolute top-0 right-0 w-96 h-96 bg-purple-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30" aria-hidden="true"></div>
-            <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-600 rounded-full mix-blend-screen filter blur-[120px] opacity-30" aria-hidden="true"></div>
-
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16 reveal">
-                    <h2 id="contact-heading" class="text-4xl sm:text-5xl font-extrabold mb-4">Reach out to Us</h2>
-                    <p class="text-xl text-gray-400 font-light">Get a custom quote or drop by our office.</p>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 reveal">
-                    
-                    <!-- Contact Info & Map (Takes up 5 columns) -->
-                    <div class="lg:col-span-5 flex flex-col space-y-8">
-                        
-                        <!-- Info Card -->
-                        <div class="glass-dark p-8 rounded-3xl border border-gray-700 hover:border-gray-600 transition-colors">
-                            <h3 class="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Contact Details</h3>
-                            
-                            <address class="space-y-6 not-italic">
-                                <div class="flex items-start">
-                                    <div class="bg-blue-500/20 p-3 rounded-xl mr-4 text-blue-400" aria-hidden="true"><i data-lucide="phone" class="w-6 h-6"></i></div>
-                                    <div>
-                                        <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Phone</p>
-                                        <p class="text-lg font-medium text-white"><a href="tel:08139810721" class="hover:text-blue-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded">081398 10721 <span class="sr-only">(opens phone application)</span></a></p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start">
-                                    <div class="bg-purple-500/20 p-3 rounded-xl mr-4 text-purple-400" aria-hidden="true"><i data-lucide="mail" class="w-6 h-6"></i></div>
-                                    <div>
-                                        <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Email</p>
-                                        <p class="text-lg font-medium text-white"><a href="mailto:hello@printos.com" class="hover:text-purple-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 rounded">hello@printos.com <span class="sr-only">(opens email application)</span></a></p>
-                                    </div>
-                                </div>
-                                <div class="flex items-start">
-                                    <div class="bg-pink-500/20 p-3 rounded-xl mr-4 text-pink-400" aria-hidden="true"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
-                                    <div>
-                                        <p class="text-sm text-gray-400 uppercase tracking-wider font-semibold">Address</p>
-                                        <p class="text-base font-medium text-white leading-relaxed">
-                                            AKG Center, General Hospital Rd, near INDICOM SYSTEMS, Jai Vihar, Kunnukuzhy,<br/>
-                                            Thiruvananthapuram, Kerala 695035
-                                        </p>
-                                    </div>
-                                </div>
-                            </address>
-                        </div>
-
-                        <!-- Map Card -->
-                        <div class="glass-dark p-2 rounded-3xl border border-gray-700 overflow-hidden h-64 shadow-xl">
-                            <iframe 
-                                src="https://maps.google.com/maps?q=8.501022254586845,76.9467338232378+(Printos)&hl=en&z=15&output=embed" 
-                                width="100%" 
-                                height="100%" 
-                                style="border:0; border-radius: 1.25rem;" 
-                                allowfullscreen="" 
-                                title="Google Maps Location of Printos"
-                                loading="lazy" 
-                                referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
-                        </div>
-                    </div>
-
-                    <!-- Contact Form (Takes up 7 columns) -->
-                    <div class="lg:col-span-7">
-                        <div class="bg-white p-8 sm:p-12 rounded-3xl shadow-2xl text-gray-900 relative">
-                            <!-- Decorative top edge -->
-                            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-t-3xl" aria-hidden="true"></div>
-                            
-                            <h3 class="text-2xl font-bold mb-8">Request a Free Quote</h3>
-                            <form action="#" method="POST" class="space-y-6" onsubmit="event.preventDefault(); alert('Form submitted! We will get back to you soon.');">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                    <div>
-                                        <label for="name" class="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
-                                        <input type="text" name="name" id="name" required class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 block p-3.5 transition-colors" placeholder="John Doe" />
-                                    </div>
-                                    <div>
-                                        <label for="email" class="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
-                                        <input type="email" name="email" id="email" required class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 block p-3.5 transition-colors" placeholder="john@example.com" />
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <label for="category" class="block text-sm font-bold text-gray-700 mb-2">Select Category</label>
-                                    <select id="category" name="category" class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 block p-3.5 transition-colors cursor-pointer">
-                                        <option>Apparel</option>
-                                        <option>Paper & Print</option>
-                                        <option>Promo Gifts</option>
-                                        <option>Large Format</option>
-                                        <option>Packaging</option>
-                                        <option>Print & Decor</option>
-                                        <option>Photo Frames</option>
-                                        <option>Design Services</option>
-                                    </select>
-                                </div>
-                                
-                                <div>
-                                    <label for="message" class="block text-sm font-bold text-gray-700 mb-2">Project Details</label>
-                                    <textarea id="message" name="message" rows="4" required class="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 block p-3.5 transition-colors" placeholder="Tell us about quantities, colors, timeline..."></textarea>
-                                </div>
-                                
-                                <button type="submit" class="w-full inline-flex justify-center items-center px-8 py-4 rounded-xl text-base font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-lg hover:shadow-purple-500/40 transition-all transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2">
-                                    Send Message <i data-lucide="send" class="ml-2 w-5 h-5" aria-hidden="true"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-black text-gray-400 pt-8 pb-16 border-t border-gray-800 relative overflow-hidden" aria-label="Site Footer">
-        
-        <!-- UNIQUE ANIMATION: Scrolling Marquee Banner -->
-        <div class="marquee-container bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white py-4 mb-16 transform -skew-y-2 shadow-2xl z-20 border-y-4 border-gray-900 overflow-hidden relative" aria-hidden="true">
-            <div class="marquee-content font-extrabold text-xl md:text-2xl tracking-[0.2em] uppercase whitespace-nowrap">
-                &nbsp; PREMIUM QUALITY • FAST TURNAROUND • CUSTOM DESIGNS • 100% SATISFACTION • PRINTING REIMAGINED • 
-                PREMIUM QUALITY • FAST TURNAROUND • CUSTOM DESIGNS • 100% SATISFACTION • PRINTING REIMAGINED • 
-                PREMIUM QUALITY • FAST TURNAROUND • CUSTOM DESIGNS • 100% SATISFACTION • PRINTING REIMAGINED • 
-            </div>
-        </div>
-
-        <!-- Abstract shape -->
-        <div class="absolute bottom-[-100px] left-[-100px] w-64 h-64 bg-gray-900 rounded-full blur-[80px]" aria-hidden="true"></div>
-        
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10 reveal">
-            <div class="md:col-span-5">
-                <div class="flex items-center space-x-3 mb-6">
-                    <!-- Normal Sized Footer Logo + Text -->
-                    <img src="Printos-01.svg" alt="" class="h-10 md:h-12 w-auto grayscale brightness-200 hover:grayscale-0 hover:brightness-100 transition-all duration-500" onerror="this.src='https://via.placeholder.com/48x48?text=P'">
-                    <span class="text-2xl md:text-3xl font-extrabold tracking-tight text-white">Printos</span>
-                </div>
-                <p class="text-sm leading-relaxed max-w-sm font-light">
-                    Printos is your trusted partner for premium custom printing solutions. Delivering precision, quality, and creativity to businesses and individuals alike.
-                </p>
-                <!-- Social links -->
-                <div class="flex space-x-4 mt-6">
-                    <a href="https://facebook.com/printos" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-600 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600" aria-label="Visit our Facebook page"><i data-lucide="facebook" class="w-4 h-4" aria-hidden="true"></i></a>
-                    <a href="https://instagram.com/printos" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-pink-600 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-600" aria-label="Visit our Instagram page"><i data-lucide="instagram" class="w-4 h-4" aria-hidden="true"></i></a>
-                    <a href="https://twitter.com/printos" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center hover:bg-blue-400 hover:text-white hover:scale-110 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400" aria-label="Visit our Twitter page"><i data-lucide="twitter" class="w-4 h-4" aria-hidden="true"></i></a>
-                </div>
-            </div>
-            
-            <div class="md:col-span-3">
-                <h3 class="text-white font-bold mb-6 text-sm tracking-widest uppercase">Quick Links</h3>
-                <ul class="space-y-3 text-sm font-light">
-                    <li><a href="#home" class="hover:text-blue-400 hover:translate-x-2 transition-all duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded"><i data-lucide="chevron-right" class="w-3 h-3 mr-2" aria-hidden="true"></i>Home</a></li>
-                    <li><a href="#services" class="hover:text-blue-400 hover:translate-x-2 transition-all duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded"><i data-lucide="chevron-right" class="w-3 h-3 mr-2" aria-hidden="true"></i>Categories</a></li>
-                    <li><a href="#about" class="hover:text-blue-400 hover:translate-x-2 transition-all duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded"><i data-lucide="chevron-right" class="w-3 h-3 mr-2" aria-hidden="true"></i>About Us</a></li>
-                    <li><a href="#contact" class="hover:text-blue-400 hover:translate-x-2 transition-all duration-300 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 rounded"><i data-lucide="chevron-right" class="w-3 h-3 mr-2" aria-hidden="true"></i>Contact</a></li>
-                </ul>
-            </div>
-            
-            <div class="md:col-span-4">
-                <h3 class="text-white font-bold mb-6 text-sm tracking-widest uppercase">Newsletter</h3>
-                <p class="text-sm font-light mb-4">Subscribe to get special offers and industry print news.</p>
-                <form class="flex group" role="search" aria-label="Newsletter Subscribe" action="#" method="POST" onsubmit="event.preventDefault();">
-                    <label for="newsletter-email" class="sr-only">Email address</label>
-                    <input type="email" id="newsletter-email" placeholder="Email address" required class="bg-gray-900 border border-gray-800 text-white text-sm rounded-l-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 outline-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
-                    <button type="submit" class="bg-blue-600 text-white px-5 rounded-r-xl group-hover:bg-blue-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500" aria-label="Subscribe to newsletter"><i data-lucide="send" class="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" aria-hidden="true"></i></button>
-                </form>
-            </div>
-        </div>
-        
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 pt-8 border-t border-gray-800 text-xs text-center md:text-left flex flex-col md:flex-row justify-between items-center relative z-10 font-light tracking-wide reveal">
-            <p>&copy; 2026 Printos. All rights reserved.</p>
-            <div class="flex space-x-4 mt-4 md:mt-0">
-                <a href="/privacy" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded">Privacy Policy</a>
-                <a href="/terms" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded">Terms of Service</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
-
-        // Mobile Menu Toggle Logic
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const menuIcon = document.getElementById('menu-icon');
-        const closeIcon = document.getElementById('close-icon');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-
-        function toggleMenu() {
-            const isHidden = mobileMenu.classList.contains('hidden');
-            
-            mobileMenu.classList.toggle('hidden');
-            menuIcon.classList.toggle('hidden');
-            closeIcon.classList.toggle('hidden');
-            
-            // Accessibility state update
-            mobileBtn.setAttribute('aria-expanded', !isHidden);
-        }
-
-        if(mobileBtn) {
-            mobileBtn.addEventListener('click', toggleMenu);
-        }
-
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-                menuIcon.classList.remove('hidden');
-                closeIcon.classList.add('hidden');
-                mobileBtn.setAttribute('aria-expanded', 'false');
-            });
-        });
-
-        // Search Bar Dropdown Logic
-        const searchInput = document.getElementById('desktop-search-input');
-        const searchDropdown = document.getElementById('search-dropdown');
-        const searchContainer = document.getElementById('desktop-search-container');
-
-        if (searchInput && searchDropdown) {
-            searchInput.addEventListener('focus', () => {
-                searchDropdown.classList.remove('hidden');
-                searchDropdown.classList.add('scale-100', 'opacity-100');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!searchContainer.contains(e.target)) {
-                    searchDropdown.classList.add('hidden');
-                }
-            });
-        }
-
-        // Hero Image Slider Logic (Fading + Zoom) with preference check
-        const slides = document.querySelectorAll('.hero-slide');
-        let currentSlide = 0;
-        
-        // Respect reduced motion preference
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        if (slides.length > 1 && !prefersReducedMotion) {
-            setInterval(() => {
-                slides[currentSlide].classList.remove('opacity-100');
-                slides[currentSlide].classList.add('opacity-0');
-                
-                currentSlide = (currentSlide + 1) % slides.length;
-                
-                slides[currentSlide].classList.remove('opacity-0');
-                slides[currentSlide].classList.add('opacity-100');
-            }, 6000); // Changes image every 6 seconds
-        }
-
-        // Sticky Nav styling change on scroll
-        const header = document.getElementById('main-header');
-        window.addEventListener('scroll', () => {
-            if(window.scrollY > 20) {
-                header.classList.add('bg-white/95', 'backdrop-blur-md');
-                header.classList.remove('bg-white/50');
-            } else {
-                header.classList.remove('bg-white/95', 'backdrop-blur-md');
-            }
-        });
-
-        // Scroll Reveal Animation Logic
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15
+        const MEGA_MENU_DATA = {
+            "Apparel": [{ title: "T-Shirts", links: ["Short Sleeve", "Long Sleeve", "V-Neck", "Performance"] }, { title: "Outerwear", links: ["Hoodies", "Jackets", "1/4 Zips", "Sweaters"] }, { title: "Headwear", links: ["Baseball Caps", "Beanies", "Visors"] }, { title: "Bags", links: ["Tote Bags", "Backpacks", "Duffels"] }],
+            "Photo Gifts": [{ title: "Wall Art", links: ["Canvas Prints", "Metal Prints", "Acrylic", "Wood Prints"] }, { title: "Books & Calendars", links: ["Photo Books", "Wall Calendars", "Desk Calendars"] }, { title: "Home Decor", links: ["Custom Blankets", "Pillows", "Coasters"] }],
+            "Stationery": [{ title: "Business Cards", links: ["Standard", "Premium", "Square", "Foil Accent"] }, { title: "Marketing", links: ["Flyers", "Postcards", "Brochures", "Rack Cards"] }, { title: "Office", links: ["Letterheads", "Envelopes", "Notepads", "Sticky Notes"] }],
+            "Packaging": [{ title: "Boxes", links: ["Mailer Boxes", "Product Boxes", "Shipping Boxes"] }, { title: "Labels & Stickers", links: ["Roll Labels", "Sheet Stickers", "Die-Cut Stickers"] }, { title: "Supplies", links: ["Custom Tape", "Tissue Paper", "Poly Mailers"] }],
+            "Signage": [{ title: "Banners", links: ["Vinyl Banners", "Retractable Banners", "Mesh Banners"] }, { title: "Signs", links: ["Yard Signs", "Aluminum Signs", "A-Frame Signs"] }, { title: "Decals", links: ["Window Decals", "Wall Decals", "Car Decals"] }],
+            "Corporate Gifts": [{ title: "Tech", links: ["Power Banks", "USB Drives", "Speakers", "Earbuds"] }, { title: "Office Accessories", links: ["Pens", "Notebooks", "Padfolios", "Mouse Pads"] }, { title: "Awards", links: ["Glass Awards", "Acrylic Awards", "Plaques"] }],
+            "Drinkware": [{ title: "Mugs", links: ["Ceramic Mugs", "Travel Mugs", "Campfire Mugs"] }, { title: "Bottles", links: ["Water Bottles", "Insulated Bottles", "Aluminium"] }, { title: "Tumblers", links: ["Stainless Steel", "Wine Tumblers", "Plastic Tumblers"] }]
         };
+        MEGA_MENU_DATA["All Products"] = Object.keys(MEGA_MENU_DATA).map(k => ({ title: k, links: MEGA_MENU_DATA[k].map(s => s.title) }));
 
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target); // Run once per element
-                }
-            });
-        }, observerOptions);
+        const LOGO = ({ className = "w-9 h-9" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.26 150.6" className={className}>
+                <path fill="currentColor" d="M122.26,61.13c0,33.76-27.37,61.13-61.13,61.13-7.42,0-14.54-1.32-21.12-3.75v-57.38c0-11.65,9.47-21.13,21.12-21.13s21.13,9.48,21.13,21.13-9.48,21.13-21.13,21.13c-4.53,0-8.73-1.43-12.17-3.88v22.04c3.85,1.2,7.93,1.84,12.17,1.84,22.68,0,41.13-18.45,41.13-41.13s-18.45-41.13-41.13-41.13S20.01,38.45,20.01,61.13v45.23C7.72,95.18,0,79.06,0,61.13,0,27.37,27.37,0,61.13,0s61.13,27.37,61.13,61.13Z" />
+                <polygon fill="currentColor" points="20.01 106.36 40.01 118.51 40.01 150.6 20.01 150.6 20.01 106.36" />
+            </svg>
+        );
 
-        // Target elements for reveal animation (disabled if reduced motion requested)
-        if (!prefersReducedMotion) {
-            document.querySelectorAll('.reveal').forEach((el) => {
-                observer.observe(el);
-            });
+        // ─── SINGLE GSAP CONTEXT ──────────────────────────────────────────────────
+        function useGlobalGSAPAnimations() {
+            useLayoutEffect(() => {
+                const raf = requestAnimationFrame(() => {
+                    const ctx = gsap.context(() => {
+                        gsap.utils.toArray('.fade-up').forEach(el => {
+                            ScrollTrigger.create({
+                                trigger: el, start: "top 85%", once: true,
+                                onEnter: () => gsap.to(el, { y: 0, opacity: 1, duration: 1, ease: "power4.out" })
+                            });
+                        });
+                        gsap.utils.toArray('.reveal-text').forEach(el => {
+                            ScrollTrigger.create({
+                                trigger: el, start: "top 85%", once: true,
+                                onEnter: () => gsap.to(el.children, { y: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: "power4.out" })
+                            });
+                        });
+                        const noMotion = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+                        const isTouch = window.matchMedia('(hover:none)').matches;
+                        if (!noMotion && !isTouch) {
+                            gsap.utils.toArray('.image-parallax-container').forEach(container => {
+                                const img = container.querySelector('.image-parallax-inner');
+                                if (img) gsap.to(img, {
+                                    yPercent: -15, ease: "none",
+                                    scrollTrigger: { trigger: container, start: "top bottom", end: "bottom top", scrub: true }
+                                });
+                            });
+                        }
+                    });
+                    return () => ctx.revert();
+                });
+                return () => cancelAnimationFrame(raf);
+            }, []);
         }
 
+        // ─── HEADER ───────────────────────────────────────────────────────────────
+        function Header() {
+            const [activeMenu, setActiveMenu] = useState(null);
+            const tid = useRef(null);
+            const enter = name => { clearTimeout(tid.current); setActiveMenu(name); };
+            const leave = () => { tid.current = setTimeout(() => setActiveMenu(null), 150); };
+            useEffect(() => () => clearTimeout(tid.current), []);
+
+            return (
+                <header className="sticky top-0 w-full z-50 bg-white shadow-sm flex flex-col" onMouseLeave={leave}>
+                    <div className="border-b border-gray-100 relative z-20 bg-white">
+                        <div className="max-w-[1600px] mx-auto px-6 lg:px-12 flex justify-between items-center py-4 tracking-tight">
+                            <div className="flex items-center gap-2 cursor-pointer z-20 text-brand"><LOGO /><span className="text-2xl font-black tracking-normal text-dark">Printos</span></div>
+                            <div className="hidden lg:flex flex-1 max-w-xl mx-8 relative z-20">
+                                <input type="text" placeholder="Search products, materials, and more..."
+                                    className="w-full bg-gray-50 border border-gray-200 text-gray-800 text-sm font-medium px-5 py-2.5 rounded-full outline-none focus:border-brand transition-colors" />
+                                <button className="absolute right-3 top-1/2 -translate-y-1/2 text-brand">
+                                    <span className="material-symbols-rounded" style={{ fontSize: '20px' }}>search</span>
+                                </button>
+                            </div>
+                            <div className="flex items-center gap-6 z-20">
+                                <button className="flex flex-col items-center text-gray-700 hover:text-brand transition-colors" title="Help">
+                                    <span className="material-symbols-rounded" style={{ fontSize: '28px' }}>help</span>
+                                </button>
+                                <button className="flex flex-col items-center text-gray-700 hover:text-brand transition-colors" title="Sign In">
+                                    <span className="material-symbols-rounded" style={{ fontSize: '28px' }}>person</span>
+                                </button>
+                                <button className="flex flex-col items-center text-gray-700 hover:text-brand transition-colors relative" title="Cart">
+                                    <span className="material-symbols-rounded" style={{ fontSize: '28px' }}>shopping_cart_checkout</span>
+                                    <span className="absolute -top-1 -right-2 w-[18px] h-[18px] bg-brand text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">0</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white relative z-20 hidden lg:block border-b border-gray-100">
+                        <div className="max-w-[1600px] mx-auto px-6 lg:px-12">
+                            <nav className="flex justify-center space-x-10">
+                                {CATEGORY_NAMES.map(cat => (
+                                    <button key={cat} onMouseEnter={() => enter(cat)}
+                                        className={`py-3.5 text-[15px] font-semibold tracking-wide border-b-2 transition-all ${activeMenu === cat ? 'border-brand text-brand' : 'border-transparent text-gray-700 hover:text-brand'}`}>
+                                        {cat}
+                                    </button>
+                                ))}
+                            </nav>
+                        </div>
+                    </div>
+
+                    {activeMenu && MEGA_MENU_DATA[activeMenu] && (
+                        <div className="mega-menu-panel absolute left-0 right-0 w-full bg-white shadow-mega-menu border-b border-gray-200 z-10"
+                            style={{ top: '100%' }} onMouseEnter={() => enter(activeMenu)}>
+                            <div className="max-w-[1600px] mx-auto px-6 lg:px-12 py-10">
+                                <div className={`grid gap-8 ${activeMenu === "All Products" ? 'grid-cols-4 lg:grid-cols-7' : 'grid-cols-2 lg:grid-cols-4'}`}>
+                                    {MEGA_MENU_DATA[activeMenu].map((col, i) => (
+                                        <div key={i} className="flex flex-col space-y-4">
+                                            <h4 className="font-bold text-gray-900 border-b border-gray-100 pb-2 text-sm">{col.title}</h4>
+                                            <ul className="space-y-3">
+                                                {col.links.map((l, j) => (
+                                                    <li key={j}><a href="#" className="text-gray-600 hover:text-brand text-sm transition-colors block">{l}</a></li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    ))}
+                                    {activeMenu !== "All Products" && (
+                                        <div className="col-span-1 lg:col-span-1 lg:col-start-4 hidden lg:block bg-brand-light rounded-xl overflow-hidden relative min-h-[180px]">
+                                            <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=400&q=80" alt="Promo"
+                                                className="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-50" loading="lazy" />
+                                            <div className="relative z-10 p-6 flex flex-col justify-end h-full">
+                                                <span className="bg-brand text-white text-[10px] uppercase font-bold tracking-widest px-2 py-1 rounded w-fit mb-2">Offer</span>
+                                                <h5 className="font-bold text-dark text-lg mb-2">20% Off {activeMenu}</h5>
+                                                <a href="#" className="text-brand font-semibold text-sm hover:underline flex items-center">
+                                                    Shop Sale <span className="material-symbols-rounded ml-1" style={{ fontSize: '16px' }}>arrow_right_alt</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </header>
+            );
+        }
+
+        // ─── DATA ─────────────────────────────────────────────────────────────────
+        const BUSINESS_NEEDS = [
+            {
+                id: 1,
+                title: "Startups",
+                desc: "Agile, cost-effective branding & essential prints.",
+                shape: "sunny",
+                image: "https://img.freepik.com/free-photo/startup-business-progress-strategy-enterprise_53876-127927.jpg?semt=ais_hybrid&w=740&q=80"
+            },
+            {
+                id: 2,
+                title: "Retail & E-commerce",
+                desc: "Stunning packaging, tags, and promotional inserts.",
+                shape: "clover",
+                image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 3,
+                title: "Events & Exhibitions",
+                desc: "High-impact banners, lanyards, and standees.",
+                shape: "cookie",
+                image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80"
+            },
+            {
+                id: 4,
+                title: "Corporate Offices",
+                desc: "Professional stationery and official branding.",
+                shape: "square",
+                image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80"
+            }
+        ];
+
+        const POPULAR_CATEGORIES = [
+            { id: 1, title: "Apparel", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80" },
+            { id: 2, title: "Stationery", image: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80" },
+            { id: 3, title: "Packaging", image: "https://tse1.mm.bing.net/th/id/OIP.9fwp9I5SuEEiUUVpdC6g0wHaEY?rs=1&pid=ImgDetMain&o=7&rm=3" },
+            { id: 4, title: "Signage", image: "https://festoonsigns.com/wp-content/uploads/2023/06/Hospital-Signage.jpg" }
+        ];
+        const NEW_LAUNCHES = [
+            { id: 1, title: "Eco-Friendly Mailers", image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=400&q=80" },
+            { id: 2, title: "Holographic Stickers", image: "https://images.unsplash.com/photo-1572375992501-4b0892d50c69?auto=format&fit=crop&w=400&q=80" },
+            { id: 3, title: "Embroidered Caps", image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=400&q=80" },
+            { id: 4, title: "Metallic Business Cards", image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=400&q=80" },
+            { id: 5, title: "Custom Water Bottles", image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=400&q=80" }
+        ];
+        const BEST_SELLERS = [
+            { id: 1, title: "Premium Cotton T-Shirt", image: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=400&q=80" },
+            { id: 2, title: "Matte Business Cards", image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?auto=format&fit=crop&w=400&q=80" },
+            { id: 3, title: "Vinyl Banners", image: "https://images.unsplash.com/photo-1562564055-71e051d33c19?auto=format&fit=crop&w=400&q=80" },
+            { id: 4, title: "Ceramic Mugs", image: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=400&q=80" },
+            { id: 5, title: "Die-Cut Stickers", image: "https://images.unsplash.com/photo-1572375992501-4b0892d50c69?auto=format&fit=crop&w=400&q=80" },
+            { id: 6, title: "Custom Hoodies", image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=400&q=80" },
+            { id: 7, title: "Designing", image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=600" },
+            { id: 8, title: "Canvas Prints", image: "https://images.unsplash.com/photo-1579762593175-20226054cad0?auto=format&fit=crop&w=400&q=80" }
+        ];
+        const TESTIMONIALS = [
+            { id: 1, name: "Sarah Jenkins", text: "The print quality is absolutely phenomenal. Our branded apparel came out exactly as we envisioned.", stars: 5 },
+            { id: 2, name: "Michael Chang", text: "Fast turnaround and incredible customer service. The custom packaging elevated our product unboxing.", stars: 5 },
+            { id: 3, name: "Emma Thompson", text: "Beautiful business cards. The matte finish feels so premium and we constantly get compliments.", stars: 4 }
+        ];
+        const FEATURES = [
+            { id: 1, title: "Fast Turn Around", desc: "Get your prints delivered when you need them.", icon: "bolt" },
+            { id: 2, title: "Easy Ordering", desc: "Seamless and hassle-free online checkout.", icon: "touch_app" },
+            { id: 3, title: "Nationwide Quality", desc: "Consistent, premium printing across the board.", icon: "verified" },
+            { id: 4, title: "Wide Product Range", desc: "Everything you need, all in one place.", icon: "category" }
+        ];
+
+        // ─── HERO SECTION ─────────────────────────────────────────────────────────
+
+        function HeroSection() {
+            const containerRef = useRef(null);
+            const printerRef = useRef(null);
+            const printerSlotRef = useRef(null);
+            const cardsRef = useRef([]);
+            const ledRef = useRef(null);
+
+            // Using all existing categories for a fully populated dynamic row
+            const HERO_CATEGORIES = [
+                { id: 'hc1', title: "Apparel", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=400&q=80" },
+                { id: 'hc2', title: "Photo Gifts", image: "https://images.unsplash.com/photo-1579762593175-20226054cad0?auto=format&fit=crop&w=400&q=80" },
+                { id: 'hc3', title: "Stationery", image: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=400&q=80" },
+                { id: 'hc4', title: "Packaging", image: "https://tse1.mm.bing.net/th/id/OIP.9fwp9I5SuEEiUUVpdC6g0wHaEY?rs=1&pid=ImgDetMain&o=7&rm=3" },
+                { id: 'hc5', title: "Signage", image: "https://images.unsplash.com/photo-1562564055-71e051d33c19?auto=format&fit=crop&w=400&q=80" },
+                { id: 'hc6', title: "Corp Gifts", image: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=400&q=80" },
+                { id: 'hc7', title: "Drinkware", image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=400&q=80" }
+            ];
+
+            useLayoutEffect(() => {
+                let ctx = gsap.context(() => {
+                    const tl = gsap.timeline({ delay: 0.2 });
+
+                    // 1. Entrance Animations
+                    tl.from(".hero-text-anim", {
+                        y: 30, opacity: 0, duration: 1, stagger: 0.15, ease: "power3.out"
+                    });
+
+                    tl.from(printerRef.current, {
+                        y: 60, opacity: 0, duration: 1.2, ease: "back.out(1.2)"
+                    }, "-=0.8");
+
+                    // 2. Ultra-Realistic Sequential Printout Effect
+                    requestAnimationFrame(() => {
+                        if (!printerSlotRef.current) return;
+                        const slotRect = printerSlotRef.current.getBoundingClientRect();
+
+                        // PRE-CALCULATE POSITIONS (Done before any GSAP mutations to prevent layout shift bugs)
+                        const cardData = cardsRef.current.map(card => {
+                            if (!card) return null;
+                            const rect = card.getBoundingClientRect();
+                            return {
+                                card,
+                                startX: (slotRect.left + slotRect.width / 2) - (rect.left + rect.width / 2),
+                                // Pin the exact bottom edge of the card to the printer slot center
+                                startY: (slotRect.top + slotRect.height / 2) - rect.bottom
+                            };
+                        }).filter(Boolean);
+
+                        cardData.forEach((data, i) => {
+                            const { card, startX, startY } = data;
+
+                            // SETUP: Hidden completely flat exactly at the slot line
+                            gsap.set(card, {
+                                x: startX,
+                                y: startY + 5, // Slightly recessed
+                                scale: 0.35,   // Shrink to fit the slot width
+                                opacity: 1,    // Must be 1 so clipPath reveal works
+                                rotationX: 45, // Tilted back inside the paper feed
+                                transformOrigin: "bottom center",
+                                clipPath: "inset(100% 0% 0% 0%)" // 100% Hidden from the top down!
+                            });
+
+                            // STRICT ORDER: Each card takes ~0.85s totally to print and clear
+                            const printStart = 1.0 + (i * 0.85);
+
+                            // Micro-interaction: Printer vibrates & LED flashes during data processing
+                            tl.to(printerRef.current, {
+                                y: "+=1.5",
+                                duration: 0.05,
+                                repeat: 11,
+                                yoyo: true
+                            }, printStart);
+                            tl.to(ledRef.current, { opacity: 1, duration: 0.05, repeat: 11, yoyo: true }, printStart);
+
+                            // STAGE 1: REALISTIC PRINTOUT (Extrusion)
+                            tl.to(card, {
+                                clipPath: "inset(0% 0% 0% 0%)", // Unmask from bottom to top line-by-line
+                                y: startY - 20,                 // Paper slowly pushes upward/forward out of the machine
+                                duration: 0.6,
+                                ease: "none"                    // Steady mechanical printer speed
+                            }, printStart);
+
+                            // STAGE 2: GLIDE TO POSITION
+                            tl.to(card, {
+                                x: 0,
+                                y: 0,
+                                rotationX: 0,
+                                scale: 1,
+                                duration: 0.9,
+                                ease: "power2.out"
+                            }, printStart + 0.65); // Hop exactly when printing finishes
+
+                            // Natural aerodynamic tilt as paper moves through the air
+                            tl.to(card, {
+                                rotationZ: (i % 2 === 0 ? 3 : -3),
+                                duration: 0.4,
+                                ease: "power1.out"
+                            }, printStart + 0.65);
+
+                            tl.to(card, {
+                                rotationZ: 0,
+                                duration: 0.5,
+                                ease: "power1.inOut"
+                            }, printStart + 1.05);
+                        });
+                    });
+
+                }, containerRef);
+
+                return () => ctx.revert();
+            }, []);
+
+            return (
+                <section ref={containerRef} className="relative w-full min-h-[90vh] flex flex-col items-center justify-between pt-24 pb-12 px-4 lg:px-12 overflow-hidden bg-slate-50">
+
+                    {/* Super Interesting Animated CMYK Ink Background */}
+                    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                        {/* Cyan Ink Blob */}
+                        <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-cyan-400/40 rounded-full mix-blend-multiply filter blur-[100px] animate-blob"></div>
+                        {/* Magenta Ink Blob */}
+                        <div className="absolute top-[10%] right-[-10%] w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] bg-fuchsia-400/40 rounded-full mix-blend-multiply filter blur-[100px] animate-blob animation-delay-2000"></div>
+                        {/* Yellow Ink Blob */}
+                        <div className="absolute bottom-[-15%] left-[20%] w-[50vw] h-[50vw] max-w-[700px] max-h-[700px] bg-yellow-300/40 rounded-full mix-blend-multiply filter blur-[100px] animate-blob animation-delay-4000"></div>
+
+                        {/* Halftone / Dot Grid Overlay (Thematic to printing) */}
+                        <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(#0f172a 2px, transparent 2px)', backgroundSize: '36px 36px' }}></div>
+
+                        {/* Soft white fade at the bottom to blend into the next section cleanly */}
+                        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent"></div>
+                    </div>
+
+                    {/* Floating Professional Line Art Elements (8 Items scattered around) */}
+                    <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden max-w-[1600px] mx-auto hidden md:block">
+
+                        {/* 1. Minimalist Isometric Box (Packaging) - Top Left */}
+                        <div className="absolute top-[12%] left-[8%] anim-float-1 opacity-80" style={{ animationDelay: '0s' }}>
+                            <svg className="w-16 h-16 lg:w-20 lg:h-20 drop-shadow-xl transform -rotate-6" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 20 L85 40 L50 60 L15 40 Z" fill="#F8FAFC" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+                                <path d="M15 40 L15 70 L50 90 L50 60 Z" fill="#FFFFFF" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+                                <path d="M85 40 L85 70 L50 90 L50 60 Z" fill="#E0F2FE" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+                                <path d="M30 31 L50 43 L70 31" stroke="#38BDF8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+
+                        {/* 2. Premium T-Shirt Vector (Apparel) - Top Right */}
+                        <div className="absolute top-[15%] right-[10%] anim-float-2 opacity-80" style={{ animationDelay: '1s' }}>
+                            <svg className="w-20 h-20 lg:w-24 lg:h-24 drop-shadow-xl transform rotate-6" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M25 35 Q50 25 75 35 L85 45 L75 55 L70 85 L30 85 L25 55 L15 45 Z" fill="#FFFFFF" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+                                <path d="M40 31 Q50 41 60 31" fill="none" stroke="#334155" strokeWidth="2.5" strokeLinecap="round" />
+                                <path d="M40 60 L60 60 M45 50 L55 50" stroke="#E0F2FE" strokeWidth="3" strokeLinecap="round" />
+                            </svg>
+                        </div>
+
+                        {/* 3. Sleek Photo Frame (Photo Prints) - Mid Left */}
+                        <div className="absolute top-[45%] left-[4%] lg:left-[6%] anim-float-3 opacity-90" style={{ animationDelay: '2.5s' }}>
+                            <svg className="w-16 h-16 lg:w-20 lg:h-20 drop-shadow-xl transform -rotate-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="25" y="20" width="50" height="60" rx="3" fill="#FFFFFF" stroke="#334155" strokeWidth="2.5" />
+                                <rect x="32" y="28" width="36" height="34" rx="2" fill="#F1F5F9" stroke="#334155" strokeWidth="2.5" />
+                                <circle cx="42" cy="38" r="4" fill="#38BDF8" />
+                                <path d="M32 62 L42 52 L50 60 L58 49 L68 62" stroke="#334155" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+
+                        {/* 4. Elegant Fountain Nib (Design/Stationery) - Mid Right */}
+                        <div className="absolute top-[50%] right-[4%] lg:right-[7%] anim-float-1 opacity-80" style={{ animationDelay: '0.8s' }}>
+                            <svg className="w-16 h-16 lg:w-20 lg:h-20 drop-shadow-xl" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g transform="rotate(45 50 50)">
+                                    <path d="M40 85 L45 50 L55 50 L60 85 Q50 95 40 85 Z" fill="#FFFFFF" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+                                    <path d="M45 50 L50 15 L55 50 Z" fill="#E0F2FE" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+                                    <circle cx="50" cy="42" r="2.5" fill="#334155" />
+                                    <line x1="50" y1="40" x2="50" y2="15" stroke="#334155" strokeWidth="2.5" />
+                                </g>
+                            </svg>
+                        </div>
+
+                        {/* 5. Clean Label Tag (Promo/Labels) - Bottom Left */}
+                        <div className="absolute bottom-[20%] left-[8%] lg:left-[12%] anim-float-2 opacity-90" style={{ animationDelay: '1.2s' }}>
+                            <svg className="w-16 h-16 lg:w-20 lg:h-20 drop-shadow-xl transform rotate-[15deg]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M35 25 L65 25 L80 45 L50 85 L20 45 Z" fill="#FFFFFF" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+                                <circle cx="50" cy="35" r="4" fill="#F8FAFC" stroke="#334155" strokeWidth="2.5" />
+                                <path d="M50 31 C50 15 35 15 35 5" stroke="#BAE6FD" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                                <line x1="40" y1="55" x2="60" y2="55" stroke="#334155" strokeWidth="2.5" strokeLinecap="round" />
+                                <line x1="45" y1="65" x2="55" y2="65" stroke="#38BDF8" strokeWidth="2.5" strokeLinecap="round" />
+                            </svg>
+                        </div>
+
+                        {/* 6. Modern Tumbler (Drinkware) - Bottom Right */}
+                        <div className="absolute bottom-[25%] right-[10%] lg:right-[15%] anim-float-3 opacity-90" style={{ animationDelay: '3s' }}>
+                            <svg className="w-16 h-16 lg:w-20 lg:h-20 drop-shadow-xl transform -rotate-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M35 30 L65 30 L58 85 C58 88 42 88 42 85 Z" fill="#FFFFFF" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+                                <path d="M32 30 L68 30 C70 30 70 20 68 20 L32 20 C30 20 30 30 32 30 Z" fill="#F8FAFC" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+                                <path d="M34 45 L66 45 L64 60 L36 60 Z" fill="#E0F2FE" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+                                <path d="M45 52 L55 52" stroke="#38BDF8" strokeWidth="2.5" strokeLinecap="round" />
+                            </svg>
+                        </div>
+
+                        {/* 7. Geometric Ink Drop (Materials) - Inner Top Right */}
+                        <div className="absolute top-[28%] right-[22%] anim-float-1 opacity-70" style={{ animationDelay: '2s' }}>
+                            <svg className="w-12 h-12 lg:w-14 lg:h-14 drop-shadow-lg transform rotate-6" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 20 C50 20 25 55 25 70 A25 25 0 0 0 75 70 C75 55 50 20 50 20 Z" fill="#FFFFFF" stroke="#334155" strokeWidth="2.5" strokeLinejoin="round" />
+                                <path d="M50 25 C50 25 35 55 35 70 A15 15 0 0 0 65 70 C65 55 50 25 50 25 Z" fill="#E0F2FE" stroke="#38BDF8" strokeWidth="2.5" strokeLinejoin="round" />
+                                <circle cx="45" cy="65" r="3" fill="#FFFFFF" />
+                            </svg>
+                        </div>
+
+                        {/* Professional Fan Swatches (Print Testing) - Inner Bottom Left */}
+                        <div className="absolute bottom-[35%] left-[22%] anim-float-2 opacity-80" style={{ animationDelay: '1.5s' }}>
+                            <svg className="w-14 h-14 lg:w-16 lg:h-16 drop-shadow-xl transform -rotate-[15deg]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g transform="rotate(-20 50 80)">
+                                    <rect x="40" y="20" width="20" height="65" rx="3" fill="#FFFFFF" stroke="#334155" strokeWidth="2.5" />
+                                    <rect x="43" y="23" width="14" height="25" rx="1" fill="#E0F2FE" stroke="#334155" strokeWidth="1.5" />
+                                </g>
+                                <g transform="rotate(0 50 80)">
+                                    <rect x="40" y="20" width="20" height="65" rx="3" fill="#FFFFFF" stroke="#334155" strokeWidth="2.5" />
+                                    <rect x="43" y="23" width="14" height="25" rx="1" fill="#7DD3FC" stroke="#334155" strokeWidth="1.5" />
+                                </g>
+                                <g transform="rotate(20 50 80)">
+                                    <rect x="40" y="20" width="20" height="65" rx="3" fill="#FFFFFF" stroke="#334155" strokeWidth="2.5" />
+                                    <rect x="43" y="23" width="14" height="25" rx="1" fill="#0284C7" stroke="#334155" strokeWidth="1.5" />
+                                    <circle cx="50" cy="78" r="2.5" fill="#334155" />
+                                </g>
+                            </svg>
+                        </div>
+
+                    </div>
+
+                    {/* Centered Hero Text */}
+                    <div className="w-full max-w-4xl text-center z-20 mb-6 relative">
+                        <span className="hero-text-anim text-brand font-bold tracking-widest text-[10px] md:text-xs uppercase mb-3 block">
+                            Digital Printing • Custom Merchandise • Branding Solutions
+                        </span>
+                        <h1 className="hero-text-anim text-4xl md:text-5xl lg:text-6xl font-black text-dark tracking-tighter mb-4 leading-tight">
+                            Elevate Yourself With <span className="text-brand">Printos</span>
+                        </h1>
+                    </div>
+
+                    {/* Dynamic Cards Row - Elevated z-index to overlay printer correctly */}
+                    <div className="relative z-40 w-full max-w-[1300px] flex flex-wrap justify-center items-end gap-3 sm:gap-4 md:gap-5 mt-auto mb-4 min-h-[160px] md:min-h-[200px]">
+                        {HERO_CATEGORIES.map((cat, i) => (
+                            <div key={cat.id} ref={el => cardsRef.current[i] = el} className="w-[100px] sm:w-[120px] md:w-[150px] flex-shrink-0 perspective-[1000px] z-10 pointer-events-none">
+                                {/* Card Body */}
+                                <div className="w-full bg-white p-2 md:p-3 rounded-xl shadow-[0_15px_30px_rgba(0,0,0,0.06)] border border-gray-100 flex flex-col items-center cursor-pointer pointer-events-auto transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_40px_rgba(45,158,216,0.2)]">
+                                    <div className="w-full aspect-[4/3] rounded-lg overflow-hidden mb-2 md:mb-3 bg-gray-50 relative group">
+                                        <img src={cat.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={cat.title} />
+                                        <div className="absolute inset-0 bg-brand/0 group-hover:bg-brand/10 transition-colors duration-300"></div>
+                                    </div>
+                                    <h3 className="font-bold text-gray-800 text-[10px] md:text-xs text-center line-clamp-1">{cat.title}</h3>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Highly Realistic Centered Printer */}
+                    <div className="relative z-30 mt-2">
+                        <div ref={printerRef} className="relative w-[300px] sm:w-[380px] md:w-[480px] h-[140px] md:h-[180px] perspective-[1200px] mx-auto drop-shadow-[0_30px_40px_rgba(0,0,0,0.15)]">
+
+                            {/* Printer Main Chassis */}
+                            <div className="absolute inset-0 bg-gradient-to-b from-[#2a2d35] to-[#1a1c23] rounded-t-[2rem] rounded-b-2xl border border-gray-700 shadow-[inset_0_2px_10px_rgba(255,255,255,0.1)] flex flex-col items-center overflow-visible">
+
+                                {/* Top Bevel / Output Area */}
+                                <div className="w-full h-[60px] md:h-[80px] bg-gradient-to-b from-[#3b3f4a] to-[#2a2d35] rounded-t-[2rem] border-b border-gray-800 shadow-[inset_0_5px_15px_rgba(255,255,255,0.05)] relative flex justify-center">
+
+                                    {/* The Output Slot (Where cards magically emerge from) */}
+                                    <div className="absolute bottom-2 w-[80%] h-3 bg-black rounded-full shadow-[inset_0_5px_10px_rgba(0,0,0,1)] border-b border-gray-600 flex justify-center items-center">
+                                        {/* Invisible Ref Anchor perfectly centered in the slot */}
+                                        <div ref={printerSlotRef} className="w-2 h-2"></div>
+                                    </div>
+
+                                    {/* Top Scanner details */}
+                                    <div className="absolute top-3 w-[60%] h-8 bg-[#22242b] rounded-xl shadow-inner border border-gray-700/50"></div>
+                                </div>
+
+                                {/* Front Face / Control Panel */}
+                                <div className="w-full flex-1 relative flex items-center justify-between px-6 md:px-10">
+
+                                    {/* Left Details (Vents / Brand) */}
+                                    <div className="flex flex-col gap-2 opacity-50">
+                                        <div className="w-12 h-1 bg-black rounded-full shadow-inner"></div>
+                                        <div className="w-16 h-1 bg-black rounded-full shadow-inner"></div>
+                                        <div className="w-10 h-1 bg-black rounded-full shadow-inner"></div>
+                                        <div className="mt-2 text-gray-400 font-black tracking-widest text-[8px] uppercase">Printos X-Pro</div>
+                                    </div>
+
+                                    {/* Right Details (Touch Screen) */}
+                                    <div className="w-[80px] md:w-[100px] h-[40px] md:h-[50px] bg-black rounded-lg border border-gray-700 shadow-[inset_0_0_10px_rgba(0,0,0,1)] relative overflow-hidden flex items-center justify-end p-2">
+                                        <div ref={ledRef} className="absolute inset-0 bg-brand/40 blur-md opacity-0"></div>
+                                        {/* Activity LED */}
+                                        <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e] relative z-10"></div>
+                                    </div>
+
+                                </div>
+
+                                {/* Bottom Tray Lip */}
+                                <div className="absolute -bottom-3 w-[85%] h-6 bg-[#1f2129] rounded-b-xl border-x border-b border-gray-800 shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex justify-center">
+                                    <div className="w-[60%] h-2 bg-gray-900 mt-2 rounded-full shadow-inner"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            );
+        }
+
+        // ─── SECTIONS ─────────────────────────────────────────────────────────────
+
+        function ClientMarquee() {
+            const CLIENTS = [
+                "Bank Of Baroda", "SBI", "RBI", "Infosys", "TCS", "UST", "NIPM",
+                "Asianet", "Asian College of Engineering", "Kerala Bank",
+                "Shamy Catering", "Kairali", "Flavour Asia", "Mar Ivanious", "Jacob's Caterers"
+            ];
+
+            // Duplicate the list to create a seamless infinite loop
+            const marqueeItems = [...CLIENTS, ...CLIENTS];
+
+            return (
+                <section className="py-12 bg-white border-b border-gray-100 overflow-hidden relative">
+                    <div className="max-w-[1600px] mx-auto px-6 lg:px-12 mb-6">
+                        <h3 className="text-xs md:text-sm font-bold text-gray-400 uppercase tracking-widest text-center">
+                            Trusted by industry leaders
+                        </h3>
+                    </div>
+
+                    {/* Gradient Masks for smooth fading edges */}
+                    <div className="absolute left-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+                    <div className="absolute right-0 top-0 bottom-0 w-16 md:w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+
+                    <div className="relative w-full flex overflow-hidden">
+                        <div className="marquee-track flex items-center">
+                            {marqueeItems.map((client, idx) => (
+                                <div key={idx} className="flex-shrink-0 flex items-center justify-center px-8 md:px-12">
+                                    <span className="text-xl md:text-3xl font-black text-gray-200 uppercase tracking-tighter hover:text-brand transition-colors cursor-default whitespace-nowrap">
+                                        {client}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Dynamic Shape Card Component for Morphing
+        function ShapeCard({ item, index }) {
+            const [isHovered, setIsHovered] = useState(false);
+
+            // Generates an SVG path with exactly 120 points (L commands)
+            // Having matching vertex counts allows CSS to seamlessly morph the path
+            const path = React.useMemo(() => {
+                const type = isHovered ? 'circle' : item.shape;
+                let p = "";
+                for (let i = 0; i < 360; i += 3) {
+                    const rad = i * Math.PI / 180;
+                    let r = 50;
+
+                    if (type === 'sunny') {
+                        r = 45 + 5 * Math.cos(8 * rad); // 8 wavy points
+                    } else if (type === 'clover') {
+                        r = 42 + 8 * Math.cos(4 * rad); // 4 deep petals
+                    } else if (type === 'cookie') {
+                        r = 47 + 3 * Math.cos(12 * rad); // 12 scalloped edges
+                    } else if (type === 'square') {
+                        const cos = Math.abs(Math.cos(rad));
+                        const sin = Math.abs(Math.sin(rad));
+                        // m=5 power creates a perfect soft squircle
+                        r = 48 / Math.pow(Math.pow(cos, 5) + Math.pow(sin, 5), 1 / 5);
+                    } else if (type === 'circle') {
+                        r = 48; // Target morphed circle radius
+                    }
+
+                    const x = 50 + r * Math.sin(rad);
+                    const y = 50 - r * Math.cos(rad);
+
+                    if (i === 0) p += `M ${x.toFixed(3)} ${y.toFixed(3)} `;
+                    else p += `L ${x.toFixed(3)} ${y.toFixed(3)} `;
+                }
+                return p + "Z";
+            }, [isHovered, item.shape]);
+
+            return (
+                <div
+                    className="fade-up flex flex-col items-center group cursor-pointer"
+                    style={{ transitionDelay: `${index * 50}ms` }}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                >
+                    {/* SVG Image Mask & Morphing Path */}
+                    <svg
+                        viewBox="0 0 100 100"
+                        className="w-full max-w-[240px] drop-shadow-[0_15px_25px_rgba(0,0,0,0.1)] group-hover:drop-shadow-[0_20px_35px_rgba(45,158,216,0.25)] transition-all duration-500 transform group-hover:-translate-y-3"
+                        preserveAspectRatio="xMidYMid meet"
+                        style={{ overflow: 'visible' }}
+                    >
+                        <defs>
+                            <pattern id={`img-pattern-${item.id}`} patternUnits="userSpaceOnUse" width="100" height="100">
+                                <image
+                                    href={item.image}
+                                    x="0" y="0"
+                                    width="100" height="100"
+                                    preserveAspectRatio="xMidYMid slice"
+                                    style={{
+                                        transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+                                        transformOrigin: '50px 50px',
+                                        transform: isHovered ? 'scale(1.15)' : 'scale(1)'
+                                    }}
+                                />
+                            </pattern>
+                        </defs>
+
+                        <path
+                            d={path}
+                            fill={`url(#img-pattern-${item.id})`}
+                            style={{ transition: 'd 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        />
+                    </svg>
+
+                    {/* Standalone Text Below */}
+                    <div className="mt-8 text-center px-4">
+                        <h3 className="text-xl md:text-2xl font-bold text-dark group-hover:text-brand transition-colors">
+                            {item.title}
+                        </h3>
+                    </div>
+                </div>
+            );
+        }
+
+        function ShopByBusinessNeeds() {
+            return (
+                <section className="py-24 bg-white relative">
+                    <div className="max-w-[1600px] mx-auto px-6 lg:px-12">
+                        <div className="text-center mb-16 fade-up">
+                            <span className="text-brand font-bold tracking-widest uppercase text-xs mb-3 block">Solutions</span>
+                            <h2 className="text-3xl md:text-5xl font-black text-dark tracking-tight">Shop By Business Needs</h2>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-10">
+                            {BUSINESS_NEEDS.map((item, index) => (
+                                <ShapeCard key={item.id} item={item} index={index} />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // Dynamic Morphing Card Component for Popular Categories (Out-of-the-box shapes)
+        function CategoryMorphCard({ cat, index }) {
+            const [isHovered, setIsHovered] = useState(false);
+            // Array of unique "out of the box" shapes
+            const shapes = ['blob', 'triangle', 'star', 'hexagon'];
+            const baseShape = shapes[index % 4];
+
+            const path = React.useMemo(() => {
+                const type = isHovered ? 'squircle' : baseShape;
+                let p = "";
+                // 120 points to ensure smooth CSS morphing
+                for (let i = 0; i < 360; i += 3) {
+                    const rad = i * Math.PI / 180;
+                    let r = 50;
+
+                    if (type === 'blob') {
+                        // Organic, asymmetric fluid blob
+                        r = 43 + 4 * Math.cos(3 * rad) + 3 * Math.sin(2 * rad);
+                    } else if (type === 'triangle') {
+                        // Soft Reuleaux triangle pointing upwards
+                        r = 42 + 6 * Math.cos(3 * rad);
+                    } else if (type === 'star') {
+                        // Plump, soft 5-pointed star
+                        r = 43 + 6 * Math.cos(5 * rad);
+                    } else if (type === 'hexagon') {
+                        // Smooth, modern honeycomb hexagon
+                        r = 45 + 3 * Math.cos(6 * rad);
+                    } else if (type === 'squircle') {
+                        // Target soft rounded square
+                        const cos = Math.abs(Math.cos(rad));
+                        const sin = Math.abs(Math.sin(rad));
+                        r = 48 / Math.pow(Math.pow(cos, 5) + Math.pow(sin, 5), 1 / 5);
+                    }
+
+                    // Convert polar to cartesian coordinates
+                    const x = 50 + r * Math.sin(rad);
+                    const y = 50 - r * Math.cos(rad);
+
+                    if (i === 0) p += `M ${x.toFixed(3)} ${y.toFixed(3)} `;
+                    else p += `L ${x.toFixed(3)} ${y.toFixed(3)} `;
+                }
+                return p + "Z";
+            }, [isHovered, baseShape]);
+
+            return (
+                <div
+                    className="fade-up group cursor-pointer flex flex-col items-center"
+                    style={{ transitionDelay: `${index * 50}ms` }}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                >
+                    <svg
+                        viewBox="0 0 100 100"
+                        className="w-full max-w-[260px] drop-shadow-[0_15px_25px_rgba(0,0,0,0.1)] group-hover:drop-shadow-[0_20px_35px_rgba(45,158,216,0.25)] transition-all duration-500 transform group-hover:-translate-y-3"
+                        preserveAspectRatio="xMidYMid meet"
+                        style={{ overflow: 'visible' }}
+                    >
+                        <defs>
+                            <pattern id={`cat-pattern-${cat.id}`} patternUnits="userSpaceOnUse" width="100" height="100">
+                                <image
+                                    href={cat.image}
+                                    x="0" y="0"
+                                    width="100" height="100"
+                                    preserveAspectRatio="xMidYMid slice"
+                                    style={{
+                                        transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
+                                        transformOrigin: '50px 50px',
+                                        transform: isHovered ? 'scale(1.15)' : 'scale(1)'
+                                    }}
+                                />
+                            </pattern>
+                        </defs>
+                        <path
+                            d={path}
+                            fill={`url(#cat-pattern-${cat.id})`}
+                            style={{ transition: 'd 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        />
+                    </svg>
+                    <h4 className="mt-8 text-2xl font-bold text-dark text-center group-hover:text-brand transition-colors">
+                        {cat.title}
+                    </h4>
+                </div>
+            );
+        }
+
+        function PopularCategories() {
+            return (
+                <section className="py-24 bg-gray-50">
+                    <div className="max-w-[1600px] mx-auto px-6 lg:px-12">
+                        <div className="text-center mb-16 fade-up">
+                            <span className="text-brand font-bold tracking-widest uppercase text-xs mb-3 block">Explore</span>
+                            <h2 className="text-3xl md:text-5xl font-black text-dark tracking-tight">Popular Categories</h2>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-10">
+                            {POPULAR_CATEGORIES.map((cat, index) => (
+                                <CategoryMorphCard key={cat.id} cat={cat} index={index} />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        function NewLaunches() {
+            return (
+                <section className="py-24 bg-white">
+                    <div className="max-w-[1600px] mx-auto px-6 lg:px-12">
+                        <div className="mb-16 fade-up md:text-left text-center">
+                            <span className="text-brand font-bold tracking-widest uppercase text-xs mb-3 block">Just Dropped</span>
+                            <h2 className="text-3xl md:text-5xl font-black text-dark tracking-tight">New Launches</h2>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                            {NEW_LAUNCHES.map((item, index) => (
+                                <div
+                                    key={item.id}
+                                    className="fade-up relative flex items-center p-5 sm:p-6 bg-white rounded-3xl border-[1.5px] border-gray-100 shadow-[0_8px_24px_rgba(0,0,0,0.03)] cursor-pointer group hover:border-brand/40 hover:shadow-[0_20px_40px_-15px_rgba(45,158,216,0.25)] transition-all duration-500 overflow-hidden"
+                                    style={{ transitionDelay: `${index * 50}ms` }}
+                                >
+                                    {/* Subtle background glow on hover to prevent the "empty" feel */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-brand/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0" />
+
+                                    {/* Product Image */}
+                                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-gray-50 overflow-hidden shrink-0 shadow-inner z-10">
+                                        <img src={item.image} alt={item.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                    </div>
+
+                                    {/* Card Content */}
+                                    <div className="ml-5 sm:ml-6 flex-1 relative z-10 pr-8">
+                                        <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-widest text-brand mb-1.5 block opacity-90">
+                                            New Arrival
+                                        </span>
+                                        <h4 className="font-bold text-gray-900 group-hover:text-brand transition-colors line-clamp-2 text-lg sm:text-xl leading-snug">
+                                            {item.title}
+                                        </h4>
+                                    </div>
+
+                                    {/* Animated Arrow */}
+                                    <div className="absolute right-6 opacity-0 group-hover:opacity-100 transition-all duration-500 transform -translate-x-4 group-hover:translate-x-0 z-10 text-brand">
+                                        <span className="material-symbols-rounded" style={{ fontSize: '28px' }}>arrow_forward</span>
+                                    </div>
+                                </div>
+                            ))}
+
+                            {/* Claymorphism Promo Banner */}
+                            <div className="fade-up col-span-1 md:col-span-2 lg:col-span-1 clay-panel-brand rounded-3xl p-8 flex flex-col justify-center relative overflow-hidden text-white group cursor-pointer" style={{ transitionDelay: '250ms' }}>
+                                <div className="absolute -right-10 -top-10 w-48 h-48 bg-white/20 rounded-full blur-2xl group-hover:bg-white/30 transition-all duration-500 group-hover:scale-110" />
+                                <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-black/10 rounded-full blur-xl" />
+                                <div className="relative z-10">
+                                    <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-[10px] font-bold uppercase tracking-widest mb-4 shadow-sm">Limited Time</span>
+                                    <h4 className="text-3xl font-extrabold mb-3 drop-shadow-md">Summer Sale!</h4>
+                                    <p className="text-white/90 mb-8 font-medium text-lg leading-snug">Get up to 30% off on all new arrivals this week.</p>
+                                    <button className="bg-white text-brand font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all w-fit focus:outline-none">Shop Collection</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        function BestSellers() {
+            const swiperRef = useRef(null);
+
+            // Chunk the 8 items into sets of 4 to form the Bento grid per slide
+            const chunkedBestSellers = [];
+            for (let i = 0; i < BEST_SELLERS.length; i += 4) {
+                chunkedBestSellers.push(BEST_SELLERS.slice(i, i + 4));
+            }
+
+            useEffect(() => {
+                swiperRef.current = new Swiper('.bestseller-swiper', {
+                    slidesPerView: 1,
+                    spaceBetween: 40,
+                    loop: true,
+                    speed: 800,
+                    autoplay: { delay: 6000, disableOnInteraction: false },
+                    navigation: {
+                        nextEl: '.bs-next',
+                        prevEl: '.bs-prev',
+                    }
+                });
+                return () => { if (swiperRef.current?.destroy) swiperRef.current.destroy(true, true); };
+            }, []);
+
+            return (
+                <section className="py-24 bg-gray-50 relative overflow-hidden">
+                    <div className="max-w-[1600px] mx-auto px-6 lg:px-12 relative">
+
+                        <div className="text-center mb-12 md:mb-16 fade-up">
+                            <h2 className="text-3xl md:text-5xl font-extrabold text-dark tracking-tight">Best Sellers</h2>
+                            <p className="text-zinc-500 mt-4 text-base md:text-xl font-medium max-w-2xl mx-auto">
+                                Our most loved and highest-rated prints, curated perfectly for your success.
+                            </p>
+                        </div>
+
+                        <div className="relative w-full max-w-[1200px] mx-auto fade-up group/slider">
+
+                            {/* Custom Navigation Arrows */}
+                            <button className="bs-prev absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-8 w-14 h-14 bg-white rounded-full shadow-elegant flex items-center justify-center z-20 text-dark hover:text-brand hover:scale-110 transition-all focus:outline-none xl:opacity-0 xl:-translate-x-12 group-hover/slider:opacity-100 group-hover/slider:-translate-x-8">
+                                <span className="material-symbols-rounded" style={{ fontSize: '28px' }}>chevron_left</span>
+                            </button>
+                            <button className="bs-next absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-8 w-14 h-14 bg-white rounded-full shadow-elegant flex items-center justify-center z-20 text-dark hover:text-brand hover:scale-110 transition-all focus:outline-none xl:opacity-0 xl:translate-x-12 group-hover/slider:opacity-100 group-hover/slider:translate-x-8">
+                                <span className="material-symbols-rounded" style={{ fontSize: '28px' }}>chevron_right</span>
+                            </button>
+
+                            {/* Swiper Carousel */}
+                            <div className="swiper bestseller-swiper px-2 py-4">
+                                <div className="swiper-wrapper">
+                                    {chunkedBestSellers.map((chunk, slideIndex) => (
+                                        <div key={slideIndex} className="swiper-slide cursor-grab">
+
+                                            {/* Bento Asymmetrical Grid Layout */}
+                                            <div className="grid grid-cols-2 grid-rows-3 gap-3 md:gap-5 lg:gap-6 h-[450px] sm:h-[600px] lg:h-[750px] w-full">
+                                                {chunk.map((item, index) => {
+                                                    // Mapped exactly to reference layout
+                                                    let gridClass = "";
+                                                    if (index === 0) gridClass = "col-start-1 row-start-1 row-span-2"; // Top Left (Tall)
+                                                    if (index === 1) gridClass = "col-start-1 row-start-3 row-span-1"; // Bottom Left (Short)
+                                                    if (index === 2) gridClass = "col-start-2 row-start-1 row-span-1"; // Top Right (Short)
+                                                    if (index === 3) gridClass = "col-start-2 row-start-2 row-span-2"; // Bottom Right (Tall)
+
+                                                    return (
+                                                        <div key={item.id} className={`relative group rounded-[24px] md:rounded-[32px] overflow-hidden shadow-sm hover:shadow-elegant-hover transition-all duration-500 ${gridClass}`}>
+                                                            <img
+                                                                src={item.image}
+                                                                alt={item.title}
+                                                                loading="lazy"
+                                                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                                            />
+
+                                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+
+                                                            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8 flex flex-col justify-end">
+                                                                <h3 className="text-white font-bold text-lg sm:text-xl lg:text-3xl drop-shadow-md transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500 line-clamp-2">
+                                                                    {item.title}
+                                                                </h3>
+
+                                                                <div className="h-0 opacity-0 group-hover:h-auto group-hover:opacity-100 group-hover:mt-4 transition-all duration-500 overflow-hidden flex items-center gap-3">
+                                                                    <button className="bg-white text-dark text-xs sm:text-sm font-bold px-4 sm:px-6 py-2.5 rounded-full shadow-sm hover:bg-brand hover:text-white transition-colors">
+                                                                        Shop Now
+                                                                    </button>
+                                                                    <span className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-brand transition-colors cursor-pointer shrink-0">
+                                                                        <span className="material-symbols-rounded" style={{ fontSize: '18px' }}>arrow_forward</span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        function CustomerTestimonials() {
+            const swiperRef = useRef(null);
+            useEffect(() => {
+                swiperRef.current = new Swiper('.testimonial-swiper', {
+                    slidesPerView: 1, spaceBetween: 30, loop: true,
+                    pagination: { el: '.swiper-pagination', clickable: true },
+                    autoplay: { delay: 5000 }
+                });
+                return () => { if (swiperRef.current?.destroy) swiperRef.current.destroy(true, true); };
+            }, []);
+            return (
+                <section className="py-24 bg-dark text-white text-center">
+                    <div className="max-w-[800px] mx-auto px-6">
+                        <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-12">Customer Testimonials</h2>
+                        <div className="swiper testimonial-swiper pb-12">
+                            <div className="swiper-wrapper">
+                                {TESTIMONIALS.map(item => (
+                                    <div key={item.id} className="swiper-slide cursor-grab">
+                                        <div className="flex justify-center mb-6 text-yellow-400">
+                                            {[...Array(item.stars)].map((_, i) => (
+                                                <span key={i} className="material-symbols-rounded star-filled">star</span>
+                                            ))}
+                                        </div>
+                                        <p className="text-xl md:text-2xl font-medium leading-relaxed mb-8 text-gray-200">"{item.text}"</p>
+                                        <h4 className="font-bold text-brand uppercase tracking-widest text-sm">— {item.name}</h4>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="swiper-pagination !-bottom-2" />
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        function FeatureHighlights() {
+            return (
+                <section className="py-16 bg-white border-b border-gray-100">
+                    <div className="max-w-[1600px] mx-auto px-6 lg:px-12">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {FEATURES.map(feat => (
+                                <div key={feat.id} className="fade-up flex flex-col items-center text-center p-6 rounded-2xl hover:bg-gray-50 transition-colors">
+                                    <div className="w-16 h-16 bg-brand-light text-brand rounded-full flex items-center justify-center mb-4">
+                                        <span className="material-symbols-rounded" style={{ fontSize: '32px' }}>{feat.icon}</span>
+                                    </div>
+                                    <h4 className="text-lg font-bold text-gray-900 mb-2">{feat.title}</h4>
+                                    <p className="text-sm font-medium text-gray-500">{feat.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        function Footer() {
+            return (
+                <footer className="bg-dark text-white pt-24 pb-12 rounded-t-[40px] relative z-10">
+                    <div className="max-w-[1600px] mx-auto px-6 lg:px-12">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-20">
+                            <div className="lg:col-span-4">
+                                <div className="flex items-center space-x-2 mb-6"><LOGO /><span className="text-3xl font-extrabold tracking-tighter uppercase">Printos</span></div>
+                                <p className="text-gray-400 font-medium leading-relaxed max-w-sm mb-8">Elevating brands with premium quality printing. Fast, reliable, and spectacular.</p>
+                                <div className="flex gap-4">
+                                    <a href="#" className="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#25D366] hover:scale-110 transition-all" title="WhatsApp">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-[18px] h-[18px]"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" /><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.549 4.107 1.51 5.837L.057 23.882a.5.5 0 0 0 .61.61l6.045-1.453A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.9a9.878 9.878 0 0 1-5.034-1.378l-.36-.214-3.742.9.916-3.742-.235-.374A9.878 9.878 0 0 1 2.1 12C2.1 6.533 6.533 2.1 12 2.1c5.466 0 9.9 4.433 9.9 9.9S17.466 21.9 12 21.9z" /></svg>
+                                    </a>
+                                    <a href="#" className="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#E1306C] hover:scale-110 transition-all" title="Instagram">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-[18px] h-[18px]"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" /></svg>
+                                    </a>
+                                    <a href="#" className="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#0A66C2] hover:scale-110 transition-all" title="LinkedIn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-[18px] h-[18px]">
+                                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                            <div className="lg:col-span-2 lg:col-start-6">
+                                <h4 className="font-bold mb-6 text-sm tracking-widest text-brand uppercase">Shop</h4>
+                                <ul className="space-y-4 text-sm font-medium text-gray-400">
+                                    <li><a href="#" className="hover:text-white transition-colors">Business Cards</a></li>
+                                    <li><a href="#" className="hover:text-white transition-colors">Apparel</a></li>
+                                    <li><a href="#" className="hover:text-white transition-colors">Marketing Materials</a></li>
+                                    <li><a href="#" className="hover:text-white transition-colors">Packaging</a></li>
+                                </ul>
+                            </div>
+                            <div className="lg:col-span-4">
+                                <h4 className="font-bold mb-6 text-sm tracking-widest text-brand uppercase">Find Us</h4>
+                                <div className="w-full h-[220px] rounded-2xl overflow-hidden border border-white/10 shadow-lg relative bg-white/5">
+                                    <iframe
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.989774549804!2d76.9489795!3d8.5003727!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b05bbd52d5d2d5d%3A0xc013d20635c5acab!2sPrintos%20tvm!5e0!3m2!1sen!2sae!4v1773801936162!5m2!1sen!2sae"
+                                        width="100%"
+                                        height="100%"
+                                        style={{ border: 0 }}
+                                        allowFullScreen={true}
+                                        loading="lazy"
+                                        referrerPolicy="no-referrer-when-downgrade"
+                                        className="absolute inset-0 grayscale-[20%] hover:grayscale-0 transition-all duration-500"
+                                    ></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            );
+        }
+
+        // ─── APP ──────────────────────────────────────────────────────────────────
+        function App() {
+            useGlobalGSAPAnimations();
+            useEffect(() => { window.scrollTo(0, 0); setTimeout(() => ScrollTrigger.refresh(), 200); }, []);
+            return (
+                <div className="w-full flex flex-col min-h-screen">
+                    <Header />
+                    <main className="flex-1 w-full bg-white relative z-0">
+                        {/* The new hero section seamlessly integrates while preserving the old name/layout placement */}
+                        <HeroSection />
+                        <ClientMarquee />
+                        <ShopByBusinessNeeds />
+                        <PopularCategories />
+                        <NewLaunches />
+                        <BestSellers />
+                        <CustomerTestimonials />
+                        <FeatureHighlights />
+                    </main>
+                    <Footer />
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
 </body>
+
 </html>
